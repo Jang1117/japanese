@@ -309,7 +309,10 @@
         function drawGuideCharacter() {
             const currentChar = hiraganaData[currentCategory][currentIndex];
             guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
-            guideCtx.font = 'bold 200px sans-serif';
+            
+            // Calculate font size to fill 80% of canvas height
+            const fontSize = Math.min(guideCanvas.width, guideCanvas.height) * 0.8;
+            guideCtx.font = `bold ${fontSize}px sans-serif`;
             guideCtx.fillStyle = '#764ba2';
             guideCtx.textAlign = 'center';
             guideCtx.textBaseline = 'middle';
