@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>히라가나 따라쓰기</title>
+    <title>일본어 학습 앱</title>
     <style>
         * {
             margin: 0;
@@ -25,382 +25,151 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            max-width: 500px;
+            padding: 40px;
+            max-width: 600px;
             width: 100%;
         }
 
         h1 {
             text-align: center;
             color: #667eea;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .character-display {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .current-character {
-            font-size: 80px;
-            color: #764ba2;
-            font-weight: bold;
             margin-bottom: 10px;
+            font-size: 36px;
         }
 
-        .character-info {
-            font-size: 18px;
+        .subtitle {
+            text-align: center;
             color: #666;
-        }
-
-        .canvas-container {
-            position: relative;
-            background: #f8f9fa;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 3px solid #e0e0e0;
-            overflow: hidden;
-        }
-
-        #drawingCanvas {
-            display: block;
-            width: 100%;
-            height: 300px;
-            cursor: crosshair;
-            touch-action: none;
-        }
-
-        .guide-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
+            margin-bottom: 40px;
             font-size: 16px;
-            font-weight: bold;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-        }
-
-        .btn-clear {
-            background: #ff6b6b;
+            text-decoration: none;
             color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-clear:hover {
-            background: #ff5252;
-            transform: translateY(-2px);
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
 
-        .btn-next {
-            background: #51cf66;
-            color: white;
+        .menu-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
         }
 
-        .btn-next:hover {
-            background: #40c057;
-            transform: translateY(-2px);
-        }
-
-        .btn-show-guide {
-            background: #ffd43b;
-            color: #333;
-        }
-
-        .btn-show-guide:hover {
-            background: #fcc419;
-            transform: translateY(-2px);
-        }
-
-        .progress {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
+        .menu-title {
+            font-size: 24px;
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .category-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .menu-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
         }
 
-        .category-btn {
-            flex: 1 1 calc(20% - 8px);
-            min-width: 70px;
-            padding: 8px 6px;
-            background: #e9ecef;
+        .card-hiragana {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card-sentence {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .features h3 {
             color: #495057;
-            border: 2px solid transparent;
-            font-size: 14px;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
-        .category-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
+        .feature-list {
+            list-style: none;
+            padding: 0;
         }
 
-        .stroke-order {
-            text-align: center;
-            margin-top: 10px;
-            padding: 10px;
-            background: #e7f5ff;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1864ab;
+        .feature-list li {
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🇯🇵 히라가나 따라쓰기</h1>
-        
-        <div class="category-selector">
-            <button class="category-btn active" onclick="selectCategory('basic')">あ행</button>
-            <button class="category-btn" onclick="selectCategory('ka')">か행</button>
-            <button class="category-btn" onclick="selectCategory('sa')">さ행</button>
-            <button class="category-btn" onclick="selectCategory('ta')">た행</button>
-            <button class="category-btn" onclick="selectCategory('na')">な행</button>
-            <button class="category-btn" onclick="selectCategory('ha')">は행</button>
-            <button class="category-btn" onclick="selectCategory('ma')">ま행</button>
-            <button class="category-btn" onclick="selectCategory('ya')">や행</button>
-            <button class="category-btn" onclick="selectCategory('ra')">ら행</button>
-            <button class="category-btn" onclick="selectCategory('wa')">わ행</button>
+        <h1>🇯🇵 일본어 학습 앱</h1>
+        <p class="subtitle">히라가나부터 문장까지 차근차근 배워보세요</p>
+
+        <div class="menu-grid">
+            <a href="hiragana-practice.html" class="menu-card card-hiragana">
+                <div class="menu-icon">あ</div>
+                <div class="menu-title">히라가나 연습</div>
+                <div class="menu-description">
+                    46개 기본 히라가나를 손으로 따라 쓰며 익혀보세요
+                </div>
+            </a>
+
+            <a href="sentence-practice.html" class="menu-card card-sentence">
+                <div class="menu-icon">📝</div>
+                <div class="menu-title">문장 연습</div>
+                <div class="menu-description">
+                    간단한 일본어 문장을 따라 쓰며 실전 연습을 해보세요
+                </div>
+            </a>
         </div>
 
-        <div class="progress">
-            <span id="progressText">1 / 5</span>
-        </div>
-
-        <div class="character-display">
-            <div class="current-character" id="currentCharacter">あ</div>
-            <div class="character-info" id="characterInfo">a (아)</div>
-        </div>
-
-        <div class="canvas-container">
-            <canvas id="guideCanvas" class="guide-canvas"></canvas>
-            <canvas id="drawingCanvas"></canvas>
-        </div>
-
-        <div class="stroke-order" id="strokeOrder">
-            획순: 왼쪽에서 오른쪽으로, 위에서 아래로
-        </div>
-
-        <div class="controls">
-            <button class="btn-clear" onclick="clearCanvas()">지우기</button>
-            <button class="btn-show-guide" onclick="toggleGuide()">가이드</button>
-            <button class="btn-next" onclick="nextCharacter()">다음</button>
+        <div class="features">
+            <h3>💡 학습 기능</h3>
+            <ul class="feature-list">
+                <li>터치 스크린과 마우스 모두 지원</li>
+                <li>가이드 표시로 정확한 글자 모양 확인</li>
+                <li>로마자와 한글 발음 함께 제공</li>
+                <li>획순 정보로 올바른 쓰기 습관</li>
+                <li>반복 연습으로 완벽한 암기</li>
+            </ul>
         </div>
     </div>
-
-    <script>
-        const hiraganaData = {
-            basic: [
-                { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: 왼→오른, 곡선, 세로' },
-                { char: 'い', romaji: 'i', korean: '이', strokes: '2획: 세로, 세로' },
-                { char: 'う', romaji: 'u', korean: '우', strokes: '2획: 가로, 곡선' },
-                { char: 'え', romaji: 'e', korean: '에', strokes: '2획: 가로+곡선, 가로' },
-                { char: 'お', romaji: 'o', korean: '오', strokes: '3획: 가로, 세로, 곡선' }
-            ],
-            ka: [
-                { char: 'か', romaji: 'ka', korean: '카', strokes: '3획' },
-                { char: 'き', romaji: 'ki', korean: '키', strokes: '4획' },
-                { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획' },
-                { char: 'け', romaji: 'ke', korean: '케', strokes: '3획' },
-                { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획' }
-            ],
-            sa: [
-                { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획' },
-                { char: 'し', romaji: 'shi', korean: '시', strokes: '1획' },
-                { char: 'す', romaji: 'su', korean: '스', strokes: '2획' },
-                { char: 'せ', romaji: 'se', korean: '세', strokes: '3획' },
-                { char: 'そ', romaji: 'so', korean: '소', strokes: '1획' }
-            ],
-            ta: [
-                { char: 'た', romaji: 'ta', korean: '타', strokes: '4획' },
-                { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획' },
-                { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획' },
-                { char: 'て', romaji: 'te', korean: '테', strokes: '1획' },
-                { char: 'と', romaji: 'to', korean: '토', strokes: '2획' }
-            ],
-            na: [
-                { char: 'な', romaji: 'na', korean: '나', strokes: '4획' },
-                { char: 'に', romaji: 'ni', korean: '니', strokes: '3획' },
-                { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획' },
-                { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획' },
-                { char: 'の', romaji: 'no', korean: '노', strokes: '1획' }
-            ],
-            ha: [
-                { char: 'は', romaji: 'ha', korean: '하', strokes: '3획' },
-                { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획' },
-                { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획' },
-                { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획' },
-                { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획' }
-            ],
-            ma: [
-                { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획' },
-                { char: 'み', romaji: 'mi', korean: '미', strokes: '2획' },
-                { char: 'む', romaji: 'mu', korean: '무', strokes: '3획' },
-                { char: 'め', romaji: 'me', korean: '메', strokes: '2획' },
-                { char: 'も', romaji: 'mo', korean: '모', strokes: '3획' }
-            ],
-            ya: [
-                { char: 'や', romaji: 'ya', korean: '야', strokes: '3획' },
-                { char: 'ゆ', romaji: 'yu', korean: '유', strokes: '2획' },
-                { char: 'よ', romaji: 'yo', korean: '요', strokes: '2획' }
-            ],
-            ra: [
-                { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획' },
-                { char: 'り', romaji: 'ri', korean: '리', strokes: '2획' },
-                { char: 'る', romaji: 'ru', korean: '루', strokes: '1획' },
-                { char: 'れ', romaji: 're', korean: '레', strokes: '2획' },
-                { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획' }
-            ],
-            wa: [
-                { char: 'わ', romaji: 'wa', korean: '와', strokes: '2획' },
-                { char: 'を', romaji: 'wo/o', korean: '오(조사)', strokes: '3획' },
-                { char: 'ん', romaji: 'n', korean: '응', strokes: '1획' }
-            ]
-        };
-
-        let currentCategory = 'basic';
-        let currentIndex = 0;
-        let isDrawing = false;
-        let showGuide = false;
-
-        const canvas = document.getElementById('drawingCanvas');
-        const guideCanvas = document.getElementById('guideCanvas');
-        const ctx = canvas.getContext('2d');
-        const guideCtx = guideCanvas.getContext('2d');
-
-        function initCanvas() {
-            const container = canvas.parentElement;
-            const rect = container.getBoundingClientRect();
-            
-            canvas.width = rect.width;
-            canvas.height = 300;
-            guideCanvas.width = rect.width;
-            guideCanvas.height = 300;
-
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.strokeStyle = '#667eea';
-
-            drawGuideCharacter();
-        }
-
-        function drawGuideCharacter() {
-            const currentChar = hiraganaData[currentCategory][currentIndex];
-            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
-            guideCtx.font = 'bold 200px sans-serif';
-            guideCtx.fillStyle = '#764ba2';
-            guideCtx.textAlign = 'center';
-            guideCtx.textBaseline = 'middle';
-            guideCtx.fillText(currentChar.char, guideCanvas.width / 2, guideCanvas.height / 2);
-        }
-
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches ? e.touches[0] : e;
-            return {
-                x: touch.clientX - rect.left,
-                y: touch.clientY - rect.top
-            };
-        }
-
-        function startDrawing(e) {
-            e.preventDefault();
-            isDrawing = true;
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            e.preventDefault();
-            const pos = getPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function toggleGuide() {
-            showGuide = !showGuide;
-            guideCanvas.style.opacity = showGuide ? '0.3' : '0';
-        }
-
-        function nextCharacter() {
-            const categoryData = hiraganaData[currentCategory];
-            currentIndex = (currentIndex + 1) % categoryData.length;
-            updateDisplay();
-            clearCanvas();
-            drawGuideCharacter();
-        }
-
-        function selectCategory(category) {
-            currentCategory = category;
-            currentIndex = 0;
-            
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            updateDisplay();
-            clearCanvas();
-            drawGuideCharacter();
-        }
-
-        function updateDisplay() {
-            const currentChar = hiraganaData[currentCategory][currentIndex];
-            document.getElementById('currentCharacter').textContent = currentChar.char;
-            document.getElementById('characterInfo').textContent = 
-                `${currentChar.romaji} (${currentChar.korean})`;
-            document.getElementById('strokeOrder').textContent = 
-                `획순: ${currentChar.strokes}`;
-            document.getElementById('progressText').textContent = 
-                `${currentIndex + 1} / ${hiraganaData[currentCategory].length}`;
-        }
-
-        // Event listeners
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        canvas.addEventListener('touchstart', startDrawing);
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        window.addEventListener('resize', initCanvas);
-        
-        initCanvas();
-        updateDisplay();
-    </script>
 </body>
 </html>
