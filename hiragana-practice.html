@@ -31,10 +31,31 @@
         }
 
         h1 {
-            text-align: center;
             color: #667eea;
-            margin-bottom: 20px;
             font-size: 28px;
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            background: #e9ecef;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-right: 15px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #dee2e6;
+            transform: translateX(-3px);
         }
 
         .character-display {
@@ -76,7 +97,7 @@
             top: 0;
             left: 0;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0;
         }
 
         .controls {
@@ -169,7 +190,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>🇯🇵 히라가나 따라쓰기</h1>
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>🇯🇵 히라가나 따라쓰기</h1>
+        </div>
         
         <div class="category-selector">
             <button class="category-btn active" onclick="selectCategory('basic')">あ행</button>
@@ -212,70 +236,116 @@
     <script>
         const hiraganaData = {
             basic: [
-                { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: 왼→오른, 곡선, 세로' },
-                { char: 'い', romaji: 'i', korean: '이', strokes: '2획: 세로, 세로' },
-                { char: 'う', romaji: 'u', korean: '우', strokes: '2획: 가로, 곡선' },
-                { char: 'え', romaji: 'e', korean: '에', strokes: '2획: 가로+곡선, 가로' },
-                { char: 'お', romaji: 'o', korean: '오', strokes: '3획: 가로, 세로, 곡선' }
+                { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: ① 위 가로 획 → ② 오른쪽 세로+곡선 획 → ③ 왼쪽 곡선 획', 
+                  strokeOrder: [[0.25, 0.25, 0.65, 0.28], [0.55, 0.25, 0.58, 0.75], [0.28, 0.45, 0.42, 0.78]] },
+                { char: 'い', romaji: 'i', korean: '이', strokes: '2획: ① 왼쪽 세로 획 → ② 오른쪽 세로 획', 
+                  strokeOrder: [[0.38, 0.28, 0.35, 0.72], [0.62, 0.23, 0.65, 0.75]] },
+                { char: 'う', romaji: 'u', korean: '우', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.30, 0.35, 0.55, 0.35], [0.40, 0.50, 0.60, 0.72]] },
+                { char: 'え', romaji: 'e', korean: '에', strokes: '2획: ① 위에서 아래로 곡선 획 → ② 아래 가로 획', 
+                  strokeOrder: [[0.30, 0.32, 0.62, 0.58], [0.32, 0.68, 0.68, 0.68]] },
+                { char: 'お', romaji: 'o', korean: '오', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.28], [0.45, 0.28, 0.45, 0.48], [0.32, 0.52, 0.62, 0.75]] }
             ],
             ka: [
-                { char: 'か', romaji: 'ka', korean: '카', strokes: '3획' },
-                { char: 'き', romaji: 'ki', korean: '키', strokes: '4획' },
-                { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획' },
-                { char: 'け', romaji: 'ke', korean: '케', strokes: '3획' },
-                { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획' }
+                { char: 'か', romaji: 'ka', korean: '카', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 오른쪽 사선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.58, 0.32], [0.42, 0.32, 0.42, 0.72], [0.55, 0.48, 0.65, 0.75]] },
+                { char: 'き', romaji: 'ki', korean: '키', strokes: '4획: ① 위 가로 획 → ② 왼쪽 세로 획 → ③ 오른쪽 위 사선 → ④ 오른쪽 아래 사선', 
+                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48], [0.50, 0.55, 0.68, 0.68]] },
+                { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획: ① 위에서 아래로 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.65, 0.68]] },
+                { char: 'け', romaji: 'ke', korean: '케', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 오른쪽 사선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.55, 0.32], [0.38, 0.32, 0.38, 0.72], [0.50, 0.48, 0.68, 0.68]] },
+                { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획: ① 위 가로 획 → ② 아래 가로 획', 
+                  strokeOrder: [[0.32, 0.35, 0.62, 0.35], [0.38, 0.52, 0.65, 0.65]] }
             ],
             sa: [
-                { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획' },
-                { char: 'し', romaji: 'shi', korean: '시', strokes: '1획' },
-                { char: 'す', romaji: 'su', korean: '스', strokes: '2획' },
-                { char: 'せ', romaji: 'se', korean: '세', strokes: '3획' },
-                { char: 'そ', romaji: 'so', korean: '소', strokes: '1획' }
+                { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.32], [0.38, 0.45, 0.58, 0.48], [0.35, 0.60, 0.65, 0.75]] },
+                { char: 'し', romaji: 'shi', korean: '시', strokes: '1획: ① 위에서 아래로 곡선 획', 
+                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
+                { char: 'す', romaji: 'su', korean: '스', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.35, 0.58, 0.38], [0.38, 0.50, 0.65, 0.72]] },
+                { char: 'せ', romaji: 'se', korean: '세', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.58, 0.32], [0.32, 0.48, 0.65, 0.52], [0.38, 0.65, 0.65, 0.75]] },
+                { char: 'そ', romaji: 'so', korean: '소', strokes: '1획: ① 위에서 아래로 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.65, 0.72]] }
             ],
             ta: [
-                { char: 'た', romaji: 'ta', korean: '타', strokes: '4획' },
-                { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획' },
-                { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획' },
-                { char: 'て', romaji: 'te', korean: '테', strokes: '1획' },
-                { char: 'と', romaji: 'to', korean: '토', strokes: '2획' }
+                { char: 'た', romaji: 'ta', korean: '타', strokes: '4획: ① 맨 위 가로 획 → ② 세로 획 → ③ 중간 가로 획 → ④ 아래 세로 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.28], [0.45, 0.28, 0.45, 0.48], [0.32, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.45, 0.62, 0.75]] },
+                { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획: ① 왼쪽에서 오른쪽으로 곡선 획', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.68]] },
+                { char: 'て', romaji: 'te', korean: '테', strokes: '1획: ① 왼쪽 위에서 오른쪽 아래로 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.65, 0.72]] },
+                { char: 'と', romaji: 'to', korean: '토', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.48, 0.65, 0.72]] }
             ],
             na: [
-                { char: 'な', romaji: 'na', korean: '나', strokes: '4획' },
-                { char: 'に', romaji: 'ni', korean: '니', strokes: '3획' },
-                { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획' },
-                { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획' },
-                { char: 'の', romaji: 'no', korean: '노', strokes: '1획' }
+                { char: 'な', romaji: 'na', korean: '나', strokes: '4획: ① 맨 위 가로 획 → ② 왼쪽 세로 획 → ③ 중간 가로 획 → ④ 오른쪽 세로 획', 
+                  strokeOrder: [[0.28, 0.28, 0.58, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'に', romaji: 'ni', korean: '니', strokes: '3획: ① 위 가로 획 → ② 아래 가로 획 → ③ 오른쪽 세로 획', 
+                  strokeOrder: [[0.32, 0.32, 0.58, 0.38], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.58, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.52, 0.38], [0.35, 0.48, 0.65, 0.75]] },
+                { char: 'の', romaji: 'no', korean: '노', strokes: '1획: ① 나선형 곡선 획 (한 붓 그리기)', 
+                  strokeOrder: [[0.32, 0.28, 0.65, 0.72]] }
             ],
             ha: [
-                { char: 'は', romaji: 'ha', korean: '하', strokes: '3획' },
-                { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획' },
-                { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획' },
-                { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획' },
-                { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획' }
+                { char: 'は', romaji: 'ha', korean: '하', strokes: '3획: ① 왼쪽 위 가로 획 → ② 왼쪽 세로 획 → ③ 오른쪽 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.32, 0.38, 0.72], [0.52, 0.38, 0.68, 0.75]] },
+                { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획: ① 왼쪽 위 점 → ② 위 가로 획 → ③ 중간 가로 획 → ④ 아래 세로 획', 
+                  strokeOrder: [[0.28, 0.28, 0.42, 0.32], [0.32, 0.38, 0.58, 0.42], [0.48, 0.48, 0.65, 0.58], [0.42, 0.65, 0.58, 0.75]] },
+                { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획: ① 왼쪽에서 오른쪽으로 사선 획', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
+                { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획: ① 맨 위 가로 획 → ② 왼쪽 세로 획 → ③ 중간 가로 획 → ④ 오른쪽 세로 획', 
+                  strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] }
             ],
             ma: [
-                { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획' },
-                { char: 'み', romaji: 'mi', korean: '미', strokes: '2획' },
-                { char: 'む', romaji: 'mu', korean: '무', strokes: '3획' },
-                { char: 'め', romaji: 'me', korean: '메', strokes: '2획' },
-                { char: 'も', romaji: 'mo', korean: '모', strokes: '3획' }
+                { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.28], [0.45, 0.28, 0.45, 0.48], [0.32, 0.52, 0.65, 0.75]] },
+                { char: 'み', romaji: 'mi', korean: '미', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.58, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'む', romaji: 'mu', korean: '무', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.28, 0.42, 0.65, 0.48], [0.42, 0.55, 0.58, 0.75]] },
+                { char: 'め', romaji: 'me', korean: '메', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.58, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'も', romaji: 'mo', korean: '모', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.28, 0.48, 0.65, 0.52], [0.42, 0.60, 0.52, 0.75]] }
             ],
             ya: [
-                { char: 'や', romaji: 'ya', korean: '야', strokes: '3획' },
-                { char: 'ゆ', romaji: 'yu', korean: '유', strokes: '2획' },
-                { char: 'よ', romaji: 'yo', korean: '요', strokes: '2획' }
+                { char: 'や', romaji: 'ya', korean: '야', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.32], [0.38, 0.48, 0.58, 0.52], [0.35, 0.65, 0.65, 0.75]] },
+                { char: 'ゆ', romaji: 'yu', korean: '유', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.52, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'よ', romaji: 'yo', korean: '요', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.62, 0.38], [0.38, 0.52, 0.65, 0.75]] }
             ],
             ra: [
-                { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획' },
-                { char: 'り', romaji: 'ri', korean: '리', strokes: '2획' },
-                { char: 'る', romaji: 'ru', korean: '루', strokes: '1획' },
-                { char: 'れ', romaji: 're', korean: '레', strokes: '2획' },
-                { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획' }
+                { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.75]] },
+                { char: 'り', romaji: 'ri', korean: '리', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.75]] },
+                { char: 'る', romaji: 'ru', korean: '루', strokes: '1획: ① 위에서 아래로 나선형 곡선 획', 
+                  strokeOrder: [[0.32, 0.32, 0.65, 0.75]] },
+                { char: 'れ', romaji: 're', korean: '레', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.58, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획', 
+                  strokeOrder: [[0.32, 0.28, 0.58, 0.28], [0.28, 0.42, 0.65, 0.48], [0.42, 0.55, 0.52, 0.75]] }
             ],
             wa: [
-                { char: 'わ', romaji: 'wa', korean: '와', strokes: '2획' },
-                { char: 'を', romaji: 'wo/o', korean: '오(조사)', strokes: '3획' },
-                { char: 'ん', romaji: 'n', korean: '응', strokes: '1획' }
+                { char: 'わ', romaji: 'wa', korean: '와', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.32, 0.62, 0.38], [0.38, 0.48, 0.65, 0.75]] },
+                { char: 'を', romaji: 'wo/o', korean: '오(조사)', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.32], [0.38, 0.48, 0.58, 0.52], [0.35, 0.65, 0.65, 0.75]] },
+                { char: 'ん', romaji: 'n', korean: '응', strokes: '1획: ① 왼쪽에서 오른쪽으로 곡선 획', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.72]] }
             ]
         };
 
@@ -401,6 +471,10 @@
         canvas.addEventListener('touchend', stopDrawing);
 
         window.addEventListener('resize', initCanvas);
+        
+        function goBack() {
+            window.location.href = 'index.html';
+        }
         
         initCanvas();
         updateDisplay();
