@@ -577,7 +577,7 @@
             fontSize = fontSize * (targetWidth / textWidth);
             
             // Limit maximum font size to 80% of canvas height
-            const maxFontSize = guideCanvas.height * 0.8;
+            const maxFontSize = guideCanvas.height * 0.9;
             fontSize = Math.min(fontSize, maxFontSize);
             
             guideCtx.font = `bold ${fontSize}px sans-serif`;
