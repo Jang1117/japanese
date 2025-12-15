@@ -404,7 +404,21 @@
         function drawGuideSentence() {
             const sentence = sentences[currentLevel][currentIndex];
             guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
-            guideCtx.font = 'bold 40px sans-serif';
+            
+            // Start with a large font size and measure
+            let fontSize = 100;
+            guideCtx.font = `bold ${fontSize}px sans-serif`;
+            let textWidth = guideCtx.measureText(sentence.japanese).width;
+            
+            // Adjust font size to fit 90% of canvas width
+            const targetWidth = guideCanvas.width * 0.9;
+            fontSize = fontSize * (targetWidth / textWidth);
+            
+            // Limit maximum font size to 80% of canvas height
+            const maxFontSize = guideCanvas.height * 0.8;
+            fontSize = Math.min(fontSize, maxFontSize);
+            
+            guideCtx.font = `bold ${fontSize}px sans-serif`;
             guideCtx.fillStyle = '#00f2fe';
             guideCtx.textAlign = 'center';
             guideCtx.textBaseline = 'middle';
