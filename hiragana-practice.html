@@ -31,9 +31,9 @@
         }
 
         h1 {
-            color: #667eea;  /* 히라가나는 #667eea, 문장연습은 #4facfe */
+            color: #667eea;
             font-size: 24px;
-            flex: none;      /* flex: 1에서 flex: none으로 */
+            flex: none;
         }
 
         .header {
@@ -170,13 +170,13 @@
         }
 
         .category-btn {
-            flex: 1 1 calc(16.666% - 6px);
-            min-width: 65px;
+            flex: 1 1 calc(20% - 6px);
+            min-width: 80px;
             padding: 8px 4px;
             background: #e9ecef;
             color: #495057;
             border: 2px solid transparent;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .category-btn.active {
@@ -205,31 +205,22 @@
         
         <div class="category-selector">
             <button class="category-btn active" onclick="selectCategory('basic')">あ행</button>
-            <button class="category-btn" onclick="selectCategory('ka')">か행</button>
-            <button class="category-btn" onclick="selectCategory('sa')">さ행</button>
-            <button class="category-btn" onclick="selectCategory('ta')">た행</button>
+            <button class="category-btn" onclick="selectCategory('ka')">か/が행</button>
+            <button class="category-btn" onclick="selectCategory('sa')">さ/ざ행</button>
+            <button class="category-btn" onclick="selectCategory('ta')">た/だ행</button>
             <button class="category-btn" onclick="selectCategory('na')">な행</button>
-            <button class="category-btn" onclick="selectCategory('ha')">は행</button>
+            <button class="category-btn" onclick="selectCategory('ha')">は/ば/ぱ행</button>
             <button class="category-btn" onclick="selectCategory('ma')">ま행</button>
             <button class="category-btn" onclick="selectCategory('ya')">や행</button>
             <button class="category-btn" onclick="selectCategory('ra')">ら행</button>
             <button class="category-btn" onclick="selectCategory('wa')">わ행</button>
-            <button class="category-btn" onclick="selectCategory('ga')">탁음 が</button>
-            <button class="category-btn" onclick="selectCategory('za')">탁음 ざ</button>
-            <button class="category-btn" onclick="selectCategory('da')">탁음 だ</button>
-            <button class="category-btn" onclick="selectCategory('ba')">탁음 ば</button>
-            <button class="category-btn" onclick="selectCategory('pa')">반탁음 ぱ</button>
-            <button class="category-btn" onclick="selectCategory('kya')">요음 きゃ</button>
-            <button class="category-btn" onclick="selectCategory('sha')">요음 しゃ</button>
-            <button class="category-btn" onclick="selectCategory('cha')">요음 ちゃ</button>
-            <button class="category-btn" onclick="selectCategory('nya')">요음 にゃ</button>
-            <button class="category-btn" onclick="selectCategory('hya')">요음 ひゃ</button>
-            <button class="category-btn" onclick="selectCategory('mya')">요음 みゃ</button>
-            <button class="category-btn" onclick="selectCategory('rya')">요음 りゃ</button>
-            <button class="category-btn" onclick="selectCategory('gya')">요음 ぎゃ</button>
-            <button class="category-btn" onclick="selectCategory('ja')">요음 じゃ</button>
-            <button class="category-btn" onclick="selectCategory('bya')">요음 びゃ</button>
-            <button class="category-btn" onclick="selectCategory('pya')">요음 ぴゃ</button>
+            <button class="category-btn" onclick="selectCategory('kya')">きゃ/ぎゃ</button>
+            <button class="category-btn" onclick="selectCategory('sha')">しゃ/じゃ</button>
+            <button class="category-btn" onclick="selectCategory('cha')">ちゃ</button>
+            <button class="category-btn" onclick="selectCategory('nya')">にゃ</button>
+            <button class="category-btn" onclick="selectCategory('hya')">ひゃ/びゃ/ぴゃ</button>
+            <button class="category-btn" onclick="selectCategory('mya')">みゃ</button>
+            <button class="category-btn" onclick="selectCategory('rya')">りゃ</button>
         </div>
 
         <div class="progress">
@@ -281,6 +272,16 @@
                 { char: 'け', romaji: 'ke', korean: '케', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 오른쪽 사선 획', 
                   strokeOrder: [[0.28, 0.28, 0.55, 0.32], [0.38, 0.32, 0.38, 0.72], [0.50, 0.48, 0.68, 0.68]] },
                 { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획: ① 위 가로 획 → ② 아래 가로 획', 
+                  strokeOrder: [[0.32, 0.35, 0.62, 0.35], [0.38, 0.52, 0.65, 0.65]] },
+                { char: 'が', romaji: 'ga', korean: '가', strokes: '3획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.58, 0.32], [0.42, 0.32, 0.42, 0.72], [0.55, 0.48, 0.65, 0.75]] },
+                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: '4획 + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48], [0.50, 0.55, 0.68, 0.68]] },
+                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: '1획 + 탁점', 
+                  strokeOrder: [[0.32, 0.32, 0.65, 0.68]] },
+                { char: 'げ', romaji: 'ge', korean: '게', strokes: '3획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.55, 0.32], [0.38, 0.32, 0.38, 0.72], [0.50, 0.48, 0.68, 0.68]] },
+                { char: 'ご', romaji: 'go', korean: '고', strokes: '2획 + 탁점', 
                   strokeOrder: [[0.32, 0.35, 0.62, 0.35], [0.38, 0.52, 0.65, 0.65]] }
             ],
             sa: [
@@ -293,6 +294,16 @@
                 { char: 'せ', romaji: 'se', korean: '세', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획', 
                   strokeOrder: [[0.28, 0.32, 0.58, 0.32], [0.32, 0.48, 0.65, 0.52], [0.38, 0.65, 0.65, 0.75]] },
                 { char: 'そ', romaji: 'so', korean: '소', strokes: '1획: ① 위에서 아래로 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.65, 0.72]] },
+                { char: 'ざ', romaji: 'za', korean: '자', strokes: '3획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.32], [0.38, 0.45, 0.58, 0.48], [0.35, 0.60, 0.65, 0.75]] },
+                { char: 'じ', romaji: 'ji', korean: '지', strokes: '1획 + 탁점', 
+                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
+                { char: 'ず', romaji: 'zu', korean: '즈', strokes: '2획 + 탁점', 
+                  strokeOrder: [[0.28, 0.35, 0.58, 0.38], [0.38, 0.50, 0.65, 0.72]] },
+                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: '3획 + 탁점', 
+                  strokeOrder: [[0.28, 0.32, 0.58, 0.32], [0.32, 0.48, 0.65, 0.52], [0.38, 0.65, 0.65, 0.75]] },
+                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: '1획 + 탁점', 
                   strokeOrder: [[0.32, 0.28, 0.65, 0.72]] }
             ],
             ta: [
@@ -305,6 +316,16 @@
                 { char: 'て', romaji: 'te', korean: '테', strokes: '1획: ① 왼쪽 위에서 오른쪽 아래로 곡선 획', 
                   strokeOrder: [[0.32, 0.32, 0.65, 0.72]] },
                 { char: 'と', romaji: 'to', korean: '토', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획', 
+                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.48, 0.65, 0.72]] },
+                { char: 'だ', romaji: 'da', korean: '다', strokes: '4획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.62, 0.28], [0.45, 0.28, 0.45, 0.48], [0.32, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'ぢ', romaji: 'ji', korean: '지', strokes: '2획 + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.45, 0.62, 0.75]] },
+                { char: 'づ', romaji: 'zu', korean: '즈', strokes: '1획 + 탁점', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.68]] },
+                { char: 'で', romaji: 'de', korean: '데', strokes: '1획 + 탁점', 
+                  strokeOrder: [[0.32, 0.32, 0.65, 0.72]] },
+                { char: 'ど', romaji: 'do', korean: '도', strokes: '2획 + 탁점', 
                   strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.48, 0.65, 0.72]] }
             ],
             na: [
@@ -329,6 +350,26 @@
                 { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획: ① 왼쪽에서 오른쪽으로 사선 획', 
                   strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
                 { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획: ① 맨 위 가로 획 → ② 왼쪽 세로 획 → ③ 중간 가로 획 → ④ 오른쪽 세로 획', 
+                  strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'ば', romaji: 'ba', korean: '바', strokes: '3획 + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.32, 0.38, 0.72], [0.52, 0.38, 0.68, 0.75]] },
+                { char: 'び', romaji: 'bi', korean: '비', strokes: '2획 + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: '4획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.42, 0.32], [0.32, 0.38, 0.58, 0.42], [0.48, 0.48, 0.65, 0.58], [0.42, 0.65, 0.58, 0.75]] },
+                { char: 'べ', romaji: 'be', korean: '베', strokes: '1획 + 탁점', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
+                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: '4획 + 탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
+                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: '3획 + 반탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.32, 0.38, 0.72], [0.52, 0.38, 0.68, 0.75]] },
+                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: '2획 + 반탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: '4획 + 반탁점', 
+                  strokeOrder: [[0.28, 0.28, 0.42, 0.32], [0.32, 0.38, 0.58, 0.42], [0.48, 0.48, 0.65, 0.58], [0.42, 0.65, 0.58, 0.75]] },
+                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: '1획 + 반탁점', 
+                  strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
+                { char: 'ぽ', romaji: 'po', korean: '포', strokes: '4획 + 반탁점', 
                   strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] }
             ],
             ma: [
@@ -372,67 +413,7 @@
                   strokeOrder: [[0.32, 0.42, 0.65, 0.72]] }
             ],
             // 탁음 (Dakuten)
-            ga: [
-                { char: 'が', romaji: 'ga', korean: '가', strokes: '3획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.58, 0.32], [0.42, 0.32, 0.42, 0.72], [0.55, 0.48, 0.65, 0.75]] },
-                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: '4획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48], [0.50, 0.55, 0.68, 0.68]] },
-                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.32, 0.32, 0.65, 0.68]] },
-                { char: 'げ', romaji: 'ge', korean: '게', strokes: '3획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.55, 0.32], [0.38, 0.32, 0.38, 0.72], [0.50, 0.48, 0.68, 0.68]] },
-                { char: 'ご', romaji: 'go', korean: '고', strokes: '2획 + 탁점', 
-                  strokeOrder: [[0.32, 0.35, 0.62, 0.35], [0.38, 0.52, 0.65, 0.65]] }
-            ],
-            za: [
-                { char: 'ざ', romaji: 'za', korean: '자', strokes: '3획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.62, 0.32], [0.38, 0.45, 0.58, 0.48], [0.35, 0.60, 0.65, 0.75]] },
-                { char: 'じ', romaji: 'ji', korean: '지', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
-                { char: 'ず', romaji: 'zu', korean: '즈', strokes: '2획 + 탁점', 
-                  strokeOrder: [[0.28, 0.35, 0.58, 0.38], [0.38, 0.50, 0.65, 0.72]] },
-                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: '3획 + 탁점', 
-                  strokeOrder: [[0.28, 0.32, 0.58, 0.32], [0.32, 0.48, 0.65, 0.52], [0.38, 0.65, 0.65, 0.75]] },
-                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.65, 0.72]] }
-            ],
-            da: [
-                { char: 'だ', romaji: 'da', korean: '다', strokes: '4획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.62, 0.28], [0.45, 0.28, 0.45, 0.48], [0.32, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] },
-                { char: 'ぢ', romaji: 'ji', korean: '지', strokes: '2획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.45, 0.62, 0.75]] },
-                { char: 'づ', romaji: 'zu', korean: '즈', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.32, 0.42, 0.65, 0.68]] },
-                { char: 'で', romaji: 'de', korean: '데', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.32, 0.32, 0.65, 0.72]] },
-                { char: 'ど', romaji: 'do', korean: '도', strokes: '2획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.58, 0.32], [0.38, 0.48, 0.65, 0.72]] }
-            ],
-            ba: [
-                { char: 'ば', romaji: 'ba', korean: '바', strokes: '3획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.32, 0.38, 0.72], [0.52, 0.38, 0.68, 0.75]] },
-                { char: 'び', romaji: 'bi', korean: '비', strokes: '2획 + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: '4획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.42, 0.32], [0.32, 0.38, 0.58, 0.42], [0.48, 0.48, 0.65, 0.58], [0.42, 0.65, 0.58, 0.75]] },
-                { char: 'べ', romaji: 'be', korean: '베', strokes: '1획 + 탁점', 
-                  strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
-                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: '4획 + 탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] }
-            ],
             // 반탁음 (Handakuten)
-            pa: [
-                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: '3획 + 반탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.32, 0.38, 0.72], [0.52, 0.38, 0.68, 0.75]] },
-                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: '2획 + 반탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: '4획 + 반탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.42, 0.32], [0.32, 0.38, 0.58, 0.42], [0.48, 0.48, 0.65, 0.58], [0.42, 0.65, 0.58, 0.75]] },
-                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: '1획 + 반탁점', 
-                  strokeOrder: [[0.32, 0.42, 0.65, 0.62]] },
-                { char: 'ぽ', romaji: 'po', korean: '포', strokes: '4획 + 반탁점', 
-                  strokeOrder: [[0.28, 0.28, 0.55, 0.28], [0.42, 0.28, 0.42, 0.48], [0.28, 0.55, 0.65, 0.60], [0.48, 0.60, 0.48, 0.75]] }
-            ],
             // 요음 (Yoon)
             kya: [
                 { char: 'きゃ', romaji: 'kya', korean: '챠', strokes: 'き + 작은 ゃ', 
@@ -440,6 +421,12 @@
                 { char: 'きゅ', romaji: 'kyu', korean: '큐', strokes: 'き + 작은 ゅ', 
                   strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
                 { char: 'きょ', romaji: 'kyo', korean: '쿄', strokes: 'き + 작은 ょ', 
+                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
+                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
+                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
+                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ + 탁점', 
                   strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] }
             ],
             sha: [
@@ -448,6 +435,12 @@
                 { char: 'しゅ', romaji: 'shu', korean: '슈', strokes: 'し + 작은 ゅ', 
                   strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
                 { char: 'しょ', romaji: 'sho', korean: '쇼', strokes: 'し + 작은 ょ', 
+                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
+                { char: 'じゃ', romaji: 'ja', korean: '자', strokes: 'じ + 작은 ゃ + 탁점', 
+                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
+                { char: 'じゅ', romaji: 'ju', korean: '주', strokes: 'じ + 작은 ゅ + 탁점', 
+                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
+                { char: 'じょ', romaji: 'jo', korean: '조', strokes: 'じ + 작은 ょ + 탁점', 
                   strokeOrder: [[0.38, 0.28, 0.58, 0.75]] }
             ],
             cha: [
@@ -472,6 +465,18 @@
                 { char: 'ひゅ', romaji: 'hyu', korean: '휴', strokes: 'ひ + 작은 ゅ', 
                   strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
                 { char: 'ひょ', romaji: 'hyo', korean: '효', strokes: 'ひ + 작은 ょ', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ + 탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ + 반탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ + 반탁점', 
+                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
+                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ + 반탁점', 
                   strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] }
             ],
             mya: [
@@ -489,108 +494,30 @@
                   strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.75]] },
                 { char: 'りょ', romaji: 'ryo', korean: '료', strokes: 'り + 작은 ょ', 
                   strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.75]] }
-            ],
-            gya: [
-                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
-                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] },
-                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.48, 0.28], [0.38, 0.28, 0.38, 0.72], [0.50, 0.38, 0.68, 0.48]] }
-            ],
-            ja: [
-                { char: 'じゃ', romaji: 'ja', korean: '자', strokes: 'じ + 작은 ゃ + 탁점', 
-                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
-                { char: 'じゅ', romaji: 'ju', korean: '주', strokes: 'じ + 작은 ゅ + 탁점', 
-                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] },
-                { char: 'じょ', romaji: 'jo', korean: '조', strokes: 'じ + 작은 ょ + 탁점', 
-                  strokeOrder: [[0.38, 0.28, 0.58, 0.75]] }
-            ],
-            bya: [
-                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ + 탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] }
-            ],
-            pya: [
-                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ + 반탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ + 반탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] },
-                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ + 반탁점', 
-                  strokeOrder: [[0.32, 0.28, 0.52, 0.32], [0.38, 0.42, 0.65, 0.72]] }
-            ]
-        };
+            ],        };
 
-        let currentCategory = 'basic';
-        let currentIndex = 0;
-        let isDrawing = false;
-        let showGuide = false;
-
-        const canvas = document.getElementById('drawingCanvas');
-        const guideCanvas = document.getElementById('guideCanvas');
-        const ctx = canvas.getContext('2d');
-        const guideCtx = guideCanvas.getContext('2d');
-
-        function initCanvas() {
-            const container = canvas.parentElement;
-            const rect = container.getBoundingClientRect();
-            
-            canvas.width = rect.width;
-            canvas.height = 300;
-            guideCanvas.width = rect.width;
-            guideCanvas.height = 300;
-
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.strokeStyle = '#667eea';
-
-            drawGuideCharacter();
-        }
-
-        function drawGuideCharacter() {
+        function updateDisplay() {
             const currentChar = hiraganaData[currentCategory][currentIndex];
-            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            document.getElementById('charDisplay').textContent = currentChar.char;
+            document.getElementById('romajiText').textContent = currentChar.romaji;
+            document.getElementById('koreanText').textContent = currentChar.korean;
+            document.getElementById('strokeCount').textContent = `획순: ${currentChar.strokes}`;
+            document.getElementById('progressText').textContent = 
+                `${currentIndex + 1} / ${hiraganaData[currentCategory].length}`;
+        }
+
+        function selectCategory(category) {
+            currentCategory = category;
+            currentIndex = 0;
             
-            // Calculate font size to fill 80% of canvas height
-            const fontSize = Math.min(guideCanvas.width, guideCanvas.height) * 0.8;
-            guideCtx.font = `bold ${fontSize}px sans-serif`;
-            guideCtx.fillStyle = '#764ba2';
-            guideCtx.textAlign = 'center';
-            guideCtx.textBaseline = 'middle';
-            guideCtx.fillText(currentChar.char, guideCanvas.width / 2, guideCanvas.height / 2);
-        }
-
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches ? e.touches[0] : e;
-            return {
-                x: touch.clientX - rect.left,
-                y: touch.clientY - rect.top
-            };
-        }
-
-        function startDrawing(e) {
-            e.preventDefault();
-            isDrawing = true;
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            e.preventDefault();
-            const pos = getPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateDisplay();
+            clearCanvas();
+            drawGuideCharacter();
         }
 
         function clearCanvas() {
@@ -610,29 +537,32 @@
             drawGuideCharacter();
         }
 
-        function selectCategory(category) {
-            currentCategory = category;
-            currentIndex = 0;
-            
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            updateDisplay();
-            clearCanvas();
-            drawGuideCharacter();
+        function goBack() {
+            window.location.href = 'index.html';
         }
 
-        function updateDisplay() {
-            const currentChar = hiraganaData[currentCategory][currentIndex];
-            document.getElementById('currentCharacter').textContent = currentChar.char;
-            document.getElementById('characterInfo').textContent = 
-                `${currentChar.romaji} (${currentChar.korean})`;
-            document.getElementById('strokeOrder').textContent = 
-                `획순: ${currentChar.strokes}`;
-            document.getElementById('progressText').textContent = 
-                `${currentIndex + 1} / ${hiraganaData[currentCategory].length}`;
+        // Drawing functions
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
         }
 
         // Event listeners
@@ -645,14 +575,17 @@
         canvas.addEventListener('touchmove', draw);
         canvas.addEventListener('touchend', stopDrawing);
 
-        window.addEventListener('resize', initCanvas);
-        
-        function goBack() {
-            window.location.href = 'index.html';
-        }
-        
-        initCanvas();
-        updateDisplay();
+        // Initialize
+        window.addEventListener('load', () => {
+            initCanvas();
+            updateDisplay();
+        });
+
+        window.addEventListener('resize', () => {
+            const savedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            initCanvas();
+            ctx.putImageData(savedImage, 0, 0);
+        });
     </script>
 </body>
 </html>
