@@ -95,7 +95,7 @@
         #drawingCanvas {
             display: block;
             width: 100%;
-            height: 300px;
+            height: 250px;
             cursor: crosshair;
             touch-action: none;
         }
@@ -172,6 +172,35 @@
             margin-bottom: 10px;
         }
 
+        .level-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .level-btn {
+            flex: 1;
+            padding: 10px;
+            background: #e9ecef;
+            color: #495057;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .level-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .level-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .category-selector {
             display: flex;
             gap: 6px;
@@ -181,13 +210,12 @@
 
         .category-btn {
             flex: 1 1 calc(20% - 6px);
-            min-width: 70px;
+            min-width: 60px;
             padding: 8px 4px;
             background: #e9ecef;
             color: #495057;
             border: 2px solid transparent;
             font-size: 13px;
-            line-height: 1.3;
         }
 
         .category-btn.active {
@@ -204,7 +232,7 @@
             border-radius: 8px;
             font-size: 14px;
             color: #1864ab;
-            min-height: 70px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -219,28 +247,13 @@
             <h1>✏️ 히라가나 따라쓰기</h1>
         </div>
         
-        <div class="category-selector">
-            <button class="category-btn active" onclick="selectCategory('basic')">あ행</button>
-            <button class="category-btn" onclick="selectCategory('ka')">か/が행</button>
-            <button class="category-btn" onclick="selectCategory('sa')">さ/ざ행</button>
-            <button class="category-btn" onclick="selectCategory('ta')">た/だ행</button>
-            <button class="category-btn" onclick="selectCategory('na')">な행</button>
-            <button class="category-btn" onclick="selectCategory('ha')">は/ば/ぱ행</button>
-            <button class="category-btn" onclick="selectCategory('ma')">ま행</button>
-            <button class="category-btn" onclick="selectCategory('ya')">や행</button>
-            <button class="category-btn" onclick="selectCategory('ra')">ら행</button>
-            <button class="category-btn" onclick="selectCategory('wa')">わ/ん행</button>
-            <button class="category-btn" onclick="selectCategory('kya')">요음 きゃ</button>
-            <button class="category-btn" onclick="selectCategory('sha')">요음 しゃ</button>
-            <button class="category-btn" onclick="selectCategory('cha')">요음 ちゃ</button>
-            <button class="category-btn" onclick="selectCategory('nya')">요음 にゃ</button>
-            <button class="category-btn" onclick="selectCategory('hya')">요음 ひゃ</button>
-            <button class="category-btn" onclick="selectCategory('mya')">요음 みゃ</button>
-            <button class="category-btn" onclick="selectCategory('rya')">요음 りゃ</button>
-            <button class="category-btn" onclick="selectCategory('gya')">요음 ぎゃ</button>
-            <button class="category-btn" onclick="selectCategory('ja')">요음 じゃ</button>
-            <button class="category-btn" onclick="selectCategory('bya')">요음 びゃ</button>
-            <button class="category-btn" onclick="selectCategory('pya')">요음 ぴゃ</button>
+        <div class="level-selector">
+            <button class="level-btn active" onclick="selectTab('basic')">청음</button>
+            <button class="level-btn" onclick="selectTab('extended')">탁음/반탁음/요음</button>
+        </div>
+
+        <div class="category-selector" id="categorySelector">
+            <!-- JavaScript로 동적 생성 -->
         </div>
 
         <div class="progress">
@@ -271,155 +284,153 @@
 
     <script>
         const hiraganaData = {
-            basic: [
-                { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: ① 위 가로 획 → ② 오른쪽 세로+곡선 획 → ③ 왼쪽 곡선 획' },
-                { char: 'い', romaji: 'i', korean: '이', strokes: '2획: ① 왼쪽 세로 획 → ② 오른쪽 세로 획' },
-                { char: 'う', romaji: 'u', korean: '우', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'え', romaji: 'e', korean: '에', strokes: '2획: ① 위에서 아래로 곡선 획 → ② 아래 가로 획' },
-                { char: 'お', romaji: 'o', korean: '오', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 아래 곡선 획' }
+            // 청음 (기본 글자만)
+            a: [
+                { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: 위→오른쪽 세로곡선→왼쪽 곡선' },
+                { char: 'い', romaji: 'i', korean: '이', strokes: '2획: 왼쪽 세로→오른쪽 세로' },
+                { char: 'う', romaji: 'u', korean: '우', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'え', romaji: 'e', korean: '에', strokes: '2획: 위→아래 곡선→아래 가로' },
+                { char: 'お', romaji: 'o', korean: '오', strokes: '3획: 위 가로→세로→아래 곡선' }
             ],
             ka: [
-                { char: 'か', romaji: 'ka', korean: '카', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 오른쪽 사선 획' },
-                { char: 'が', romaji: 'ga', korean: '가', strokes: 'か + 탁점(˝)' },
-                { char: 'き', romaji: 'ki', korean: '키', strokes: '4획: ① 위 가로 획 → ② 왼쪽 세로 획 → ③ 오른쪽 위 사선 → ④ 오른쪽 아래 사선' },
-                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: 'き + 탁점(˝)' },
-                { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획: ① 위에서 아래로 곡선 획' },
-                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: 'く + 탁점(˝)' },
-                { char: 'け', romaji: 'ke', korean: '케', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 오른쪽 사선 획' },
-                { char: 'げ', romaji: 'ge', korean: '게', strokes: 'け + 탁점(˝)' },
-                { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획: ① 위 가로 획 → ② 아래 가로 획' },
-                { char: 'ご', romaji: 'go', korean: '고', strokes: 'こ + 탁점(˝)' }
-            ],
-            sa: [
-                { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획' },
-                { char: 'ざ', romaji: 'za', korean: '자', strokes: 'さ + 탁점(˝)' },
-                { char: 'し', romaji: 'shi', korean: '시', strokes: '1획: ① 위에서 아래로 곡선 획' },
-                { char: 'じ', romaji: 'ji', korean: '지', strokes: 'し + 탁점(˝)' },
-                { char: 'す', romaji: 'su', korean: '스', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'ず', romaji: 'zu', korean: '즈', strokes: 'す + 탁점(˝)' },
-                { char: 'せ', romaji: 'se', korean: '세', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획' },
-                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: 'せ + 탁점(˝)' },
-                { char: 'そ', romaji: 'so', korean: '소', strokes: '1획: ① 위에서 아래로 곡선 획' },
-                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: 'そ + 탁점(˝)' }
-            ],
-            ta: [
-                { char: 'た', romaji: 'ta', korean: '타', strokes: '4획: ① 맨 위 가로 획 → ② 세로 획 → ③ 중간 가로 획 → ④ 아래 세로 획' },
-                { char: 'だ', romaji: 'da', korean: '다', strokes: 'た + 탁점(˝)' },
-                { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'ぢ', romaji: 'ji', korean: '지', strokes: 'ち + 탁점(˝)' },
-                { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획: ① 왼쪽에서 오른쪽으로 곡선 획' },
-                { char: 'づ', romaji: 'zu', korean: '즈', strokes: 'つ + 탁점(˝)' },
-                { char: 'て', romaji: 'te', korean: '테', strokes: '1획: ① 왼쪽 위에서 오른쪽 아래로 곡선 획' },
-                { char: 'で', romaji: 'de', korean: '데', strokes: 'て + 탁점(˝)' },
-                { char: 'と', romaji: 'to', korean: '토', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'ど', romaji: 'do', korean: '도', strokes: 'と + 탁점(˝)' }
-            ],
-            na: [
-                { char: 'な', romaji: 'na', korean: '나', strokes: '4획: ① 맨 위 가로 획 → ② 왼쪽 세로 획 → ③ 중간 가로 획 → ④ 오른쪽 세로 획' },
-                { char: 'に', romaji: 'ni', korean: '니', strokes: '3획: ① 위 가로 획 → ② 아래 가로 획 → ③ 오른쪽 세로 획' },
-                { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'の', romaji: 'no', korean: '노', strokes: '1획: ① 나선형 곡선 획 (한 붓 그리기)' }
-            ],
-            ha: [
-                { char: 'は', romaji: 'ha', korean: '하', strokes: '3획: ① 왼쪽 위 가로 획 → ② 왼쪽 세로 획 → ③ 오른쪽 곡선 획' },
-                { char: 'ば', romaji: 'ba', korean: '바', strokes: 'は + 탁점(˝)' },
-                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: 'は + 반탁점(˚)' },
-                { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'び', romaji: 'bi', korean: '비', strokes: 'ひ + 탁점(˝)' },
-                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: 'ひ + 반탁점(˚)' },
-                { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획: ① 왼쪽 위 점 → ② 위 가로 획 → ③ 중간 가로 획 → ④ 아래 세로 획' },
-                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: 'ふ + 탁점(˝)' },
-                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: 'ふ + 반탁점(˚)' },
-                { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획: ① 왼쪽에서 오른쪽으로 사선 획' },
-                { char: 'べ', romaji: 'be', korean: '베', strokes: 'へ + 탁점(˝)' },
-                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: 'へ + 반탁점(˚)' },
-                { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획: ① 맨 위 가로 획 → ② 왼쪽 세로 획 → ③ 중간 가로 획 → ④ 오른쪽 세로 획' },
-                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: 'ほ + 탁점(˝)' },
-                { char: 'ぽ', romaji: 'po', korean: '포', strokes: 'ほ + 반탁점(˚)' }
-            ],
-            ma: [
-                { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획: ① 위 가로 획 → ② 세로 획 → ③ 아래 곡선 획' },
-                { char: 'み', romaji: 'mi', korean: '미', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'む', romaji: 'mu', korean: '무', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획' },
-                { char: 'め', romaji: 'me', korean: '메', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'も', romaji: 'mo', korean: '모', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획' }
-            ],
-            ya: [
-                { char: 'や', romaji: 'ya', korean: '야', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획' },
-                { char: 'ゆ', romaji: 'yu', korean: '유', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'よ', romaji: 'yo', korean: '요', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' }
-            ],
-            ra: [
-                { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'り', romaji: 'ri', korean: '리', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'る', romaji: 'ru', korean: '루', strokes: '1획: ① 위에서 아래로 나선형 곡선 획' },
-                { char: 'れ', romaji: 're', korean: '레', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 세로 획' }
-            ],
-            wa: [
-                { char: 'わ', romaji: 'wa', korean: '와', strokes: '2획: ① 위 가로 획 → ② 아래 곡선 획' },
-                { char: 'を', romaji: 'wo/o', korean: '오(조사)', strokes: '3획: ① 위 가로 획 → ② 중간 가로 획 → ③ 아래 곡선 획' },
-                { char: 'ん', romaji: 'n', korean: '응', strokes: '1획: ① 왼쪽에서 오른쪽으로 곡선 획' }
-            ],
-            kya: [
+                { char: 'か', romaji: 'ka', korean: '카', strokes: '3획: 위 가로→세로→오른쪽 사선' },
+                { char: 'が', romaji: 'ga', korean: '가', strokes: 'か + 탁점' },
+                { char: 'き', romaji: 'ki', korean: '키', strokes: '4획: 위 가로→왼쪽 세로→오른쪽 위 사선→아래 사선' },
+                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: 'き + 탁점' },
                 { char: 'きゃ', romaji: 'kya', korean: '캬', strokes: 'き + 작은 ゃ' },
                 { char: 'きゅ', romaji: 'kyu', korean: '큐', strokes: 'き + 작은 ゅ' },
-                { char: 'きょ', romaji: 'kyo', korean: '쿄', strokes: 'き + 작은 ょ' }
+                { char: 'きょ', romaji: 'kyo', korean: '쿄', strokes: 'き + 작은 ょ' },
+                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ' },
+                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ' },
+                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ' },
+                { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획: 위→아래 곡선' },
+                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: 'く + 탁점' },
+                { char: 'け', romaji: 'ke', korean: '케', strokes: '3획: 위 가로→세로→오른쪽 사선' },
+                { char: 'げ', romaji: 'ge', korean: '게', strokes: 'け + 탁점' },
+                { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획: 위 가로→아래 가로' },
+                { char: 'ご', romaji: 'go', korean: '고', strokes: 'こ + 탁점' }
             ],
-            sha: [
+            sa: [
+                { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획: 위 가로→중간 가로→아래 곡선' },
+                { char: 'ざ', romaji: 'za', korean: '자', strokes: 'さ + 탁점' },
+                { char: 'し', romaji: 'shi', korean: '시', strokes: '1획: 위→아래 곡선' },
+                { char: 'じ', romaji: 'ji', korean: '지', strokes: 'し + 탁점' },
                 { char: 'しゃ', romaji: 'sha', korean: '샤', strokes: 'し + 작은 ゃ' },
                 { char: 'しゅ', romaji: 'shu', korean: '슈', strokes: 'し + 작은 ゅ' },
-                { char: 'しょ', romaji: 'sho', korean: '쇼', strokes: 'し + 작은 ょ' }
+                { char: 'しょ', romaji: 'sho', korean: '쇼', strokes: 'し + 작은 ょ' },
+                { char: 'じゃ', romaji: 'ja', korean: '자', strokes: 'じ + 작은 ゃ' },
+                { char: 'じゅ', romaji: 'ju', korean: '주', strokes: 'じ + 작은 ゅ' },
+                { char: 'じょ', romaji: 'jo', korean: '조', strokes: 'じ + 작은 ょ' },
+                { char: 'す', romaji: 'su', korean: '스', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'ず', romaji: 'zu', korean: '즈', strokes: 'す + 탁점' },
+                { char: 'せ', romaji: 'se', korean: '세', strokes: '3획: 위 가로→중간 가로→아래 곡선' },
+                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: 'せ + 탁점' },
+                { char: 'そ', romaji: 'so', korean: '소', strokes: '1획: 위→아래 곡선' },
+                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: 'そ + 탁점' }
             ],
-            cha: [
+            ta: [
+                { char: 'た', romaji: 'ta', korean: '타', strokes: '4획: 맨 위 가로→세로→중간 가로→아래 세로' },
+                { char: 'だ', romaji: 'da', korean: '다', strokes: 'た + 탁점' },
+                { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'ぢ', romaji: 'ji', korean: '지', strokes: 'ち + 탁점' },
                 { char: 'ちゃ', romaji: 'cha', korean: '차', strokes: 'ち + 작은 ゃ' },
                 { char: 'ちゅ', romaji: 'chu', korean: '추', strokes: 'ち + 작은 ゅ' },
-                { char: 'ちょ', romaji: 'cho', korean: '초', strokes: 'ち + 작은 ょ' }
+                { char: 'ちょ', romaji: 'cho', korean: '초', strokes: 'ち + 작은 ょ' },
+                { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획: 왼쪽→오른쪽 곡선' },
+                { char: 'づ', romaji: 'zu', korean: '즈', strokes: 'つ + 탁점' },
+                { char: 'て', romaji: 'te', korean: '테', strokes: '1획: 왼쪽 위→오른쪽 아래 곡선' },
+                { char: 'で', romaji: 'de', korean: '데', strokes: 'て + 탁점' },
+                { char: 'と', romaji: 'to', korean: '토', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'ど', romaji: 'do', korean: '도', strokes: 'と + 탁점' }
             ],
-            nya: [
+            na: [
+                { char: 'な', romaji: 'na', korean: '나', strokes: '4획: 위 가로→왼쪽 세로→중간 가로→오른쪽 세로' },
+                { char: 'に', romaji: 'ni', korean: '니', strokes: '3획: 위 가로→아래 가로→오른쪽 세로' },
                 { char: 'にゃ', romaji: 'nya', korean: '냐', strokes: 'に + 작은 ゃ' },
                 { char: 'にゅ', romaji: 'nyu', korean: '뉴', strokes: 'に + 작은 ゅ' },
-                { char: 'にょ', romaji: 'nyo', korean: '뇨', strokes: 'に + 작은 ょ' }
+                { char: 'にょ', romaji: 'nyo', korean: '뇨', strokes: 'に + 작은 ょ' },
+                { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'の', romaji: 'no', korean: '노', strokes: '1획: 나선형 곡선 (한 붓)' }
             ],
-            hya: [
+            ha: [
+                { char: 'は', romaji: 'ha', korean: '하', strokes: '3획: 왼쪽 위 가로→왼쪽 세로→오른쪽 곡선' },
+                { char: 'ば', romaji: 'ba', korean: '바', strokes: 'は + 탁점' },
+                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: 'は + 반탁점' },
+                { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'び', romaji: 'bi', korean: '비', strokes: 'ひ + 탁점' },
+                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: 'ひ + 반탁점' },
                 { char: 'ひゃ', romaji: 'hya', korean: '햐', strokes: 'ひ + 작은 ゃ' },
                 { char: 'ひゅ', romaji: 'hyu', korean: '휴', strokes: 'ひ + 작은 ゅ' },
-                { char: 'ひょ', romaji: 'hyo', korean: '효', strokes: 'ひ + 작은 ょ' }
+                { char: 'ひょ', romaji: 'hyo', korean: '효', strokes: 'ひ + 작은 ょ' },
+                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ' },
+                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ' },
+                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ' },
+                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ' },
+                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ' },
+                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ' },
+                { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획: 왼쪽 위 점→위 가로→중간 가로→아래 세로' },
+                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: 'ふ + 탁점' },
+                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: 'ふ + 반탁점' },
+                { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획: 왼쪽→오른쪽 사선' },
+                { char: 'べ', romaji: 'be', korean: '베', strokes: 'へ + 탁점' },
+                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: 'へ + 반탁점' },
+                { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획: 맨 위 가로→왼쪽 세로→중간 가로→오른쪽 세로' },
+                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: 'ほ + 탁점' },
+                { char: 'ぽ', romaji: 'po', korean: '포', strokes: 'ほ + 반탁점' }
             ],
-            mya: [
+            ma: [
+                { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획: 위 가로→세로→아래 곡선' },
+                { char: 'み', romaji: 'mi', korean: '미', strokes: '2획: 위 가로→아래 곡선' },
                 { char: 'みゃ', romaji: 'mya', korean: '먀', strokes: 'み + 작은 ゃ' },
                 { char: 'みゅ', romaji: 'myu', korean: '뮤', strokes: 'み + 작은 ゅ' },
-                { char: 'みょ', romaji: 'myo', korean: '묘', strokes: 'み + 작은 ょ' }
+                { char: 'みょ', romaji: 'myo', korean: '묘', strokes: 'み + 작은 ょ' },
+                { char: 'む', romaji: 'mu', korean: '무', strokes: '3획: 위 가로→중간 가로→아래 세로' },
+                { char: 'め', romaji: 'me', korean: '메', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'も', romaji: 'mo', korean: '모', strokes: '3획: 위 가로→중간 가로→아래 세로' }
             ],
-            rya: [
+            ya: [
+                { char: 'や', romaji: 'ya', korean: '야', strokes: '3획: 위 가로→중간 가로→아래 곡선' },
+                { char: 'ゆ', romaji: 'yu', korean: '유', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'よ', romaji: 'yo', korean: '요', strokes: '2획: 위 가로→아래 곡선' }
+            ],
+            ra: [
+                { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'り', romaji: 'ri', korean: '리', strokes: '2획: 위 가로→아래 곡선' },
                 { char: 'りゃ', romaji: 'rya', korean: '랴', strokes: 'り + 작은 ゃ' },
                 { char: 'りゅ', romaji: 'ryu', korean: '류', strokes: 'り + 작은 ゅ' },
-                { char: 'りょ', romaji: 'ryo', korean: '료', strokes: 'り + 작은 ょ' }
+                { char: 'りょ', romaji: 'ryo', korean: '료', strokes: 'り + 작은 ょ' },
+                { char: 'る', romaji: 'ru', korean: '루', strokes: '1획: 위→아래 나선형 곡선' },
+                { char: 'れ', romaji: 're', korean: '레', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획: 위 가로→중간 가로→아래 세로' }
             ],
-            gya: [
-                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ + 탁점' },
-                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ + 탁점' },
-                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ + 탁점' }
-            ],
-            ja: [
-                { char: 'じゃ', romaji: 'ja', korean: '자', strokes: 'じ + 작은 ゃ + 탁점' },
-                { char: 'じゅ', romaji: 'ju', korean: '주', strokes: 'じ + 작은 ゅ + 탁점' },
-                { char: 'じょ', romaji: 'jo', korean: '조', strokes: 'じ + 작은 ょ + 탁점' }
-            ],
-            bya: [
-                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ + 탁점' },
-                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ + 탁점' },
-                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ + 탁점' }
-            ],
-            pya: [
-                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ + 반탁점' },
-                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ + 반탁점' },
-                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ + 반탁점' }
+            wa: [
+                { char: 'わ', romaji: 'wa', korean: '와', strokes: '2획: 위 가로→아래 곡선' },
+                { char: 'を', romaji: 'wo/o', korean: '오(조사)', strokes: '3획: 위 가로→중간 가로→아래 곡선' },
+                { char: 'ん', romaji: 'n', korean: '응', strokes: '1획: 왼쪽→오른쪽 곡선' }
             ]
         };
 
-        let currentCategory = 'basic';
+        // 청음만 표시
+        const basicCategories = ['a', 'ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ya', 'ra', 'wa'];
+        // 탁음/반탁음/요음이 있는 것들만
+        const extendedCategories = ['ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ra'];
+
+        const categoryLabels = {
+            a: 'あ',
+            ka: 'か',
+            sa: 'さ',
+            ta: 'た',
+            na: 'な',
+            ha: 'は',
+            ma: 'ま',
+            ya: 'や',
+            ra: 'ら',
+            wa: 'わ'
+        };
+
+        let currentTab = 'basic';
+        let currentCategory = 'a';
         let currentIndex = 0;
         let isDrawing = false;
         let showGuide = false;
@@ -434,9 +445,9 @@
             const rect = container.getBoundingClientRect();
             
             canvas.width = rect.width;
-            canvas.height = 300;
+            canvas.height = 250;
             guideCanvas.width = rect.width;
-            guideCanvas.height = 300;
+            guideCanvas.height = 250;
 
             ctx.lineWidth = 3;
             ctx.lineCap = 'round';
@@ -526,6 +537,38 @@
             drawGuideCharacter();
         }
 
+        function selectTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateCategoryButtons();
+            
+            const categories = currentTab === 'basic' ? basicCategories : extendedCategories;
+            currentCategory = categories[0];
+            currentIndex = 0;
+            updateDisplay();
+            clearCanvas();
+            drawGuideCharacter();
+        }
+
+        function updateCategoryButtons() {
+            const categorySelector = document.getElementById('categorySelector');
+            const categories = currentTab === 'basic' ? basicCategories : extendedCategories;
+            
+            categorySelector.innerHTML = '';
+            categories.forEach((cat, index) => {
+                const button = document.createElement('button');
+                button.className = 'category-btn' + (index === 0 ? ' active' : '');
+                button.textContent = categoryLabels[cat];
+                button.onclick = () => selectCategory(cat);
+                categorySelector.appendChild(button);
+            });
+        }
+
         function updateDisplay() {
             const currentChar = hiraganaData[currentCategory][currentIndex];
             document.getElementById('currentCharacter').textContent = currentChar.char;
@@ -552,6 +595,8 @@
             window.location.href = 'index.html';
         }
         
+        // 초기화
+        updateCategoryButtons();
         initCanvas();
         updateDisplay();
     </script>
