@@ -40,13 +40,14 @@
             background: #e9ecef;
             border: none;
             border-radius: 8px;
-            padding: 10px;           /* 상하좌우 동일하게 */
+            padding: 8px;
+            width: 36px;             /* 고정 크기 */
+            height: 36px;            /* 고정 크기 */
             cursor: pointer;
             font-size: 16px;
             margin-right: 10px;
             transition: all 0.3s;
-            width: auto;             /* auto로 변경 */
-            min-width: 36px;         /* 최소 크기만 지정 */
+            flex-shrink: 0;          /* 절대 줄어들지 않음 */
         }
 
         .back-button:hover {
@@ -57,7 +58,7 @@
         h1 {
             color: #4facfe;
             font-size: 24px;
-            flex: 1;
+            flex: none;
         }
 
         .level-selector {
