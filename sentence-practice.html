@@ -40,14 +40,19 @@
             background: #e9ecef;
             border: none;
             border-radius: 8px;
-            padding: 8px;
-            width: 18px;             /* 고정 크기 */
-            height: 36px;            /* 고정 크기 */
+            padding: 0;                    /* padding을 0으로 */
+            width: 36px;
+            height: 36px;
             cursor: pointer;
             font-size: 16px;
             margin-right: 10px;
             transition: all 0.3s;
-            flex-shrink: 0;          /* 절대 줄어들지 않음 */
+            flex-shrink: 0;
+            display: flex;                 /* 추가 */
+            align-items: center;           /* 추가 */
+            justify-content: center;       /* 추가 */
+            min-width: 36px;               /* 추가 */
+            max-width: 36px;               /* 추가 */
         }
 
         .back-button:hover {
