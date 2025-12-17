@@ -39,14 +39,14 @@
         .back-button {
             background: #e9ecef;
             border: none;
-            border-radius: 10px;
-            padding: 10px 0px;
-            width: auto;   
+            border-radius: 8px;
+            padding: 10px;           /* 상하좌우 동일하게 */
             cursor: pointer;
             font-size: 16px;
             margin-right: 10px;
             transition: all 0.3s;
-            flex-shrink: 0;
+            width: auto;             /* auto로 변경 */
+            min-width: 36px;         /* 최소 크기만 지정 */
         }
 
         .back-button:hover {
