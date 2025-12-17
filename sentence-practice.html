@@ -40,7 +40,7 @@
             background: #e9ecef;
             border: none;
             border-radius: 8px;
-            padding: 0;                    /* padding을 0으로 */
+            padding: 0;
             width: 36px;
             height: 36px;
             cursor: pointer;
@@ -48,11 +48,11 @@
             margin-right: 10px;
             transition: all 0.3s;
             flex-shrink: 0;
-            display: flex;                 /* 추가 */
-            align-items: center;           /* 추가 */
-            justify-content: center;       /* 추가 */
-            min-width: 36px;               /* 추가 */
-            max-width: 36px;               /* 추가 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            max-width: 36px;
         }
 
         .back-button:hover {
@@ -203,6 +203,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-prev {
+            background: #74c0fc;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #4dabf7;
+            transform: translateY(-2px);
+        }
+
         .btn-next {
             background: #51cf66;
             color: white;
@@ -280,6 +290,7 @@
         <div class="controls">
             <button class="btn-clear" onclick="clearCanvas()">지우기</button>
             <button class="btn-guide" onclick="toggleGuide()">가이드</button>
+            <button class="btn-prev" onclick="prevSentence()">이전</button>
             <button class="btn-next" onclick="nextSentence()">다음</button>
         </div>
 
@@ -687,6 +698,14 @@
         function nextSentence() {
             const levelData = sentences[currentLevel];
             currentIndex = (currentIndex + 1) % levelData.length;
+            updateDisplay();
+            clearCanvas();
+            drawGuideSentence();
+        }
+
+        function prevSentence() {
+            const levelData = sentences[currentLevel];
+            currentIndex = (currentIndex - 1 + levelData.length) % levelData.length;
             updateDisplay();
             clearCanvas();
             drawGuideSentence();
