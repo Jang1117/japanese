@@ -204,6 +204,11 @@
             border-radius: 8px;
             font-size: 14px;
             color: #1864ab;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -252,15 +257,15 @@
             <canvas id="drawingCanvas"></canvas>
         </div>
 
-        <div class="stroke-order" id="strokeOrder">
-            획순: 왼쪽에서 오른쪽으로, 위에서 아래로
-        </div>
-
         <div class="controls">
             <button class="btn-clear" onclick="clearCanvas()">지우기</button>
             <button class="btn-show-guide" onclick="toggleGuide()">가이드</button>
             <button class="btn-prev" onclick="prevCharacter()">이전</button>
             <button class="btn-next" onclick="nextCharacter()">다음</button>
+        </div>
+
+        <div class="stroke-order" id="strokeOrder">
+            획순: 왼쪽에서 오른쪽으로, 위에서 아래로
         </div>
     </div>
 
