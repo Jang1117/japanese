@@ -934,18 +934,23 @@
             // 공백 제거한 순수 문자열로 줄 나누기
             const noSpace = sentence.japanese.replace(/\s/g, '');
             let lines = [];
+            
             if (noSpace.length <= 6) {
                 lines = [sentence.japanese];
             } else {
-                // 6글자씩 나누기
+                // 반으로 나누기
+                const totalChars = noSpace.length;
+                const firstLineChars = Math.ceil(totalChars / 2);
+                
                 let currentLine = '';
                 let charCount = 0;
+                
                 for (let i = 0; i < sentence.japanese.length; i++) {
                     const char = sentence.japanese[i];
                     if (char === ' ') {
                         currentLine += char;
                     } else {
-                        if (charCount > 0 && charCount % 6 === 0) {
+                        if (charCount === firstLineChars) {
                             lines.push(currentLine.trim());
                             currentLine = '';
                         }
