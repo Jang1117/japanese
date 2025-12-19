@@ -34,25 +34,22 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            gap: 10px;
         }
 
         .back-button {
             background: #e9ecef;
             border: none;
             border-radius: 8px;
-            padding: 0;
             width: 36px;
             height: 36px;
             cursor: pointer;
             font-size: 16px;
-            margin-right: 10px;
             transition: all 0.3s;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 36px;
-            max-width: 36px;
         }
 
         .back-button:hover {
@@ -62,21 +59,20 @@
 
         h1 {
             color: #4facfe;
-            font-size: 24px;
-            flex: none;
+            font-size: 22px;
+            flex: 1;
+            white-space: nowrap;
         }
 
         .level-selector {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .level-btn {
-            flex: 1;
-            min-width: 100px;
-            padding: 10px;
+            padding: 12px 10px;
             background: #e9ecef;
             color: #495057;
             border: 2px solid transparent;
@@ -85,6 +81,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .level-btn.active {
@@ -107,35 +104,36 @@
         .sentence-display {
             background: #f8f9fa;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             margin-bottom: 20px;
         }
 
         .japanese-sentence {
-            font-size: 32px;
+            font-size: 28px;
             color: #212529;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
             line-height: 1.5;
+            word-break: keep-all;
         }
 
         .romaji {
-            font-size: 16px;
+            font-size: 14px;
             color: #6c757d;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
         }
 
         .korean-pronunciation {
-            font-size: 17px;
+            font-size: 15px;
             color: #495057;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
             font-weight: 500;
         }
 
         .korean-translation {
-            font-size: 18px;
+            font-size: 16px;
             color: #0066cc;
             text-align: center;
             font-weight: 600;
@@ -167,20 +165,21 @@
         }
 
         .controls {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
 
         button {
-            flex: 1;
-            padding: 12px 20px;
+            padding: 14px 10px;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .btn-clear {
@@ -243,17 +242,50 @@
             line-height: 1.6;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 400px) {
             .container {
-                padding: 20px;
+                padding: 20px 15px;
             }
             
             h1 {
-                font-size: 22px;
+                font-size: 18px;
             }
             
             .japanese-sentence {
-                font-size: 26px;
+                font-size: 22px;
+            }
+            
+            .romaji {
+                font-size: 13px;
+            }
+            
+            .korean-pronunciation {
+                font-size: 14px;
+            }
+            
+            .korean-translation {
+                font-size: 15px;
+            }
+            
+            button {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            
+            .sentence-display {
+                padding: 15px;
+            }
+            
+            .hint-section {
+                padding: 12px;
+            }
+            
+            .hint-title {
+                font-size: 13px;
+            }
+            
+            .hint-content {
+                font-size: 12px;
             }
         }
     </style>
@@ -267,38 +299,33 @@
 
         <div class="level-selector">
             <button class="level-btn active" onclick="selectLevel('beginner')">초급</button>
-            <button class="level-btn" onclick="selectLevel('basic')">기초</button>
             <button class="level-btn" onclick="selectLevel('intermediate')">중급</button>
         </div>
 
-        <div class="progress">
-            <span id="progressText">1 / 5</span>
-        </div>
+        <div class="progress" id="progressText">1 / 15</div>
 
         <div class="sentence-display">
             <div class="japanese-sentence" id="japaneseSentence">こんにちは</div>
             <div class="romaji" id="romajiText">konnichiwa</div>
-            <div class="korean-pronunciation" id="koreanPronunciation">곤니치와</div>
+            <div class="korean-pronunciation" id="koreanPronunciation">콘니치와</div>
             <div class="korean-translation" id="koreanTranslation">안녕하세요</div>
         </div>
 
         <div class="canvas-container">
-            <canvas id="guideCanvas" class="guide-canvas"></canvas>
             <canvas id="drawingCanvas"></canvas>
+            <canvas id="guideCanvas" class="guide-canvas"></canvas>
         </div>
 
         <div class="controls">
-            <button class="btn-clear" onclick="clearCanvas()">지우기</button>
-            <button class="btn-guide" onclick="toggleGuide()">가이드</button>
-            <button class="btn-prev" onclick="prevSentence()">이전</button>
-            <button class="btn-next" onclick="nextSentence()">다음</button>
+            <button class="btn-prev" onclick="prevSentence()">◀ 이전</button>
+            <button class="btn-next" onclick="nextSentence()">다음 ▶</button>
+            <button class="btn-clear" onclick="clearCanvas()">🗑 지우기</button>
+            <button class="btn-guide" onclick="toggleGuide()">👁 가이드</button>
         </div>
 
         <div class="hint-section">
-            <div class="hint-title">💡 학습 팁</div>
-            <div class="hint-content" id="hintContent">
-                간단한 인사말부터 시작해보세요. 천천히 따라 쓰면서 각 글자의 모양을 익혀보세요.
-            </div>
+            <div class="hint-title">💡 학습 힌트</div>
+            <div class="hint-content" id="hintContent">일본어 인사 중 가장 기본적인 표현입니다.</div>
         </div>
     </div>
 
@@ -308,51 +335,37 @@
                 {
                     japanese: 'こんにちは',
                     romaji: 'konnichiwa',
-                    pronunciation: '곤니치와',
+                    pronunciation: '콘니치와',
                     korean: '안녕하세요',
-                    hint: '가장 기본적인 인사말입니다. 낮 시간대에 사용합니다.'
-                },
-                {
-                    japanese: 'ありがとう',
-                    romaji: 'arigatou',
-                    pronunciation: '아리가또',
-                    korean: '고마워요',
-                    hint: '감사를 표현하는 기본 표현입니다.'
+                    hint: '일본어 인사 중 가장 기본적인 표현입니다.'
                 },
                 {
                     japanese: 'おはよう',
                     romaji: 'ohayou',
-                    pronunciation: '오하요',
-                    korean: '좋은 아침',
-                    hint: '아침 인사입니다. 친한 사이에 사용합니다.'
+                    pronunciation: '오하요-',
+                    korean: '좋은 아침이에요',
+                    hint: '아침 인사입니다. 친구나 가족에게 사용합니다.'
                 },
                 {
                     japanese: 'こんばんは',
                     romaji: 'konbanwa',
-                    pronunciation: '곤방와',
+                    pronunciation: '콤반와',
                     korean: '안녕하세요 (저녁)',
-                    hint: '저녁 인사입니다.'
+                    hint: '저녁 시간대에 하는 인사입니다.'
                 },
                 {
-                    japanese: 'さようなら',
-                    romaji: 'sayounara',
-                    pronunciation: '사요나라',
-                    korean: '안녕히 가세요',
-                    hint: '작별 인사입니다. 오랜 시간 만나지 않을 때 사용합니다.'
+                    japanese: 'ありがとう',
+                    romaji: 'arigatou',
+                    pronunciation: '아리가또-',
+                    korean: '고마워요',
+                    hint: '감사를 표현하는 기본 표현입니다.'
                 },
                 {
-                    japanese: 'おやすみ',
-                    romaji: 'oyasumi',
-                    pronunciation: '오야스미',
-                    korean: '잘 자',
-                    hint: '잠들기 전 하는 인사입니다.'
-                },
-                {
-                    japanese: 'ごめんなさい',
-                    romaji: 'gomennasai',
-                    pronunciation: '고멘나사이',
-                    korean: '미안해요',
-                    hint: '사과할 때 사용하는 표현입니다.'
+                    japanese: 'すみません',
+                    romaji: 'sumimasen',
+                    pronunciation: '스미마셍',
+                    korean: '실례합니다 / 죄송합니다',
+                    hint: '사과나 주의를 끌 때 사용합니다.'
                 },
                 {
                     japanese: 'はい',
@@ -364,326 +377,23 @@
                 {
                     japanese: 'いいえ',
                     romaji: 'iie',
-                    pronunciation: '이이에',
+                    pronunciation: '이-에',
                     korean: '아니요',
                     hint: '부정의 대답입니다.'
                 },
                 {
-                    japanese: 'わかりました',
-                    romaji: 'wakarimashita',
-                    pronunciation: '와카리마시타',
-                    korean: '알겠습니다',
-                    hint: '이해했음을 표현합니다.'
+                    japanese: 'さようなら',
+                    romaji: 'sayounara',
+                    pronunciation: '사요-나라',
+                    korean: '안녕히 가세요',
+                    hint: '작별 인사입니다.'
                 },
                 {
-                    japanese: 'どういたしまして',
-                    romaji: 'douitashimashite',
-                    pronunciation: '도-이타시마시테',
-                    korean: '천만에요',
-                    hint: '감사에 대한 응답입니다.'
-                },
-                {
-                    japanese: 'じゃあね',
-                    romaji: 'jaane',
-                    pronunciation: '쟈-네',
-                    korean: '그럼 안녕',
-                    hint: '친구와 헤어질 때 하는 인사입니다.'
-                },
-                {
-                    japanese: 'すみません',
-                    romaji: 'sumimasen',
-                    pronunciation: '스미마센',
-                    korean: '실례합니다',
-                    hint: '사람을 부를 때나 사과할 때 사용합니다.'
-                },
-                {
-                    japanese: 'ただいま',
-                    romaji: 'tadaima',
-                    pronunciation: '타다이마',
-                    korean: '다녀왔습니다',
-                    hint: '집에 돌아왔을 때 하는 인사입니다.'
-                },
-                {
-                    japanese: 'おかえり',
-                    romaji: 'okaeri',
-                    pronunciation: '오카에리',
-                    korean: '어서 와',
-                    hint: '돌아온 사람을 맞이할 때 하는 인사입니다.'
-                },
-                {
-                    japanese: 'いってきます',
-                    romaji: 'ittekimasu',
-                    pronunciation: '잇테키마스',
-                    korean: '다녀오겠습니다',
-                    hint: '외출할 때 하는 인사입니다.'
-                },
-                {
-                    japanese: 'いってらっしゃい',
-                    romaji: 'itterasshai',
-                    pronunciation: '잇테랏샤이',
-                    korean: '다녀오세요',
-                    hint: '외출하는 사람에게 하는 인사입니다.'
-                },
-                {
-                    japanese: 'いただきます',
-                    romaji: 'itadakimasu',
-                    pronunciation: '이타다키마스',
-                    korean: '잘 먹겠습니다',
-                    hint: '식사를 시작하기 전에 하는 인사입니다.'
-                },
-                {
-                    japanese: 'ごちそうさま',
-                    romaji: 'gochisousama',
-                    pronunciation: '고치소-사마',
-                    korean: '잘 먹었습니다',
-                    hint: '식사를 마친 후 하는 인사입니다.'
-                },
-                {
-                    japanese: 'おめでとう',
-                    romaji: 'omedetou',
-                    pronunciation: '오메데또',
-                    korean: '축하해요',
-                    hint: '축하할 일이 있을 때 사용합니다.'
-                },
-                {
-                    japanese: 'がんばって',
-                    romaji: 'ganbatte',
-                    pronunciation: '간밧테',
-                    korean: '힘내',
-                    hint: '응원할 때 사용하는 표현입니다.'
-                },
-                {
-                    japanese: 'だいじょうぶ',
-                    romaji: 'daijoubu',
-                    pronunciation: '다이죠-부',
-                    korean: '괜찮아요',
-                    hint: '괜찮다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'すてき',
-                    romaji: 'suteki',
-                    pronunciation: '스테키',
-                    korean: '멋져요',
-                    hint: '멋지거나 훌륭하다는 의미입니다.'
-                },
-                {
-                    japanese: 'かわいい',
-                    romaji: 'kawaii',
-                    pronunciation: '카와이이',
-                    korean: '귀여워',
-                    hint: '귀엽다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'すごい',
-                    romaji: 'sugoi',
-                    pronunciation: '스고이',
-                    korean: '대단해',
-                    hint: '놀랍거나 대단하다는 의미입니다.'
-                },
-                {
-                    japanese: 'たのしい',
-                    romaji: 'tanoshii',
-                    pronunciation: '타노시이',
-                    korean: '즐거워',
-                    hint: '즐겁다는 감정을 표현합니다.'
-                },
-                {
-                    japanese: 'うれしい',
-                    romaji: 'ureshii',
-                    pronunciation: '우레시이',
-                    korean: '기뻐',
-                    hint: '기쁘다는 감정을 표현합니다.'
-                },
-                {
-                    japanese: 'さびしい',
-                    romaji: 'sabishii',
-                    pronunciation: '사비시이',
-                    korean: '외로워',
-                    hint: '외롭다는 감정을 표현합니다.'
-                },
-                {
-                    japanese: 'つかれた',
-                    romaji: 'tsukareta',
-                    pronunciation: '츠카레타',
-                    korean: '피곤해',
-                    hint: '피곤하다는 상태를 표현합니다.'
-                },
-                {
-                    japanese: 'ねむい',
-                    romaji: 'nemui',
-                    pronunciation: '네무이',
-                    korean: '졸려',
-                    hint: '졸리다는 상태를 표현합니다.'
-                },
-                {
-                    japanese: 'おいしい',
-                    romaji: 'oishii',
-                    pronunciation: '오이시이',
-                    korean: '맛있어',
-                    hint: '음식이 맛있을 때 사용합니다.'
-                },
-                {
-                    japanese: 'まずい',
-                    romaji: 'mazui',
-                    pronunciation: '마즈이',
-                    korean: '맛없어',
-                    hint: '음식이 맛없을 때 사용합니다.'
-                },
-                {
-                    japanese: 'あつい',
-                    romaji: 'atsui',
-                    pronunciation: '아츠이',
-                    korean: '더워/뜨거워',
-                    hint: '날씨가 덥거나 물건이 뜨거울 때 사용합니다.'
-                },
-                {
-                    japanese: 'さむい',
-                    romaji: 'samui',
-                    pronunciation: '사무이',
-                    korean: '추워',
-                    hint: '날씨가 추울 때 사용합니다.'
-                },
-                {
-                    japanese: 'たかい',
-                    romaji: 'takai',
-                    pronunciation: '타카이',
-                    korean: '비싸/높아',
-                    hint: '가격이 비싸거나 높이가 높을 때 사용합니다.'
-                },
-                {
-                    japanese: 'やすい',
-                    romaji: 'yasui',
-                    pronunciation: '야스이',
-                    korean: '싸',
-                    hint: '가격이 쌀 때 사용합니다.'
-                },
-                {
-                    japanese: 'おおきい',
-                    romaji: 'ookii',
-                    pronunciation: '오-키이',
-                    korean: '커',
-                    hint: '크기가 클 때 사용합니다.'
-                },
-                {
-                    japanese: 'ちいさい',
-                    romaji: 'chiisai',
-                    pronunciation: '치-사이',
-                    korean: '작아',
-                    hint: '크기가 작을 때 사용합니다.'
-                },
-                {
-                    japanese: 'あたらしい',
-                    romaji: 'atarashii',
-                    pronunciation: '아타라시이',
-                    korean: '새로워',
-                    hint: '새것일 때 사용합니다.'
-                },
-                {
-                    japanese: 'ふるい',
-                    romaji: 'furui',
-                    pronunciation: '후루이',
-                    korean: '오래됐어',
-                    hint: '오래된 것을 표현합니다.'
-                },
-                {
-                    japanese: 'いい',
-                    romaji: 'ii',
-                    pronunciation: '이-',
-                    korean: '좋아',
-                    hint: '좋다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'わるい',
-                    romaji: 'warui',
-                    pronunciation: '와루이',
-                    korean: '나빠',
-                    hint: '나쁘다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'むずかしい',
-                    romaji: 'muzukashii',
-                    pronunciation: '무즈카시이',
-                    korean: '어려워',
-                    hint: '어렵다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'やさしい',
-                    romaji: 'yasashii',
-                    pronunciation: '야사시이',
-                    korean: '쉬워/친절해',
-                    hint: '쉽거나 친절하다는 의미입니다.'
-                },
-                {
-                    japanese: 'はやい',
-                    romaji: 'hayai',
-                    pronunciation: '하야이',
-                    korean: '빨라',
-                    hint: '속도가 빠르다는 의미입니다.'
-                },
-                {
-                    japanese: 'おそい',
-                    romaji: 'osoi',
-                    pronunciation: '오소이',
-                    korean: '느려',
-                    hint: '속도가 느리다는 의미입니다.'
-                },
-                {
-                    japanese: 'たくさん',
-                    romaji: 'takusan',
-                    pronunciation: '타쿠상',
-                    korean: '많이',
-                    hint: '많다는 의미를 표현합니다.'
-                },
-                {
-                    japanese: 'すこし',
-                    romaji: 'sukoshi',
-                    pronunciation: '스코시',
-                    korean: '조금',
-                    hint: '적은 양을 표현합니다.'
-                },
-                {
-                    japanese: 'とても',
-                    romaji: 'totemo',
-                    pronunciation: '토테모',
-                    korean: '매우',
-                    hint: '정도가 심함을 표현합니다.'
-                },
-                {
-                    japanese: 'ちょっと',
-                    romaji: 'chotto',
-                    pronunciation: '촛토',
-                    korean: '잠깐',
-                    hint: '짧은 시간이나 적은 양을 표현합니다.'
-                }
-            ],
-            basic: [
-                {
-                    japanese: 'わたしは がくせい です',
-                    romaji: 'watashi wa gakusei desu',
-                    pronunciation: '와타시와 가쿠세-데스',
-                    korean: '저는 학생입니다',
-                    hint: '자기소개의 기본 문장입니다.'
-                },
-                {
-                    japanese: 'これは ほん です',
-                    romaji: 'kore wa hon desu',
-                    pronunciation: '코레와 혼데스',
-                    korean: '이것은 책입니다',
-                    hint: '사물을 가리킬 때 사용하는 표현입니다.'
-                },
-                {
-                    japanese: 'なまえは なん ですか',
-                    romaji: 'namae wa nan desuka',
-                    pronunciation: '나마에와 난데스카',
-                    korean: '이름이 무엇입니까?',
-                    hint: '상대방의 이름을 물어보는 표현입니다.'
-                },
-                {
-                    japanese: 'すみません',
-                    romaji: 'sumimasen',
-                    pronunciation: '스미마센',
-                    korean: '죄송합니다 / 실례합니다',
-                    hint: '사과하거나 주의를 끌 때 사용합니다.'
+                    japanese: 'おやすみ',
+                    romaji: 'oyasumi',
+                    pronunciation: '오야스미',
+                    korean: '잘 자요',
+                    hint: '밤에 하는 인사입니다.'
                 },
                 {
                     japanese: 'いただきます',
@@ -693,67 +403,32 @@
                     hint: '식사 전에 하는 인사입니다.'
                 },
                 {
-                    japanese: 'ごちそうさまでした',
-                    romaji: 'gochisousamadeshita',
-                    pronunciation: '고치소-사마데시타',
+                    japanese: 'ごちそうさま',
+                    romaji: 'gochisousama',
+                    pronunciation: '고치소-사마',
                     korean: '잘 먹었습니다',
                     hint: '식사 후에 하는 인사입니다.'
                 },
                 {
-                    japanese: 'わたしは にほんじん です',
-                    romaji: 'watashi wa nihonjin desu',
-                    pronunciation: '와타시와 니혼진데스',
-                    korean: '저는 일본인입니다',
-                    hint: '국적을 말할 때 사용합니다.'
+                    japanese: 'おねがいします',
+                    romaji: 'onegaishimasu',
+                    pronunciation: '오네가이시마스',
+                    korean: '부탁드립니다',
+                    hint: '부탁할 때 사용하는 표현입니다.'
                 },
                 {
-                    japanese: 'これは いくら ですか',
-                    romaji: 'kore wa ikura desuka',
-                    pronunciation: '코레와 이쿠라데스카',
-                    korean: '이것은 얼마입니까?',
-                    hint: '가격을 물어볼 때 사용합니다.'
+                    japanese: 'だいじょうぶ',
+                    romaji: 'daijoubu',
+                    pronunciation: '다이죠-부',
+                    korean: '괜찮아요',
+                    hint: '상태가 괜찮음을 표현합니다.'
                 },
                 {
-                    japanese: 'すきです',
-                    romaji: 'suki desu',
-                    pronunciation: '스키데스',
-                    korean: '좋아합니다',
-                    hint: '좋아하는 것을 표현할 때 사용합니다.'
-                },
-                {
-                    japanese: 'わかりません',
-                    romaji: 'wakarimasen',
-                    pronunciation: '와카리마센',
-                    korean: '모르겠습니다',
-                    hint: '이해하지 못했을 때 사용합니다.'
-                },
-                {
-                    japanese: 'にほんごが はなせます',
-                    romaji: 'nihongo ga hanasemasu',
-                    pronunciation: '니혼고가 하나세마스',
-                    korean: '일본어를 말할 수 있습니다',
-                    hint: '능력을 표현하는 문장입니다.'
-                },
-                {
-                    japanese: 'トイレは どこ ですか',
-                    romaji: 'toire wa doko desuka',
-                    pronunciation: '토이레와 도코데스카',
-                    korean: '화장실은 어디입니까?',
-                    hint: '화장실 위치를 물어볼 때 사용합니다.'
-                },
-                {
-                    japanese: 'かんこくじん です',
-                    romaji: 'kankokujin desu',
-                    pronunciation: '칸코쿠진데스',
-                    korean: '한국인입니다',
-                    hint: '국적을 말하는 표현입니다.'
-                },
-                {
-                    japanese: 'これを ください',
-                    romaji: 'kore wo kudasai',
-                    pronunciation: '코레오 쿠다사이',
-                    korean: '이것을 주세요',
-                    hint: '물건을 요청할 때 사용합니다.'
+                    japanese: 'わかりました',
+                    romaji: 'wakarimashita',
+                    pronunciation: '와카리마시타',
+                    korean: '알겠습니다',
+                    hint: '이해했음을 표현합니다.'
                 },
                 {
                     japanese: 'おいしい です',
