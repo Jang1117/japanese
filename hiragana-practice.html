@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>히라가나 따라쓰기</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +64,27 @@
         .back-button:hover {
             background: #dee2e6;
             transform: translateX(-3px);
+        }
+
+        .chart-button {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border: none;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .chart-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(196, 69, 105, 0.4);
         }
 
         .character-display {
@@ -240,6 +263,330 @@
             line-height: 1.5;
         }
 
+        /* 팝업 모달 스타일 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* 히라가나 표 스타일 */
+        .hiragana-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .hiragana-table th {
+            background: linear-gradient(135deg, #ffeef8 0%, #f8e1eb 100%);
+            padding: 10px 6px;
+            font-weight: bold;
+            color: #764ba2;
+            border: 1px solid #e0c4d4;
+            font-size: 13px;
+        }
+
+        .hiragana-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            vertical-align: middle;
+            transition: all 0.2s;
+        }
+
+        .hiragana-table td:hover {
+            background: #f0e6ff;
+            transform: scale(1.05);
+        }
+
+        .hiragana-table .row-header {
+            background: linear-gradient(135deg, #ffeef8 0%, #f8e1eb 100%);
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 13px;
+        }
+
+        .char-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .char-main {
+            font-size: 24px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .char-romaji {
+            font-size: 10px;
+            color: #888;
+        }
+
+        .empty-cell {
+            background: #f8f9fa;
+            color: #ccc;
+        }
+
+        /* 탭 스타일 */
+        .table-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .table-tab {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #495057;
+        }
+
+        .table-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .table-tab:hover {
+            transform: translateY(-2px);
+        }
+
+        .table-section {
+            display: none;
+        }
+
+        .table-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 요음 표 스타일 */
+        .yoon-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .yoon-table th, .yoon-table td {
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .yoon-table th {
+            background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
+            color: #1864ab;
+            font-size: 12px;
+        }
+
+        /* 통합 표 스타일 */
+        .table-scroll {
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .combined-table {
+            min-width: 900px;
+        }
+
+        .combined-table th,
+        .combined-table td {
+            min-width: 55px;
+            padding: 6px 4px;
+        }
+
+        .dakuon-header {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%) !important;
+            color: #e65100 !important;
+        }
+
+        .handakuon-header {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
+            color: #2e7d32 !important;
+        }
+
+        .dakuon-cell {
+            background: #fff8e1;
+        }
+
+        .handakuon-cell {
+            background: #e8f5e9;
+        }
+
+        .dakuon-row td {
+            background: #fff8e1;
+        }
+
+        .handakuon-row td {
+            background: #e8f5e9;
+        }
+
+        /* 범례 스타일 */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #495057;
+        }
+
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .seion-box {
+            background: white;
+        }
+
+        .dakuon-box {
+            background: #fff8e1;
+        }
+
+        .handakuon-box {
+            background: #e8f5e9;
+        }
+
+        @media (max-width: 500px) {
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .char-main {
+                font-size: 20px;
+            }
+            
+            .char-romaji {
+                font-size: 9px;
+            }
+            
+            .hiragana-table th,
+            .hiragana-table td {
+                padding: 6px 3px;
+            }
+            
+            .table-tab {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+        }
+
         @media (max-width: 400px) {
             .container {
                 padding: 20px 15px;
@@ -284,11 +631,12 @@
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
             <h1>あ 히라가나 따라쓰기</h1>
+            <button class="chart-button" onclick="openChart()" title="히라가나 표 보기">表</button>
         </div>
 
         <div class="level-selector">
-            <button class="level-btn active" onclick="selectTab('basic')">청음 (기본)</button>
-            <button class="level-btn" onclick="selectTab('extended')">탁음/반탁음</button>
+            <button class="level-btn active" onclick="selectTab('basic')">청음·탁음·반탁음</button>
+            <button class="level-btn" onclick="selectTab('extended')">요음 (拗音)</button>
         </div>
 
         <div class="category-selector" id="categorySelector"></div>
@@ -315,8 +663,243 @@
         <div class="stroke-order" id="strokeOrder">획순: 1획: 왼쪽 위→오른쪽 아래 곡선</div>
     </div>
 
+    <!-- 히라가나 표 모달 -->
+    <div class="modal-overlay" id="chartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 히라가나 표</h2>
+                <button class="modal-close" onclick="closeChart()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-tabs">
+                    <button class="table-tab active" onclick="switchTableTab('seion')">청음 · 탁음 · 반탁음</button>
+                    <button class="table-tab" onclick="switchTableTab('yoon')">요음 (拗音)</button>
+                </div>
+
+                <!-- 청음/탁음/반탁음 통합 표 -->
+                <div class="table-section active" id="seion-section">
+                    <div class="section-title">✨ 청음 · 탁음 · 반탁음</div>
+                    <div class="table-scroll">
+                        <table class="hiragana-table combined-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>あ</th>
+                                    <th>か</th>
+                                    <th class="dakuon-header">が</th>
+                                    <th>さ</th>
+                                    <th class="dakuon-header">ざ</th>
+                                    <th>た</th>
+                                    <th class="dakuon-header">だ</th>
+                                    <th>な</th>
+                                    <th>は</th>
+                                    <th class="dakuon-header">ば</th>
+                                    <th class="handakuon-header">ぱ</th>
+                                    <th>ま</th>
+                                    <th>や</th>
+                                    <th>ら</th>
+                                    <th>わ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="row-header">あ단</td>
+                                    <td><div class="char-cell"><span class="char-main">あ</span><span class="char-romaji">a / 아</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">か</span><span class="char-romaji">ka / 카</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">が</span><span class="char-romaji">ga / 가</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">さ</span><span class="char-romaji">sa / 사</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ざ</span><span class="char-romaji">za / 자</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">た</span><span class="char-romaji">ta / 타</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">だ</span><span class="char-romaji">da / 다</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">な</span><span class="char-romaji">na / 나</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">は</span><span class="char-romaji">ha / 하</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ば</span><span class="char-romaji">ba / 바</span></div></td>
+                                    <td class="handakuon-cell"><div class="char-cell"><span class="char-main">ぱ</span><span class="char-romaji">pa / 파</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ま</span><span class="char-romaji">ma / 마</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">や</span><span class="char-romaji">ya / 야</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ら</span><span class="char-romaji">ra / 라</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">わ</span><span class="char-romaji">wa / 와</span></div></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-header">い단</td>
+                                    <td><div class="char-cell"><span class="char-main">い</span><span class="char-romaji">i / 이</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">き</span><span class="char-romaji">ki / 키</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぎ</span><span class="char-romaji">gi / 기</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">し</span><span class="char-romaji">shi / 시</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">じ</span><span class="char-romaji">ji / 지</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ち</span><span class="char-romaji">chi / 치</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぢ</span><span class="char-romaji">ji / 지</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">に</span><span class="char-romaji">ni / 니</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ひ</span><span class="char-romaji">hi / 히</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">び</span><span class="char-romaji">bi / 비</span></div></td>
+                                    <td class="handakuon-cell"><div class="char-cell"><span class="char-main">ぴ</span><span class="char-romaji">pi / 피</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">み</span><span class="char-romaji">mi / 미</span></div></td>
+                                    <td class="empty-cell">-</td>
+                                    <td><div class="char-cell"><span class="char-main">り</span><span class="char-romaji">ri / 리</span></div></td>
+                                    <td class="empty-cell">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="row-header">う단</td>
+                                    <td><div class="char-cell"><span class="char-main">う</span><span class="char-romaji">u / 우</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">く</span><span class="char-romaji">ku / 쿠</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぐ</span><span class="char-romaji">gu / 구</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">す</span><span class="char-romaji">su / 스</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ず</span><span class="char-romaji">zu / 즈</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">つ</span><span class="char-romaji">tsu / 츠</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">づ</span><span class="char-romaji">zu / 즈</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ぬ</span><span class="char-romaji">nu / 누</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ふ</span><span class="char-romaji">fu / 후</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぶ</span><span class="char-romaji">bu / 부</span></div></td>
+                                    <td class="handakuon-cell"><div class="char-cell"><span class="char-main">ぷ</span><span class="char-romaji">pu / 푸</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">む</span><span class="char-romaji">mu / 무</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ゆ</span><span class="char-romaji">yu / 유</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">る</span><span class="char-romaji">ru / 루</span></div></td>
+                                    <td class="empty-cell">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="row-header">え단</td>
+                                    <td><div class="char-cell"><span class="char-main">え</span><span class="char-romaji">e / 에</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">け</span><span class="char-romaji">ke / 케</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">げ</span><span class="char-romaji">ge / 게</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">せ</span><span class="char-romaji">se / 세</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぜ</span><span class="char-romaji">ze / 제</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">て</span><span class="char-romaji">te / 테</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">で</span><span class="char-romaji">de / 데</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ね</span><span class="char-romaji">ne / 네</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">へ</span><span class="char-romaji">he / 헤</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">べ</span><span class="char-romaji">be / 베</span></div></td>
+                                    <td class="handakuon-cell"><div class="char-cell"><span class="char-main">ぺ</span><span class="char-romaji">pe / 페</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">め</span><span class="char-romaji">me / 메</span></div></td>
+                                    <td class="empty-cell">-</td>
+                                    <td><div class="char-cell"><span class="char-main">れ</span><span class="char-romaji">re / 레</span></div></td>
+                                    <td class="empty-cell">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="row-header">お단</td>
+                                    <td><div class="char-cell"><span class="char-main">お</span><span class="char-romaji">o / 오</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">こ</span><span class="char-romaji">ko / 코</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ご</span><span class="char-romaji">go / 고</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">そ</span><span class="char-romaji">so / 소</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぞ</span><span class="char-romaji">zo / 조</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">と</span><span class="char-romaji">to / 토</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ど</span><span class="char-romaji">do / 도</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">の</span><span class="char-romaji">no / 노</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ほ</span><span class="char-romaji">ho / 호</span></div></td>
+                                    <td class="dakuon-cell"><div class="char-cell"><span class="char-main">ぼ</span><span class="char-romaji">bo / 보</span></div></td>
+                                    <td class="handakuon-cell"><div class="char-cell"><span class="char-main">ぽ</span><span class="char-romaji">po / 포</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">も</span><span class="char-romaji">mo / 모</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">よ</span><span class="char-romaji">yo / 요</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">ろ</span><span class="char-romaji">ro / 로</span></div></td>
+                                    <td><div class="char-cell"><span class="char-main">を</span><span class="char-romaji">wo / 오</span></div></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-header">ん</td>
+                                    <td colspan="15"><div class="char-cell"><span class="char-main">ん</span><span class="char-romaji">n / 응</span></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="legend">
+                        <span class="legend-item"><span class="legend-box seion-box"></span> 청음</span>
+                        <span class="legend-item"><span class="legend-box dakuon-box"></span> 탁음 (゛)</span>
+                        <span class="legend-item"><span class="legend-box handakuon-box"></span> 반탁음 (゜)</span>
+                    </div>
+                </div>
+
+                <!-- 요음 표 -->
+                <div class="table-section" id="yoon-section">
+                    <div class="section-title">🎵 요음 (작은 や・ゆ・よ 조합)</div>
+                    <table class="yoon-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>~ゃ</th>
+                                <th>~ゅ</th>
+                                <th>~ょ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="row-header">き</td>
+                                <td><div class="char-cell"><span class="char-main">きゃ</span><span class="char-romaji">kya / 캬</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">きゅ</span><span class="char-romaji">kyu / 큐</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">きょ</span><span class="char-romaji">kyo / 쿄</span></div></td>
+                            </tr>
+                            <tr class="dakuon-row">
+                                <td class="row-header">ぎ</td>
+                                <td><div class="char-cell"><span class="char-main">ぎゃ</span><span class="char-romaji">gya / 갸</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ぎゅ</span><span class="char-romaji">gyu / 규</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ぎょ</span><span class="char-romaji">gyo / 교</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">し</td>
+                                <td><div class="char-cell"><span class="char-main">しゃ</span><span class="char-romaji">sha / 샤</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">しゅ</span><span class="char-romaji">shu / 슈</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">しょ</span><span class="char-romaji">sho / 쇼</span></div></td>
+                            </tr>
+                            <tr class="dakuon-row">
+                                <td class="row-header">じ</td>
+                                <td><div class="char-cell"><span class="char-main">じゃ</span><span class="char-romaji">ja / 쟈</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">じゅ</span><span class="char-romaji">ju / 쥬</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">じょ</span><span class="char-romaji">jo / 죠</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">ち</td>
+                                <td><div class="char-cell"><span class="char-main">ちゃ</span><span class="char-romaji">cha / 챠</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ちゅ</span><span class="char-romaji">chu / 츄</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ちょ</span><span class="char-romaji">cho / 쵸</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">に</td>
+                                <td><div class="char-cell"><span class="char-main">にゃ</span><span class="char-romaji">nya / 냐</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">にゅ</span><span class="char-romaji">nyu / 뉴</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">にょ</span><span class="char-romaji">nyo / 뇨</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">ひ</td>
+                                <td><div class="char-cell"><span class="char-main">ひゃ</span><span class="char-romaji">hya / 햐</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ひゅ</span><span class="char-romaji">hyu / 휴</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ひょ</span><span class="char-romaji">hyo / 효</span></div></td>
+                            </tr>
+                            <tr class="dakuon-row">
+                                <td class="row-header">び</td>
+                                <td><div class="char-cell"><span class="char-main">びゃ</span><span class="char-romaji">bya / 뱌</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">びゅ</span><span class="char-romaji">byu / 뷰</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">びょ</span><span class="char-romaji">byo / 뵤</span></div></td>
+                            </tr>
+                            <tr class="handakuon-row">
+                                <td class="row-header">ぴ</td>
+                                <td><div class="char-cell"><span class="char-main">ぴゃ</span><span class="char-romaji">pya / 퍄</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ぴゅ</span><span class="char-romaji">pyu / 퓨</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">ぴょ</span><span class="char-romaji">pyo / 표</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">み</td>
+                                <td><div class="char-cell"><span class="char-main">みゃ</span><span class="char-romaji">mya / 먀</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">みゅ</span><span class="char-romaji">myu / 뮤</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">みょ</span><span class="char-romaji">myo / 묘</span></div></td>
+                            </tr>
+                            <tr>
+                                <td class="row-header">り</td>
+                                <td><div class="char-cell"><span class="char-main">りゃ</span><span class="char-romaji">rya / 랴</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">りゅ</span><span class="char-romaji">ryu / 류</span></div></td>
+                                <td><div class="char-cell"><span class="char-main">りょ</span><span class="char-romaji">ryo / 료</span></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="legend">
+                        <span class="legend-item"><span class="legend-box seion-box"></span> 청음 요음</span>
+                        <span class="legend-item"><span class="legend-box dakuon-box"></span> 탁음 요음</span>
+                        <span class="legend-item"><span class="legend-box handakuon-box"></span> 반탁음 요음</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const hiraganaData = {
+        // 청음+탁음+반탁음 통합 데이터
+        const basicData = {
             a: [
                 { char: 'あ', romaji: 'a', korean: '아', strokes: '3획: 위 가로→세로→아래 곡선' },
                 { char: 'い', romaji: 'i', korean: '이', strokes: '2획: 왼쪽 세로→오른쪽 세로' },
@@ -326,97 +909,67 @@
             ],
             ka: [
                 { char: 'か', romaji: 'ka', korean: '카', strokes: '3획: 위 가로→세로→아래 곡선' },
-                { char: 'が', romaji: 'ga', korean: '가', strokes: 'か + 탁점' },
+                { char: 'が', romaji: 'ga', korean: '가', strokes: 'か + 탁점(゛)' },
                 { char: 'き', romaji: 'ki', korean: '키', strokes: '4획: 위 가로→중간 가로→아래 가로→세로' },
-                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: 'き + 탁점' },
-                { char: 'きゃ', romaji: 'kya', korean: '캬', strokes: 'き + 작은 ゃ' },
-                { char: 'きゅ', romaji: 'kyu', korean: '큐', strokes: 'き + 작은 ゅ' },
-                { char: 'きょ', romaji: 'kyo', korean: '쿄', strokes: 'き + 작은 ょ' },
-                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ' },
-                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ' },
-                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ' },
+                { char: 'ぎ', romaji: 'gi', korean: '기', strokes: 'き + 탁점(゛)' },
                 { char: 'く', romaji: 'ku', korean: '쿠', strokes: '1획: 왼쪽→오른쪽 꺾임' },
-                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: 'く + 탁점' },
+                { char: 'ぐ', romaji: 'gu', korean: '구', strokes: 'く + 탁점(゛)' },
                 { char: 'け', romaji: 'ke', korean: '케', strokes: '3획: 왼쪽 세로→위 가로→오른쪽 세로' },
-                { char: 'げ', romaji: 'ge', korean: '게', strokes: 'け + 탁점' },
+                { char: 'げ', romaji: 'ge', korean: '게', strokes: 'け + 탁점(゛)' },
                 { char: 'こ', romaji: 'ko', korean: '코', strokes: '2획: 위 가로→아래 가로' },
-                { char: 'ご', romaji: 'go', korean: '고', strokes: 'こ + 탁점' }
+                { char: 'ご', romaji: 'go', korean: '고', strokes: 'こ + 탁점(゛)' }
             ],
             sa: [
                 { char: 'さ', romaji: 'sa', korean: '사', strokes: '3획: 위 가로→세로→아래 곡선' },
-                { char: 'ざ', romaji: 'za', korean: '자', strokes: 'さ + 탁점' },
+                { char: 'ざ', romaji: 'za', korean: '자', strokes: 'さ + 탁점(゛)' },
                 { char: 'し', romaji: 'shi', korean: '시', strokes: '1획: 위→아래 곡선' },
-                { char: 'じ', romaji: 'ji', korean: '지', strokes: 'し + 탁점' },
-                { char: 'しゃ', romaji: 'sha', korean: '샤', strokes: 'し + 작은 ゃ' },
-                { char: 'しゅ', romaji: 'shu', korean: '슈', strokes: 'し + 작은 ゅ' },
-                { char: 'しょ', romaji: 'sho', korean: '쇼', strokes: 'し + 작은 ょ' },
-                { char: 'じゃ', romaji: 'ja', korean: '쟈', strokes: 'じ + 작은 ゃ' },
-                { char: 'じゅ', romaji: 'ju', korean: '쥬', strokes: 'じ + 작은 ゅ' },
-                { char: 'じょ', romaji: 'jo', korean: '죠', strokes: 'じ + 작은 ょ' },
+                { char: 'じ', romaji: 'ji', korean: '지', strokes: 'し + 탁점(゛)' },
                 { char: 'す', romaji: 'su', korean: '스', strokes: '2획: 위 가로→아래 곡선' },
-                { char: 'ず', romaji: 'zu', korean: '즈', strokes: 'す + 탁점' },
+                { char: 'ず', romaji: 'zu', korean: '즈', strokes: 'す + 탁점(゛)' },
                 { char: 'せ', romaji: 'se', korean: '세', strokes: '3획: 위 가로→중간 가로→아래 세로' },
-                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: 'せ + 탁점' },
+                { char: 'ぜ', romaji: 'ze', korean: '제', strokes: 'せ + 탁점(゛)' },
                 { char: 'そ', romaji: 'so', korean: '소', strokes: '1획: 위→아래 지그재그' },
-                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: 'そ + 탁점' }
+                { char: 'ぞ', romaji: 'zo', korean: '조', strokes: 'そ + 탁점(゛)' }
             ],
             ta: [
                 { char: 'た', romaji: 'ta', korean: '타', strokes: '4획: 위 가로→세로→아래 가로→점' },
-                { char: 'だ', romaji: 'da', korean: '다', strokes: 'た + 탁점' },
+                { char: 'だ', romaji: 'da', korean: '다', strokes: 'た + 탁점(゛)' },
                 { char: 'ち', romaji: 'chi', korean: '치', strokes: '2획: 위 가로→아래 곡선' },
-                { char: 'ぢ', romaji: 'di', korean: '지', strokes: 'ち + 탁점' },
-                { char: 'ちゃ', romaji: 'cha', korean: '챠', strokes: 'ち + 작은 ゃ' },
-                { char: 'ちゅ', romaji: 'chu', korean: '츄', strokes: 'ち + 작은 ゅ' },
-                { char: 'ちょ', romaji: 'cho', korean: '쵸', strokes: 'ち + 작은 ょ' },
+                { char: 'ぢ', romaji: 'ji', korean: '지', strokes: 'ち + 탁점(゛)' },
                 { char: 'つ', romaji: 'tsu', korean: '츠', strokes: '1획: 왼쪽→오른쪽 곡선' },
-                { char: 'づ', romaji: 'du', korean: '즈', strokes: 'つ + 탁점' },
+                { char: 'づ', romaji: 'zu', korean: '즈', strokes: 'つ + 탁점(゛)' },
                 { char: 'て', romaji: 'te', korean: '테', strokes: '1획: 위→아래 곡선' },
-                { char: 'で', romaji: 'de', korean: '데', strokes: 'て + 탁점' },
+                { char: 'で', romaji: 'de', korean: '데', strokes: 'て + 탁점(゛)' },
                 { char: 'と', romaji: 'to', korean: '토', strokes: '2획: 위 세로→아래 곡선' },
-                { char: 'ど', romaji: 'do', korean: '도', strokes: 'と + 탁점' }
+                { char: 'ど', romaji: 'do', korean: '도', strokes: 'と + 탁점(゛)' }
             ],
             na: [
                 { char: 'な', romaji: 'na', korean: '나', strokes: '4획: 위 가로→세로→점→곡선' },
                 { char: 'に', romaji: 'ni', korean: '니', strokes: '3획: 왼쪽 세로→위 가로→아래 가로' },
-                { char: 'にゃ', romaji: 'nya', korean: '냐', strokes: 'に + 작은 ゃ' },
-                { char: 'にゅ', romaji: 'nyu', korean: '뉴', strokes: 'に + 작은 ゅ' },
-                { char: 'にょ', romaji: 'nyo', korean: '뇨', strokes: 'に + 작은 ょ' },
                 { char: 'ぬ', romaji: 'nu', korean: '누', strokes: '2획: 왼쪽 곡선→오른쪽 곡선' },
                 { char: 'ね', romaji: 'ne', korean: '네', strokes: '2획: 왼쪽 세로→오른쪽 곡선' },
                 { char: 'の', romaji: 'no', korean: '노', strokes: '1획: 원형 곡선' }
             ],
             ha: [
                 { char: 'は', romaji: 'ha', korean: '하', strokes: '3획: 왼쪽 세로→위 가로→오른쪽 곡선' },
-                { char: 'ば', romaji: 'ba', korean: '바', strokes: 'は + 탁점' },
-                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: 'は + 반탁점' },
+                { char: 'ば', romaji: 'ba', korean: '바', strokes: 'は + 탁점(゛)' },
+                { char: 'ぱ', romaji: 'pa', korean: '파', strokes: 'は + 반탁점(゜)' },
                 { char: 'ひ', romaji: 'hi', korean: '히', strokes: '2획: 위 가로→아래 곡선' },
-                { char: 'び', romaji: 'bi', korean: '비', strokes: 'ひ + 탁점' },
-                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: 'ひ + 반탁점' },
-                { char: 'ひゃ', romaji: 'hya', korean: '햐', strokes: 'ひ + 작은 ゃ' },
-                { char: 'ひゅ', romaji: 'hyu', korean: '휴', strokes: 'ひ + 작은 ゅ' },
-                { char: 'ひょ', romaji: 'hyo', korean: '효', strokes: 'ひ + 작은 ょ' },
-                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ' },
-                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ' },
-                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ' },
-                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ' },
-                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ' },
-                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ' },
+                { char: 'び', romaji: 'bi', korean: '비', strokes: 'ひ + 탁점(゛)' },
+                { char: 'ぴ', romaji: 'pi', korean: '피', strokes: 'ひ + 반탁점(゜)' },
                 { char: 'ふ', romaji: 'fu', korean: '후', strokes: '4획: 왼쪽 위 점→위 가로→중간 가로→아래 세로' },
-                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: 'ふ + 탁점' },
-                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: 'ふ + 반탁점' },
+                { char: 'ぶ', romaji: 'bu', korean: '부', strokes: 'ふ + 탁점(゛)' },
+                { char: 'ぷ', romaji: 'pu', korean: '푸', strokes: 'ふ + 반탁점(゜)' },
                 { char: 'へ', romaji: 'he', korean: '헤', strokes: '1획: 왼쪽→오른쪽 사선' },
-                { char: 'べ', romaji: 'be', korean: '베', strokes: 'へ + 탁점' },
-                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: 'へ + 반탁점' },
+                { char: 'べ', romaji: 'be', korean: '베', strokes: 'へ + 탁점(゛)' },
+                { char: 'ぺ', romaji: 'pe', korean: '페', strokes: 'へ + 반탁점(゜)' },
                 { char: 'ほ', romaji: 'ho', korean: '호', strokes: '4획: 맨 위 가로→왼쪽 세로→중간 가로→오른쪽 세로' },
-                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: 'ほ + 탁점' },
-                { char: 'ぽ', romaji: 'po', korean: '포', strokes: 'ほ + 반탁점' }
+                { char: 'ぼ', romaji: 'bo', korean: '보', strokes: 'ほ + 탁점(゛)' },
+                { char: 'ぽ', romaji: 'po', korean: '포', strokes: 'ほ + 반탁점(゜)' }
             ],
             ma: [
                 { char: 'ま', romaji: 'ma', korean: '마', strokes: '3획: 위 가로→세로→아래 곡선' },
                 { char: 'み', romaji: 'mi', korean: '미', strokes: '2획: 위 가로→아래 곡선' },
-                { char: 'みゃ', romaji: 'mya', korean: '먀', strokes: 'み + 작은 ゃ' },
-                { char: 'みゅ', romaji: 'myu', korean: '뮤', strokes: 'み + 작은 ゅ' },
-                { char: 'みょ', romaji: 'myo', korean: '묘', strokes: 'み + 작은 ょ' },
                 { char: 'む', romaji: 'mu', korean: '무', strokes: '3획: 위 가로→중간 가로→아래 세로' },
                 { char: 'め', romaji: 'me', korean: '메', strokes: '2획: 위 가로→아래 곡선' },
                 { char: 'も', romaji: 'mo', korean: '모', strokes: '3획: 위 가로→중간 가로→아래 세로' }
@@ -429,9 +982,6 @@
             ra: [
                 { char: 'ら', romaji: 'ra', korean: '라', strokes: '2획: 위 가로→아래 곡선' },
                 { char: 'り', romaji: 'ri', korean: '리', strokes: '2획: 위 가로→아래 곡선' },
-                { char: 'りゃ', romaji: 'rya', korean: '랴', strokes: 'り + 작은 ゃ' },
-                { char: 'りゅ', romaji: 'ryu', korean: '류', strokes: 'り + 작은 ゅ' },
-                { char: 'りょ', romaji: 'ryo', korean: '료', strokes: 'り + 작은 ょ' },
                 { char: 'る', romaji: 'ru', korean: '루', strokes: '1획: 위→아래 나선형 곡선' },
                 { char: 'れ', romaji: 're', korean: '레', strokes: '2획: 위 가로→아래 곡선' },
                 { char: 'ろ', romaji: 'ro', korean: '로', strokes: '3획: 위 가로→중간 가로→아래 세로' }
@@ -443,10 +993,60 @@
             ]
         };
 
-        // 청음만 표시
+        // 요음 데이터 (청음/탁음/반탁음 요음 통합)
+        const extendedData = {
+            kya: [
+                { char: 'きゃ', romaji: 'kya', korean: '캬', strokes: 'き + 작은 ゃ' },
+                { char: 'きゅ', romaji: 'kyu', korean: '큐', strokes: 'き + 작은 ゅ' },
+                { char: 'きょ', romaji: 'kyo', korean: '쿄', strokes: 'き + 작은 ょ' },
+                { char: 'ぎゃ', romaji: 'gya', korean: '갸', strokes: 'ぎ + 작은 ゃ' },
+                { char: 'ぎゅ', romaji: 'gyu', korean: '규', strokes: 'ぎ + 작은 ゅ' },
+                { char: 'ぎょ', romaji: 'gyo', korean: '교', strokes: 'ぎ + 작은 ょ' }
+            ],
+            sha: [
+                { char: 'しゃ', romaji: 'sha', korean: '샤', strokes: 'し + 작은 ゃ' },
+                { char: 'しゅ', romaji: 'shu', korean: '슈', strokes: 'し + 작은 ゅ' },
+                { char: 'しょ', romaji: 'sho', korean: '쇼', strokes: 'し + 작은 ょ' },
+                { char: 'じゃ', romaji: 'ja', korean: '쟈', strokes: 'じ + 작은 ゃ' },
+                { char: 'じゅ', romaji: 'ju', korean: '쥬', strokes: 'じ + 작은 ゅ' },
+                { char: 'じょ', romaji: 'jo', korean: '죠', strokes: 'じ + 작은 ょ' }
+            ],
+            cha: [
+                { char: 'ちゃ', romaji: 'cha', korean: '챠', strokes: 'ち + 작은 ゃ' },
+                { char: 'ちゅ', romaji: 'chu', korean: '츄', strokes: 'ち + 작은 ゅ' },
+                { char: 'ちょ', romaji: 'cho', korean: '쵸', strokes: 'ち + 작은 ょ' }
+            ],
+            nya: [
+                { char: 'にゃ', romaji: 'nya', korean: '냐', strokes: 'に + 작은 ゃ' },
+                { char: 'にゅ', romaji: 'nyu', korean: '뉴', strokes: 'に + 작은 ゅ' },
+                { char: 'にょ', romaji: 'nyo', korean: '뇨', strokes: 'に + 작은 ょ' }
+            ],
+            hya: [
+                { char: 'ひゃ', romaji: 'hya', korean: '햐', strokes: 'ひ + 작은 ゃ' },
+                { char: 'ひゅ', romaji: 'hyu', korean: '휴', strokes: 'ひ + 작은 ゅ' },
+                { char: 'ひょ', romaji: 'hyo', korean: '효', strokes: 'ひ + 작은 ょ' },
+                { char: 'びゃ', romaji: 'bya', korean: '뱌', strokes: 'び + 작은 ゃ' },
+                { char: 'びゅ', romaji: 'byu', korean: '뷰', strokes: 'び + 작은 ゅ' },
+                { char: 'びょ', romaji: 'byo', korean: '뵤', strokes: 'び + 작은 ょ' },
+                { char: 'ぴゃ', romaji: 'pya', korean: '퍄', strokes: 'ぴ + 작은 ゃ' },
+                { char: 'ぴゅ', romaji: 'pyu', korean: '퓨', strokes: 'ぴ + 작은 ゅ' },
+                { char: 'ぴょ', romaji: 'pyo', korean: '표', strokes: 'ぴ + 작은 ょ' }
+            ],
+            mya: [
+                { char: 'みゃ', romaji: 'mya', korean: '먀', strokes: 'み + 작은 ゃ' },
+                { char: 'みゅ', romaji: 'myu', korean: '뮤', strokes: 'み + 작은 ゅ' },
+                { char: 'みょ', romaji: 'myo', korean: '묘', strokes: 'み + 작은 ょ' }
+            ],
+            rya: [
+                { char: 'りゃ', romaji: 'rya', korean: '랴', strokes: 'り + 작은 ゃ' },
+                { char: 'りゅ', romaji: 'ryu', korean: '류', strokes: 'り + 작은 ゅ' },
+                { char: 'りょ', romaji: 'ryo', korean: '료', strokes: 'り + 작은 ょ' }
+            ]
+        };
+
+        // 카테고리 설정
         const basicCategories = ['a', 'ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ya', 'ra', 'wa'];
-        // 탁음/반탁음/요음이 있는 것들만
-        const extendedCategories = ['ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ra'];
+        const extendedCategories = ['kya', 'sha', 'cha', 'nya', 'hya', 'mya', 'rya'];
 
         const categoryLabels = {
             a: 'あ',
@@ -458,7 +1058,14 @@
             ma: 'ま',
             ya: 'や',
             ra: 'ら',
-            wa: 'わ'
+            wa: 'わ',
+            kya: 'きゃ',
+            sha: 'しゃ',
+            cha: 'ちゃ',
+            nya: 'にゃ',
+            hya: 'ひゃ',
+            mya: 'みゃ',
+            rya: 'りゃ'
         };
 
         let currentTab = 'basic';
@@ -471,6 +1078,10 @@
         const guideCanvas = document.getElementById('guideCanvas');
         const ctx = canvas.getContext('2d');
         const guideCtx = guideCanvas.getContext('2d');
+
+        function getCurrentData() {
+            return currentTab === 'basic' ? basicData : extendedData;
+        }
 
         function initCanvas() {
             const container = canvas.parentElement;
@@ -490,25 +1101,22 @@
         }
 
         function drawGuideCharacter() {
-            const currentChar = hiraganaData[currentCategory][currentIndex];
+            const data = getCurrentData();
+            const currentChar = data[currentCategory][currentIndex];
             guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
             
-            // 글자 수에 따라 폰트 크기 조절
             const charLength = currentChar.char.length;
             let fontSize;
             
             if (charLength === 1) {
-                // 단일 글자: 캔버스의 80%
                 fontSize = Math.min(guideCanvas.width, guideCanvas.height) * 0.8;
             } else {
-                // 2글자 이상: 캔버스 너비에 맞게 조절
                 const testFontSize = 100;
                 guideCtx.font = `bold ${testFontSize}px sans-serif`;
                 const textWidth = guideCtx.measureText(currentChar.char).width;
                 const targetWidth = guideCanvas.width * 0.85;
                 fontSize = testFontSize * (targetWidth / textWidth);
                 
-                // 높이도 고려해서 최대값 제한
                 const maxFontSize = guideCanvas.height * 0.7;
                 fontSize = Math.min(fontSize, maxFontSize);
             }
@@ -559,7 +1167,8 @@
         }
 
         function nextCharacter() {
-            const categoryData = hiraganaData[currentCategory];
+            const data = getCurrentData();
+            const categoryData = data[currentCategory];
             currentIndex = (currentIndex + 1) % categoryData.length;
             updateDisplay();
             clearCanvas();
@@ -567,7 +1176,8 @@
         }
 
         function prevCharacter() {
-            const categoryData = hiraganaData[currentCategory];
+            const data = getCurrentData();
+            const categoryData = data[currentCategory];
             currentIndex = (currentIndex - 1 + categoryData.length) % categoryData.length;
             updateDisplay();
             clearCanvas();
@@ -615,21 +1225,59 @@
                 const button = document.createElement('button');
                 button.className = 'category-btn' + (index === 0 ? ' active' : '');
                 button.textContent = categoryLabels[cat];
-                button.onclick = () => selectCategory(cat);
+                button.onclick = function() { selectCategory(cat); };
                 categorySelector.appendChild(button);
             });
         }
 
         function updateDisplay() {
-            const currentChar = hiraganaData[currentCategory][currentIndex];
+            const data = getCurrentData();
+            const currentChar = data[currentCategory][currentIndex];
             document.getElementById('currentCharacter').textContent = currentChar.char;
             document.getElementById('characterInfo').textContent = 
                 `${currentChar.romaji} (${currentChar.korean})`;
             document.getElementById('strokeOrder').textContent = 
                 `획순: ${currentChar.strokes}`;
             document.getElementById('progressText').textContent = 
-                `${currentIndex + 1} / ${hiraganaData[currentCategory].length}`;
+                `${currentIndex + 1} / ${data[currentCategory].length}`;
         }
+
+        // 모달 관련 함수
+        function openChart() {
+            document.getElementById('chartModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeChart() {
+            document.getElementById('chartModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function switchTableTab(tabName) {
+            document.querySelectorAll('.table-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.table-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabName + '-section').classList.add('active');
+        }
+
+        // 모달 외부 클릭시 닫기
+        document.getElementById('chartModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeChart();
+            }
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeChart();
+            }
+        });
 
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mousemove', draw);
