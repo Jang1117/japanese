@@ -106,6 +106,7 @@
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
+            min-height: 160px;
         }
 
         .japanese-sentence {
@@ -115,7 +116,7 @@
             text-align: center;
             line-height: 1.4;
             word-break: keep-all;
-            height: 2.8em;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1099,14 +1100,16 @@
             const charCount = noSpace.length;
             let fontSize;
             
-            if (charCount <= 6) {
+            if (charCount <= 5) {
+                fontSize = 32;
+            } else if (charCount <= 8) {
                 fontSize = 28;
-            } else if (charCount <= 10) {
+            } else if (charCount <= 12) {
+                fontSize = 26;
+            } else if (charCount <= 16) {
                 fontSize = 24;
-            } else if (charCount <= 14) {
-                fontSize = 20;
             } else {
-                fontSize = 17;
+                fontSize = 22;
             }
             
             japaneseEl.style.fontSize = fontSize + 'px';
