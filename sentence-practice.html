@@ -113,8 +113,13 @@
             color: #212529;
             margin-bottom: 12px;
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.4;
             word-break: keep-all;
+            height: 2.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .romaji {
@@ -931,17 +936,17 @@
             const sentence = sentences[currentLevel][currentIndex];
             guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
             
-            // 공백 제거한 순수 문자열로 줄 나누기
+            // 공백 제거한 순수 문자열
             const noSpace = sentence.japanese.replace(/\s/g, '');
+            const totalChars = noSpace.length;
             let lines = [];
             
-            if (noSpace.length <= 6) {
+            if (totalChars <= 6) {
+                // 6글자 이하: 1줄
                 lines = [sentence.japanese];
-            } else {
-                // 반으로 나누기
-                const totalChars = noSpace.length;
+            } else if (totalChars <= 12) {
+                // 7~12글자: 2줄 (반으로 나누기)
                 const firstLineChars = Math.ceil(totalChars / 2);
-                
                 let currentLine = '';
                 let charCount = 0;
                 
@@ -953,6 +958,30 @@
                         if (charCount === firstLineChars) {
                             lines.push(currentLine.trim());
                             currentLine = '';
+                        }
+                        currentLine += char;
+                        charCount++;
+                    }
+                }
+                if (currentLine.trim()) {
+                    lines.push(currentLine.trim());
+                }
+            } else {
+                // 13글자 이상: 3줄 (3등분)
+                const charsPerLine = Math.ceil(totalChars / 3);
+                let currentLine = '';
+                let charCount = 0;
+                let lineCount = 0;
+                
+                for (let i = 0; i < sentence.japanese.length; i++) {
+                    const char = sentence.japanese[i];
+                    if (char === ' ') {
+                        currentLine += char;
+                    } else {
+                        if (charCount > 0 && charCount % charsPerLine === 0 && lineCount < 2) {
+                            lines.push(currentLine.trim());
+                            currentLine = '';
+                            lineCount++;
                         }
                         currentLine += char;
                         charCount++;
@@ -1063,7 +1092,26 @@
 
         function updateDisplay() {
             const sentence = sentences[currentLevel][currentIndex];
-            document.getElementById('japaneseSentence').textContent = sentence.japanese;
+            const japaneseEl = document.getElementById('japaneseSentence');
+            
+            // 글자 수에 따라 폰트 크기 조절 (2줄 안에 들어가도록)
+            const noSpace = sentence.japanese.replace(/\s/g, '');
+            const charCount = noSpace.length;
+            let fontSize;
+            
+            if (charCount <= 6) {
+                fontSize = 28;
+            } else if (charCount <= 10) {
+                fontSize = 24;
+            } else if (charCount <= 14) {
+                fontSize = 20;
+            } else {
+                fontSize = 17;
+            }
+            
+            japaneseEl.style.fontSize = fontSize + 'px';
+            japaneseEl.textContent = sentence.japanese;
+            
             document.getElementById('romajiText').textContent = sentence.romaji;
             document.getElementById('koreanPronunciation').textContent = sentence.pronunciation;
             document.getElementById('koreanTranslation').textContent = sentence.korean;
