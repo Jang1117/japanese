@@ -493,7 +493,26 @@
             const currentChar = hiraganaData[currentCategory][currentIndex];
             guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
             
-            const fontSize = Math.min(guideCanvas.width, guideCanvas.height) * 0.8;
+            // 글자 수에 따라 폰트 크기 조절
+            const charLength = currentChar.char.length;
+            let fontSize;
+            
+            if (charLength === 1) {
+                // 단일 글자: 캔버스의 80%
+                fontSize = Math.min(guideCanvas.width, guideCanvas.height) * 0.8;
+            } else {
+                // 2글자 이상: 캔버스 너비에 맞게 조절
+                const testFontSize = 100;
+                guideCtx.font = `bold ${testFontSize}px sans-serif`;
+                const textWidth = guideCtx.measureText(currentChar.char).width;
+                const targetWidth = guideCanvas.width * 0.85;
+                fontSize = testFontSize * (targetWidth / textWidth);
+                
+                // 높이도 고려해서 최대값 제한
+                const maxFontSize = guideCanvas.height * 0.7;
+                fontSize = Math.min(fontSize, maxFontSize);
+            }
+            
             guideCtx.font = `bold ${fontSize}px sans-serif`;
             guideCtx.fillStyle = '#764ba2';
             guideCtx.textAlign = 'center';
