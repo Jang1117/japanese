@@ -66,7 +66,12 @@
             transform: translateX(-3px);
         }
 
-        .chart-button {
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-button, .quiz-button {
             background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
             border: none;
             border-radius: 8px;
@@ -82,9 +87,17 @@
             color: white;
         }
 
-        .chart-button:hover {
+        .quiz-button {
+            background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+        }
+
+        .chart-button:hover, .quiz-button:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 15px rgba(196, 69, 105, 0.4);
+        }
+
+        .quiz-button:hover {
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.4);
         }
 
         .character-display {
@@ -97,6 +110,28 @@
             color: #764ba2;
             font-weight: bold;
             margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .check-mark {
+            position: absolute;
+            top: -5px;
+            right: -25px;
+            font-size: 24px;
+            color: #51cf66;
+            display: none;
+        }
+
+        .check-mark.show {
+            display: block;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
         }
 
         .character-info {
@@ -133,7 +168,16 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .controls-three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .controls-three button {
+            padding: 12px 8px;
+            font-size: 13px;
         }
 
         button {
@@ -185,6 +229,20 @@
         .btn-show-guide:hover {
             background: #fcc419;
             transform: translateY(-2px);
+        }
+
+        .btn-check {
+            background: #845ef7;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #7950f2;
+            transform: translateY(-2px);
+        }
+
+        .btn-check.checked {
+            background: #51cf66;
         }
 
         .progress {
@@ -240,12 +298,32 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         .category-btn.active {
             background: #667eea;
             color: white;
             border-color: #667eea;
+        }
+
+        .category-btn .cat-check {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            background: #51cf66;
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-btn.has-progress .cat-check {
+            display: flex;
         }
 
         .stroke-order {
@@ -261,6 +339,21 @@
             align-items: center;
             justify-content: center;
             line-height: 1.5;
+        }
+
+        .shortcut-hint {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #adb5bd;
+        }
+
+        .shortcut-hint kbd {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 2px;
         }
 
         /* 팝업 모달 스타일 */
@@ -563,6 +656,135 @@
             background: #e8f5e9;
         }
 
+        /* 퀴즈 모달 스타일 */
+        .quiz-modal .modal-header {
+            background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+        }
+
+        .quiz-container {
+            text-align: center;
+        }
+
+        .quiz-question {
+            font-size: 48px;
+            color: #333;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .quiz-hint {
+            font-size: 24px;
+            color: #868e96;
+            margin-bottom: 20px;
+        }
+
+        .quiz-canvas-container {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px auto;
+            border: 3px solid #e0e0e0;
+            overflow: hidden;
+            max-width: 350px;
+        }
+
+        #quizCanvas {
+            display: block;
+            width: 100%;
+            height: 200px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .quiz-controls-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .quiz-controls-row button {
+            padding: 12px 8px;
+            font-size: 18px;
+        }
+
+        .btn-show-answer {
+            background: #868e96;
+            color: white;
+        }
+
+        .btn-show-answer:hover {
+            background: #495057;
+        }
+
+        .btn-correct {
+            background: #51cf66;
+            color: white;
+        }
+
+        .btn-correct:hover {
+            background: #40c057;
+        }
+
+        .btn-wrong {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-wrong:hover {
+            background: #fa5252;
+        }
+
+        .quiz-guide-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .quiz-guide-canvas.show {
+            opacity: 0.3;
+        }
+
+        .quiz-score {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .quiz-score .correct {
+            color: #51cf66;
+        }
+
+        .quiz-score .wrong {
+            color: #ff6b6b;
+        }
+
+        .quiz-mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-mode-btn {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-mode-btn.active {
+            background: #20c997;
+            color: white;
+        }
+
         @media (max-width: 500px) {
             .modal-body {
                 padding: 15px;
@@ -584,6 +806,14 @@
             .table-tab {
                 padding: 8px 14px;
                 font-size: 12px;
+            }
+
+            .quiz-question {
+                font-size: 36px;
+            }
+
+            .quiz-answer {
+                font-size: 56px;
             }
         }
 
@@ -623,6 +853,10 @@
                 font-size: 13px;
                 padding: 10px;
             }
+
+            .shortcut-hint {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -631,7 +865,10 @@
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
             <h1>あ 히라가나 따라쓰기</h1>
-            <button class="chart-button" onclick="openChart()" title="히라가나 표 보기">表</button>
+            <div class="header-buttons">
+                <button class="quiz-button" onclick="openQuiz()" title="퀴즈 모드">Q</button>
+                <button class="chart-button" onclick="openChart()" title="히라가나 표 보기">表</button>
+            </div>
         </div>
 
         <div class="level-selector">
@@ -644,7 +881,9 @@
         <div class="progress" id="progressText">1 / 5</div>
 
         <div class="character-display">
-            <div class="current-character" id="currentCharacter">あ</div>
+            <div class="current-character" id="currentCharacter">あ
+                <span class="check-mark" id="checkMark">✓</span>
+            </div>
             <div class="character-info" id="characterInfo">a (아)</div>
         </div>
 
@@ -656,11 +895,18 @@
         <div class="controls">
             <button class="btn-prev" onclick="prevCharacter()">◀ 이전</button>
             <button class="btn-next" onclick="nextCharacter()">다음 ▶</button>
+        </div>
+        <div class="controls controls-three">
             <button class="btn-clear" onclick="clearCanvas()">🗑 지우기</button>
             <button class="btn-show-guide" onclick="toggleGuide()">👁 가이드</button>
+            <button class="btn-check" id="checkBtn" onclick="toggleCheck()">✓ 완료</button>
         </div>
 
         <div class="stroke-order" id="strokeOrder">획순: 1획: 왼쪽 위→오른쪽 아래 곡선</div>
+        
+        <div class="shortcut-hint">
+            단축키: <kbd>←</kbd> 이전 <kbd>→</kbd> 다음 <kbd>Space</kbd> 지우기 <kbd>Enter</kbd> 완료
+        </div>
     </div>
 
     <!-- 히라가나 표 모달 -->
@@ -897,6 +1143,44 @@
         </div>
     </div>
 
+    <!-- 퀴즈 모달 -->
+    <div class="modal-overlay quiz-modal" id="quizModal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>🎯 히라가나 퀴즈</h2>
+                <button class="modal-close" onclick="closeQuiz()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="quiz-container">
+                    <div class="quiz-mode-selector">
+                        <button class="quiz-mode-btn active" onclick="setQuizMode('romaji')">로마자 → 히라가나</button>
+                        <button class="quiz-mode-btn" onclick="setQuizMode('korean')">한글 → 히라가나</button>
+                    </div>
+                    
+                    <div class="quiz-score">
+                        <span class="correct">⭕ 정답: <span id="correctCount">0</span></span>
+                        <span class="wrong">❌ 오답: <span id="wrongCount">0</span></span>
+                    </div>
+                    
+                    <div class="quiz-question" id="quizQuestion">a</div>
+                    <div class="quiz-hint" id="quizHint">(아)</div>
+                    
+                    <div class="quiz-canvas-container">
+                        <canvas id="quizCanvas"></canvas>
+                        <canvas id="quizGuideCanvas" class="quiz-guide-canvas"></canvas>
+                    </div>
+                    
+                    <div class="quiz-controls-row">
+                        <button class="btn-clear" onclick="clearQuizCanvas()">🗑</button>
+                        <button class="btn-show-answer" onclick="showAnswer()">👁</button>
+                        <button class="btn-correct" onclick="markCorrect()">⭕</button>
+                        <button class="btn-wrong" onclick="markWrong()">❌</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 청음+탁음+반탁음 통합 데이터
         const basicData = {
@@ -993,7 +1277,7 @@
             ]
         };
 
-        // 요음 데이터 (청음/탁음/반탁음 요음 통합)
+        // 요음 데이터
         const extendedData = {
             kya: [
                 { char: 'きゃ', romaji: 'kya', korean: '캬', strokes: 'き + 작은 ゃ' },
@@ -1049,23 +1333,10 @@
         const extendedCategories = ['kya', 'sha', 'cha', 'nya', 'hya', 'mya', 'rya'];
 
         const categoryLabels = {
-            a: 'あ',
-            ka: 'か',
-            sa: 'さ',
-            ta: 'た',
-            na: 'な',
-            ha: 'は',
-            ma: 'ま',
-            ya: 'や',
-            ra: 'ら',
-            wa: 'わ',
-            kya: 'きゃ',
-            sha: 'しゃ',
-            cha: 'ちゃ',
-            nya: 'にゃ',
-            hya: 'ひゃ',
-            mya: 'みゃ',
-            rya: 'りゃ'
+            a: 'あ', ka: 'か', sa: 'さ', ta: 'た', na: 'な',
+            ha: 'は', ma: 'ま', ya: 'や', ra: 'ら', wa: 'わ',
+            kya: 'きゃ', sha: 'しゃ', cha: 'ちゃ', nya: 'にゃ',
+            hya: 'ひゃ', mya: 'みゃ', rya: 'りゃ'
         };
 
         let currentTab = 'basic';
@@ -1074,6 +1345,9 @@
         let isDrawing = false;
         let showGuide = true;
 
+        // 체크 상태 저장 (localStorage 사용)
+        let checkedChars = JSON.parse(localStorage.getItem('hiraganaChecked') || '{}');
+
         const canvas = document.getElementById('drawingCanvas');
         const guideCanvas = document.getElementById('guideCanvas');
         const ctx = canvas.getContext('2d');
@@ -1081,6 +1355,11 @@
 
         function getCurrentData() {
             return currentTab === 'basic' ? basicData : extendedData;
+        }
+
+        function getCharKey() {
+            const data = getCurrentData();
+            return `${currentTab}-${currentCategory}-${currentIndex}`;
         }
 
         function initCanvas() {
@@ -1166,6 +1445,35 @@
             guideCanvas.style.opacity = showGuide ? '0.3' : '0';
         }
 
+        function toggleCheck() {
+            const key = getCharKey();
+            if (checkedChars[key]) {
+                delete checkedChars[key];
+            } else {
+                checkedChars[key] = true;
+            }
+            localStorage.setItem('hiraganaChecked', JSON.stringify(checkedChars));
+            updateCheckDisplay();
+            updateCategoryButtons();
+        }
+
+        function updateCheckDisplay() {
+            const key = getCharKey();
+            const isChecked = checkedChars[key];
+            const checkMark = document.getElementById('checkMark');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            if (isChecked) {
+                checkMark.classList.add('show');
+                checkBtn.classList.add('checked');
+                checkBtn.textContent = '✓ 완료됨';
+            } else {
+                checkMark.classList.remove('show');
+                checkBtn.classList.remove('checked');
+                checkBtn.textContent = '✓ 완료';
+            }
+        }
+
         function nextCharacter() {
             const data = getCurrentData();
             const categoryData = data[currentCategory];
@@ -1191,7 +1499,7 @@
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            event.target.closest('.category-btn').classList.add('active');
             
             updateDisplay();
             clearCanvas();
@@ -1219,12 +1527,27 @@
         function updateCategoryButtons() {
             const categorySelector = document.getElementById('categorySelector');
             const categories = currentTab === 'basic' ? basicCategories : extendedCategories;
+            const data = getCurrentData();
             
             categorySelector.innerHTML = '';
             categories.forEach((cat, index) => {
                 const button = document.createElement('button');
-                button.className = 'category-btn' + (index === 0 ? ' active' : '');
-                button.textContent = categoryLabels[cat];
+                button.className = 'category-btn' + (cat === currentCategory ? ' active' : '');
+                
+                // 해당 카테고리에 체크된 항목이 있는지 확인
+                const categoryData = data[cat];
+                let hasChecked = false;
+                for (let i = 0; i < categoryData.length; i++) {
+                    if (checkedChars[`${currentTab}-${cat}-${i}`]) {
+                        hasChecked = true;
+                        break;
+                    }
+                }
+                if (hasChecked) {
+                    button.classList.add('has-progress');
+                }
+                
+                button.innerHTML = `${categoryLabels[cat]}<span class="cat-check">✓</span>`;
                 button.onclick = function() { selectCategory(cat); };
                 categorySelector.appendChild(button);
             });
@@ -1233,13 +1556,16 @@
         function updateDisplay() {
             const data = getCurrentData();
             const currentChar = data[currentCategory][currentIndex];
-            document.getElementById('currentCharacter').textContent = currentChar.char;
+            document.getElementById('currentCharacter').innerHTML = 
+                `${currentChar.char}<span class="check-mark" id="checkMark">✓</span>`;
             document.getElementById('characterInfo').textContent = 
                 `${currentChar.romaji} (${currentChar.korean})`;
             document.getElementById('strokeOrder').textContent = 
                 `획순: ${currentChar.strokes}`;
             document.getElementById('progressText').textContent = 
                 `${currentIndex + 1} / ${data[currentCategory].length}`;
+            
+            updateCheckDisplay();
         }
 
         // 모달 관련 함수
@@ -1265,25 +1591,207 @@
             document.getElementById(tabName + '-section').classList.add('active');
         }
 
-        // 모달 외부 클릭시 닫기
-        document.getElementById('chartModal').addEventListener('click', function(e) {
-            if (e.target === this) {
+        // 퀴즈 관련 변수 및 함수
+        let quizMode = 'romaji';
+        let quizCorrect = 0;
+        let quizWrong = 0;
+        let currentQuizChar = null;
+        let quizCanvas, quizCtx;
+        let isQuizDrawing = false;
+
+        let quizGuideCanvas, quizGuideCtx;
+
+        function openQuiz() {
+            document.getElementById('quizModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+            initQuizCanvas();
+            nextQuizQuestion();
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function initQuizCanvas() {
+            quizCanvas = document.getElementById('quizCanvas');
+            quizCtx = quizCanvas.getContext('2d');
+            quizGuideCanvas = document.getElementById('quizGuideCanvas');
+            quizGuideCtx = quizGuideCanvas.getContext('2d');
+            
+            const container = quizCanvas.parentElement;
+            const rect = container.getBoundingClientRect();
+            
+            quizCanvas.width = rect.width;
+            quizCanvas.height = 200;
+            quizGuideCanvas.width = rect.width;
+            quizGuideCanvas.height = 200;
+            
+            quizCtx.lineWidth = 3;
+            quizCtx.lineCap = 'round';
+            quizCtx.lineJoin = 'round';
+            quizCtx.strokeStyle = '#20c997';
+
+            quizCanvas.addEventListener('mousedown', startQuizDrawing);
+            quizCanvas.addEventListener('mousemove', quizDraw);
+            quizCanvas.addEventListener('mouseup', stopQuizDrawing);
+            quizCanvas.addEventListener('mouseout', stopQuizDrawing);
+            quizCanvas.addEventListener('touchstart', startQuizDrawing);
+            quizCanvas.addEventListener('touchmove', quizDraw);
+            quizCanvas.addEventListener('touchend', stopQuizDrawing);
+        }
+
+        function getQuizPos(e) {
+            const rect = quizCanvas.getBoundingClientRect();
+            const touch = e.touches ? e.touches[0] : e;
+            return {
+                x: touch.clientX - rect.left,
+                y: touch.clientY - rect.top
+            };
+        }
+
+        function startQuizDrawing(e) {
+            e.preventDefault();
+            isQuizDrawing = true;
+            const pos = getQuizPos(e);
+            quizCtx.beginPath();
+            quizCtx.moveTo(pos.x, pos.y);
+        }
+
+        function quizDraw(e) {
+            if (!isQuizDrawing) return;
+            e.preventDefault();
+            const pos = getQuizPos(e);
+            quizCtx.lineTo(pos.x, pos.y);
+            quizCtx.stroke();
+        }
+
+        function stopQuizDrawing() {
+            isQuizDrawing = false;
+        }
+
+        function clearQuizCanvas() {
+            quizCtx.clearRect(0, 0, quizCanvas.width, quizCanvas.height);
+        }
+
+        function setQuizMode(mode) {
+            quizMode = mode;
+            document.querySelectorAll('.quiz-mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            nextQuizQuestion();
+        }
+
+        function getAllChars() {
+            let allChars = [];
+            for (let cat of basicCategories) {
+                allChars = allChars.concat(basicData[cat]);
+            }
+            return allChars;
+        }
+
+        function nextQuizQuestion() {
+            const allChars = getAllChars();
+            currentQuizChar = allChars[Math.floor(Math.random() * allChars.length)];
+            
+            document.getElementById('quizQuestion').textContent = 
+                quizMode === 'romaji' ? currentQuizChar.romaji : currentQuizChar.korean;
+            document.getElementById('quizHint').textContent = 
+                quizMode === 'romaji' ? `(${currentQuizChar.korean})` : `(${currentQuizChar.romaji})`;
+            
+            // 가이드 캔버스 숨기기
+            quizGuideCanvas.classList.remove('show');
+            
+            clearQuizCanvas();
+            drawQuizGuide();
+        }
+
+        function drawQuizGuide() {
+            quizGuideCtx.clearRect(0, 0, quizGuideCanvas.width, quizGuideCanvas.height);
+            
+            const charLength = currentQuizChar.char.length;
+            let fontSize;
+            
+            if (charLength === 1) {
+                fontSize = Math.min(quizGuideCanvas.width, quizGuideCanvas.height) * 0.7;
+            } else {
+                fontSize = Math.min(quizGuideCanvas.width, quizGuideCanvas.height) * 0.5;
+            }
+            
+            quizGuideCtx.font = `bold ${fontSize}px sans-serif`;
+            quizGuideCtx.fillStyle = '#20c997';
+            quizGuideCtx.textAlign = 'center';
+            quizGuideCtx.textBaseline = 'middle';
+            quizGuideCtx.fillText(currentQuizChar.char, quizGuideCanvas.width / 2, quizGuideCanvas.height / 2);
+        }
+
+        function showAnswer() {
+            quizGuideCanvas.classList.add('show');
+        }
+
+        function markCorrect() {
+            quizCorrect++;
+            document.getElementById('correctCount').textContent = quizCorrect;
+            nextQuizQuestion();
+        }
+
+        function markWrong() {
+            quizWrong++;
+            document.getElementById('wrongCount').textContent = quizWrong;
+            nextQuizQuestion();
+        }
+
+        // 키보드 단축키
+        document.addEventListener('keydown', function(e) {
+            // 모달이 열려있으면 무시 (ESC 제외)
+            const chartOpen = document.getElementById('chartModal').classList.contains('show');
+            const quizOpen = document.getElementById('quizModal').classList.contains('show');
+            
+            if (e.key === 'Escape') {
                 closeChart();
+                closeQuiz();
+                return;
+            }
+            
+            if (chartOpen || quizOpen) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    prevCharacter();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextCharacter();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    clearCanvas();
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    toggleCheck();
+                    break;
+                case 'g':
+                case 'G':
+                    toggleGuide();
+                    break;
             }
         });
 
-        // ESC 키로 모달 닫기
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeChart();
-            }
+        // 모달 외부 클릭시 닫기
+        document.getElementById('chartModal').addEventListener('click', function(e) {
+            if (e.target === this) closeChart();
+        });
+        document.getElementById('quizModal').addEventListener('click', function(e) {
+            if (e.target === this) closeQuiz();
         });
 
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mouseout', stopDrawing);
-
         canvas.addEventListener('touchstart', startDrawing);
         canvas.addEventListener('touchmove', draw);
         canvas.addEventListener('touchend', stopDrawing);
