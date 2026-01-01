@@ -38,7 +38,7 @@
             gap: 10px;
         }
 
-        .back-button, .font-button {
+        .back-button, .header-btn {
             background: #e9ecef;
             border: none;
             border-radius: 8px;
@@ -54,35 +54,79 @@
         }
 
         .back-button:hover { background: #dee2e6; transform: translateX(-3px); }
-        .font-button:hover { background: #dee2e6; }
+        .header-btn:hover { background: #dee2e6; }
+        .header-btn.playing { background: #4facfe; color: white; animation: pulse 1s infinite; }
+        .header-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
         h1 { color: #4facfe; font-size: 22px; flex: 1; white-space: nowrap; }
 
-        .header-buttons { display: flex; gap: 8px; }
+        .header-buttons { display: flex; gap: 6px; align-items: center; }
 
-        /* 폰트 드롭다운 */
-        .font-dropdown { position: relative; display: inline-block; }
-        .font-dropdown-content {
+        /* 드롭다운 공통 */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
             display: none;
             position: absolute;
             top: 100%;
             right: 0;
             background: white;
-            min-width: 160px;
+            min-width: 220px;
+            max-height: 350px;
+            overflow-y: auto;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             border-radius: 8px;
             z-index: 100;
-            overflow: hidden;
         }
-        .font-dropdown-content.show { display: block; }
-        .font-option {
+        .dropdown-content.show { display: block; }
+        .dropdown-option {
             padding: 10px 15px;
             cursor: pointer;
             transition: background 0.2s;
-            font-size: 14px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .font-option:hover { background: #f0f0f0; }
-        .font-option.active { background: #4facfe; color: white; }
+        .dropdown-option:last-child { border-bottom: none; }
+        .dropdown-option:hover { background: #f0f0f0; }
+        .dropdown-option.active { background: #4facfe; color: white; }
+
+        .voice-category {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            font-size: 11px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+        }
+
+        .voice-badge {
+            font-size: 9px;
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: #e9ecef;
+            color: #666;
+        }
+        .voice-badge.local { background: #d3f9d8; color: #2b8a3e; }
+        .voice-badge.cloud { background: #d0ebff; color: #1864ab; }
+        .voice-badge.voicevox { background: #fff3bf; color: #e67700; }
+
+        .current-voice {
+            font-size: 10px;
+            color: #666;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
         .level-selector {
             display: grid;
@@ -220,6 +264,44 @@
         .hint-title { font-size: 14px; color: #1864ab; font-weight: bold; margin-bottom: 8px; }
         .hint-content { font-size: 13px; color: #495057; line-height: 1.6; }
 
+        /* TTS 상태 표시 */
+        .tts-status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            display: none;
+            animation: soundWave 0.5s ease-in-out infinite;
+        }
+        .tts-status.show { display: block; }
+        
+        @keyframes soundWave {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 로딩 스피너 */
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-voices-msg {
+            padding: 15px;
+            text-align: center;
+            color: #868e96;
+            font-size: 12px;
+        }
+
         @media (max-width: 400px) {
             .container { padding: 20px 15px; }
             h1 { font-size: 18px; }
@@ -232,6 +314,7 @@
             .hint-section { padding: 12px; }
             .hint-title { font-size: 13px; }
             .hint-content { font-size: 12px; }
+            .current-voice { display: none; }
         }
     </style>
 </head>
@@ -241,13 +324,30 @@
             <button class="back-button" onclick="goBack()">←</button>
             <h1>📝 일본어 문장 연습</h1>
             <div class="header-buttons">
-                <div class="font-dropdown">
-                    <button class="font-button" onclick="toggleFontDropdown()" title="폰트 변경">Aa</button>
-                    <div class="font-dropdown-content" id="fontDropdown">
-                        <div class="font-option active" onclick="setFont('Noto Sans JP')" style="font-family: 'Noto Sans JP'">Noto Sans JP</div>
-                        <div class="font-option" onclick="setFont('Zen Maru Gothic')" style="font-family: 'Zen Maru Gothic'">Zen Maru Gothic</div>
-                        <div class="font-option" onclick="setFont('Kosugi Maru')" style="font-family: 'Kosugi Maru'">Kosugi Maru</div>
-                        <div class="font-option" onclick="setFont('M PLUS Rounded 1c')" style="font-family: 'M PLUS Rounded 1c'">M PLUS Rounded</div>
+                <!-- TTS 재생 버튼 -->
+                <button class="header-btn" id="playBtn" onclick="playTTS()" title="발음 듣기">
+                    <span id="playIcon">▶</span>
+                </button>
+                
+                <!-- 음성 선택 드롭다운 -->
+                <div class="dropdown">
+                    <button class="header-btn" onclick="toggleDropdown('voiceDropdown')" title="음성 선택" style="width: auto; padding: 0 10px; gap: 5px;">
+                        <span>🎤</span>
+                        <span class="current-voice" id="currentVoiceName">로딩중...</span>
+                    </button>
+                    <div class="dropdown-content" id="voiceDropdown">
+                        <div class="no-voices-msg" id="loadingVoices">음성 목록 로딩중...</div>
+                    </div>
+                </div>
+                
+                <!-- 폰트 드롭다운 -->
+                <div class="dropdown">
+                    <button class="header-btn" onclick="toggleDropdown('fontDropdown')" title="폰트 변경">Aa</button>
+                    <div class="dropdown-content" id="fontDropdown" style="min-width: 160px;">
+                        <div class="dropdown-option active" onclick="setFont('Noto Sans JP')" style="font-family: 'Noto Sans JP'">Noto Sans JP</div>
+                        <div class="dropdown-option" onclick="setFont('Zen Maru Gothic')" style="font-family: 'Zen Maru Gothic'">Zen Maru Gothic</div>
+                        <div class="dropdown-option" onclick="setFont('Kosugi Maru')" style="font-family: 'Kosugi Maru'">Kosugi Maru</div>
+                        <div class="dropdown-option" onclick="setFont('M PLUS Rounded 1c')" style="font-family: 'M PLUS Rounded 1c'">M PLUS Rounded</div>
                     </div>
                 </div>
             </div>
@@ -262,6 +362,7 @@
         <div class="progress" id="progressText">1 / 50</div>
 
         <div class="sentence-display">
+            <span class="tts-status" id="ttsStatus">🔊</span>
             <span class="sentence-check" id="sentenceCheck">✓</span>
             <div class="japanese-sentence jp-text" id="japaneseSentence">こんにちは</div>
             <div class="romaji" id="romajiText">konnichiwa</div>
@@ -380,35 +481,296 @@
             ]
         };
 
+        // VOICEVOX 음성 목록
+        const voicevoxVoices = [
+            { id: 3, name: 'ずんだもん', category: 'female' },
+            { id: 1, name: '四国めたん', category: 'female' },
+            { id: 22, name: '春日部つむぎ', category: 'female' },
+            { id: 10, name: '雨晴はう', category: 'female' },
+            { id: 14, name: '冥鳴ひまり', category: 'female' },
+            { id: 9, name: '波音リツ', category: 'female' },
+            { id: 13, name: '青山龍星', category: 'male' },
+            { id: 11, name: '玄野武宏', category: 'male' },
+            { id: 52, name: '剣崎雌雄', category: 'male' },
+            { id: 4, name: 'ずんだもん (달콤)', category: 'special' },
+            { id: 6, name: 'ずんだもん (섹시)', category: 'special' },
+            { id: 5, name: 'ずんだもん (츤츤)', category: 'special' },
+            { id: 21, name: 'ずんだもん (속삭임)', category: 'special' },
+        ];
+
         let currentLevel = 'beginner';
         let currentIndex = 0;
         let isDrawing = false;
         let showGuide = true;
         let currentFont = 'Noto Sans JP';
         let checkedSentences = JSON.parse(localStorage.getItem('sentenceChecked') || '{}');
+        let isPlaying = false;
+        let currentAudio = null;
+        
+        // 음성 설정
+        let selectedVoice = null; // { type: 'webspeech' | 'voicevox', id: ... }
+        let webSpeechVoices = [];
 
         const canvas = document.getElementById('drawingCanvas');
         const guideCanvas = document.getElementById('guideCanvas');
         const ctx = canvas.getContext('2d');
         const guideCtx = guideCanvas.getContext('2d');
 
-        function toggleFontDropdown() {
-            document.getElementById('fontDropdown').classList.toggle('show');
+        // Web Speech API 음성 로드
+        function loadWebSpeechVoices() {
+            return new Promise((resolve) => {
+                let voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    resolve(voices);
+                    return;
+                }
+                
+                speechSynthesis.onvoiceschanged = () => {
+                    voices = speechSynthesis.getVoices();
+                    resolve(voices);
+                };
+                
+                // 타임아웃 (일부 브라우저에서 이벤트가 발생하지 않을 수 있음)
+                setTimeout(() => resolve(speechSynthesis.getVoices()), 1000);
+            });
+        }
+
+        // 음성 목록 UI 구성
+        async function populateVoiceList() {
+            const dropdown = document.getElementById('voiceDropdown');
+            const allVoices = await loadWebSpeechVoices();
+            
+            // 일본어 음성만 필터링
+            webSpeechVoices = allVoices.filter(v => v.lang.startsWith('ja'));
+            
+            let html = '';
+            
+            // VOICEVOX 음성 (클라우드)
+            html += '<div class="voice-category">🎭 VOICEVOX (고품질)</div>';
+            
+            const femaleVV = voicevoxVoices.filter(v => v.category === 'female');
+            const maleVV = voicevoxVoices.filter(v => v.category === 'male');
+            const specialVV = voicevoxVoices.filter(v => v.category === 'special');
+            
+            [...femaleVV, ...maleVV, ...specialVV].forEach(voice => {
+                const icon = voice.category === 'female' ? '👩' : voice.category === 'male' ? '👨' : '✨';
+                html += `<div class="dropdown-option" data-type="voicevox" data-id="${voice.id}" onclick="selectVoice('voicevox', ${voice.id}, '${voice.name}')">
+                    ${icon} ${voice.name}
+                    <span class="voice-badge voicevox">VOICEVOX</span>
+                </div>`;
+            });
+            
+            // Web Speech API 음성
+            if (webSpeechVoices.length > 0) {
+                html += '<div class="voice-category">🌐 브라우저 음성</div>';
+                
+                webSpeechVoices.forEach((voice, index) => {
+                    const isLocal = voice.localService;
+                    const displayName = voice.name.replace('Google ', '').replace('Microsoft ', '').replace(' Online (Natural)', '');
+                    const badgeClass = isLocal ? 'local' : 'cloud';
+                    const badgeText = isLocal ? '로컬' : '클라우드';
+                    
+                    html += `<div class="dropdown-option" data-type="webspeech" data-id="${index}" onclick="selectVoice('webspeech', ${index}, '${displayName}')">
+                        🔊 ${displayName}
+                        <span class="voice-badge ${badgeClass}">${badgeText}</span>
+                    </div>`;
+                });
+            }
+            
+            if (html === '') {
+                html = '<div class="no-voices-msg">사용 가능한 음성이 없습니다</div>';
+            }
+            
+            dropdown.innerHTML = html;
+            
+            // 저장된 음성 설정 복원 또는 기본값 설정
+            const savedVoice = localStorage.getItem('selectedVoice');
+            if (savedVoice) {
+                try {
+                    selectedVoice = JSON.parse(savedVoice);
+                    document.getElementById('currentVoiceName').textContent = selectedVoice.name;
+                    updateActiveVoice();
+                } catch (e) {
+                    setDefaultVoice();
+                }
+            } else {
+                setDefaultVoice();
+            }
+        }
+
+        function setDefaultVoice() {
+            // 기본값: VOICEVOX ずんだもん
+            selectedVoice = { type: 'voicevox', id: 3, name: 'ずんだもん' };
+            document.getElementById('currentVoiceName').textContent = selectedVoice.name;
+            localStorage.setItem('selectedVoice', JSON.stringify(selectedVoice));
+            updateActiveVoice();
+        }
+
+        function updateActiveVoice() {
+            document.querySelectorAll('#voiceDropdown .dropdown-option').forEach(opt => {
+                const type = opt.dataset.type;
+                const id = parseInt(opt.dataset.id);
+                opt.classList.toggle('active', type === selectedVoice.type && id === selectedVoice.id);
+            });
+        }
+
+        function selectVoice(type, id, name) {
+            selectedVoice = { type, id, name };
+            document.getElementById('currentVoiceName').textContent = name;
+            localStorage.setItem('selectedVoice', JSON.stringify(selectedVoice));
+            updateActiveVoice();
+            document.getElementById('voiceDropdown').classList.remove('show');
+        }
+
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown-content').forEach(d => {
+                if (d.id !== id) d.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        async function playTTS() {
+            // 이미 재생 중이면 중지
+            if (isPlaying) {
+                stopCurrentAudio();
+                return;
+            }
+
+            const sentence = sentences[currentLevel][currentIndex];
+            const text = sentence.japanese.replace(/\s/g, '');
+            
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+            playBtn.disabled = true;
+            playIcon.innerHTML = '<span class="loading-spinner"></span>';
+            
+            try {
+                if (selectedVoice.type === 'voicevox') {
+                    await playVoicevox(text, selectedVoice.id);
+                } else {
+                    playWebSpeech(text, selectedVoice.id);
+                }
+            } catch (error) {
+                console.error('TTS 오류:', error);
+                // VOICEVOX 실패 시 Web Speech로 폴백
+                if (selectedVoice.type === 'voicevox' && webSpeechVoices.length > 0) {
+                    playWebSpeech(text, 0);
+                }
+            } finally {
+                playBtn.disabled = false;
+                if (!isPlaying) {
+                    playIcon.textContent = '▶';
+                }
+            }
+        }
+
+        async function playVoicevox(text, speakerId) {
+            const apiUrl = `https://api.tts.quest/v3/voicevox/synthesis?speaker=${speakerId}&text=${encodeURIComponent(text)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            
+            if (data.success && data.mp3StreamingUrl) {
+                currentAudio = new Audio(data.mp3StreamingUrl);
+                
+                currentAudio.onplay = () => {
+                    isPlaying = true;
+                    updatePlayButton(true);
+                    updateTtsStatus(true);
+                };
+                
+                currentAudio.onended = () => {
+                    isPlaying = false;
+                    currentAudio = null;
+                    updatePlayButton(false);
+                    updateTtsStatus(false);
+                };
+                
+                currentAudio.onerror = () => {
+                    isPlaying = false;
+                    currentAudio = null;
+                    updatePlayButton(false);
+                    updateTtsStatus(false);
+                };
+                
+                await currentAudio.play();
+            } else {
+                throw new Error('VOICEVOX API 응답 오류');
+            }
+        }
+
+        function playWebSpeech(text, voiceIndex) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.9;
+            
+            if (webSpeechVoices[voiceIndex]) {
+                utterance.voice = webSpeechVoices[voiceIndex];
+            }
+            
+            utterance.onstart = () => {
+                isPlaying = true;
+                updatePlayButton(true);
+                updateTtsStatus(true);
+            };
+            
+            utterance.onend = () => {
+                isPlaying = false;
+                updatePlayButton(false);
+                updateTtsStatus(false);
+            };
+            
+            utterance.onerror = () => {
+                isPlaying = false;
+                updatePlayButton(false);
+                updateTtsStatus(false);
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function updatePlayButton(playing) {
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+            
+            if (playing) {
+                playBtn.classList.add('playing');
+                playIcon.textContent = '⏹';
+            } else {
+                playBtn.classList.remove('playing');
+                playIcon.textContent = '▶';
+            }
+        }
+
+        function updateTtsStatus(playing) {
+            const ttsStatus = document.getElementById('ttsStatus');
+            ttsStatus.classList.toggle('show', playing);
+        }
+
+        function stopCurrentAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            speechSynthesis.cancel();
+            isPlaying = false;
+            updatePlayButton(false);
+            updateTtsStatus(false);
         }
 
         function setFont(fontName) {
             currentFont = fontName;
             document.documentElement.style.setProperty('--jp-font', `'${fontName}', sans-serif`);
-            document.querySelectorAll('.font-option').forEach(opt => opt.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('#fontDropdown .dropdown-option').forEach(opt => {
+                opt.classList.toggle('active', opt.textContent.trim() === fontName);
+            });
             document.getElementById('fontDropdown').classList.remove('show');
             localStorage.setItem('sentenceFont', fontName);
             drawGuideSentence();
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.font-dropdown')) {
-                document.getElementById('fontDropdown').classList.remove('show');
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
             }
         });
 
@@ -581,6 +943,7 @@
         function toggleGuide() { showGuide = !showGuide; guideCanvas.style.opacity = showGuide ? '0.3' : '0'; }
 
         function nextSentence() {
+            stopCurrentAudio();
             const levelData = sentences[currentLevel];
             currentIndex = (currentIndex + 1) % levelData.length;
             updateDisplay();
@@ -589,6 +952,7 @@
         }
 
         function prevSentence() {
+            stopCurrentAudio();
             const levelData = sentences[currentLevel];
             currentIndex = (currentIndex - 1 + levelData.length) % levelData.length;
             updateDisplay();
@@ -597,6 +961,7 @@
         }
 
         function selectLevel(level) {
+            stopCurrentAudio();
             currentLevel = level;
             currentIndex = 0;
             document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
@@ -643,6 +1008,7 @@
                 case ' ': e.preventDefault(); clearCanvas(); break;
                 case 'Enter': e.preventDefault(); toggleCheck(); break;
                 case 'g': case 'G': toggleGuide(); break;
+                case 'p': case 'P': playTTS(); break;
             }
         });
 
@@ -657,18 +1023,29 @@
         window.addEventListener('resize', initCanvas);
         
         // 초기화
-        const savedFont = localStorage.getItem('sentenceFont');
-        if (savedFont) {
-            currentFont = savedFont;
-            document.documentElement.style.setProperty('--jp-font', `'${savedFont}', sans-serif`);
-            document.querySelectorAll('.font-option').forEach(opt => {
-                opt.classList.toggle('active', opt.textContent.trim() === savedFont);
-            });
+        async function init() {
+            // 폰트 설정 복원
+            const savedFont = localStorage.getItem('sentenceFont');
+            if (savedFont) {
+                currentFont = savedFont;
+                document.documentElement.style.setProperty('--jp-font', `'${savedFont}', sans-serif`);
+                document.querySelectorAll('#fontDropdown .dropdown-option').forEach(opt => {
+                    opt.classList.toggle('active', opt.textContent.trim() === savedFont);
+                });
+            }
+            
+            // 음성 목록 로드
+            await populateVoiceList();
+            
+            // Chrome 버그 해결: 빈 문자열로 초기화
+            speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+            
+            initCanvas();
+            updateDisplay();
+            updateLevelProgress();
         }
         
-        initCanvas();
-        updateDisplay();
-        updateLevelProgress();
+        init();
     </script>
 </body>
 </html>
