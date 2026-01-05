@@ -27,8 +27,8 @@
             max-width: 500px;
             width: 100%;
         }
-        h1 { color: #667eea; font-size: 22px; flex: 1; white-space: nowrap; }
-        .header { display: flex; align-items: center; margin-bottom: 20px; gap: 10px; }
+        h1 { color: #667eea; font-size: 20px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+        .header { display: flex; align-items: center; margin-bottom: 20px; gap: 8px; }
         .back-button, .font-button {
             background: #e9ecef; border: none; border-radius: 8px;
             width: 36px; height: 36px; cursor: pointer; font-size: 16px;
@@ -37,7 +37,7 @@
         }
         .back-button:hover { background: #dee2e6; transform: translateX(-3px); }
         .font-button:hover { background: #dee2e6; }
-        .header-buttons { display: flex; gap: 8px; }
+        .header-buttons { display: flex; gap: 6px; flex-shrink: 0; }
         .chart-button, .quiz-button {
             background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
             border: none; border-radius: 8px; width: 36px; height: 36px;
@@ -115,7 +115,7 @@
         .shortcut-hint kbd { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: monospace; margin: 0 2px; }
         .font-dropdown { position: relative; display: inline-block; }
         .font-dropdown-content {
-            display: none; position: absolute; top: 100%; left: 0;
+            display: none; position: absolute; top: 100%; right: 0;
             background: white; min-width: 160px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2); border-radius: 8px; z-index: 100; overflow: hidden;
         }
@@ -248,7 +248,12 @@
         }
         @media (max-width: 400px) {
             .container { padding: 20px 15px; }
-            h1 { font-size: 18px; }
+            h1 { font-size: 16px; }
+            .header { gap: 6px; }
+            .header-buttons { gap: 4px; }
+            .back-button, .font-button, .chart-button, .quiz-button {
+                width: 32px; height: 32px; font-size: 14px;
+            }
             .current-character { font-size: 60px; }
             .character-info { font-size: 16px; }
             .category-selector { grid-template-columns: repeat(5, 1fr); gap: 6px; }
@@ -257,13 +262,19 @@
             .stroke-order { font-size: 13px; padding: 10px; }
             .shortcut-hint { display: none; }
         }
+        @media (max-width: 340px) {
+            h1 { font-size: 14px; }
+            .back-button, .font-button, .chart-button, .quiz-button {
+                width: 28px; height: 28px; font-size: 12px; border-radius: 6px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
-            <h1>あ 히라가나 따라쓰기</h1>
+            <h1>히라가나</h1>
             <div class="header-buttons">
                 <div class="font-dropdown">
                     <button class="font-button" onclick="toggleFontDropdown()" title="폰트 변경">Aa</button>
