@@ -35,7 +35,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
-            gap: 10px;
+            gap: 8px;
         }
 
         .back-button, .header-btn {
@@ -63,9 +63,17 @@
             50% { transform: scale(1.1); }
         }
 
-        h1 { color: #4facfe; font-size: 22px; flex: 1; white-space: nowrap; }
+        h1 { 
+            color: #4facfe; 
+            font-size: 20px; 
+            flex: 1; 
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-        .header-buttons { display: flex; gap: 6px; align-items: center; }
+        .header-buttons { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
 
         /* 드롭다운 공통 */
         .dropdown { position: relative; display: inline-block; }
@@ -302,9 +310,21 @@
             font-size: 12px;
         }
 
+        @media (max-width: 500px) {
+            h1 { font-size: 16px; }
+            .header { gap: 6px; }
+            .header-buttons { gap: 4px; }
+            .back-button, .header-btn {
+                width: 32px; height: 32px; font-size: 14px;
+            }
+        }
+
         @media (max-width: 400px) {
             .container { padding: 20px 15px; }
-            h1 { font-size: 18px; }
+            h1 { font-size: 14px; }
+            .back-button, .header-btn {
+                width: 30px; height: 30px; font-size: 12px; border-radius: 6px;
+            }
             .japanese-sentence { font-size: 22px; }
             .romaji { font-size: 13px; }
             .korean-pronunciation { font-size: 14px; }
@@ -322,7 +342,7 @@
     <div class="container">
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
-            <h1>📝 일본어 문장 연습</h1>
+            <h1>문장 연습</h1>
             <div class="header-buttons">
                 <!-- TTS 재생 버튼 -->
                 <button class="header-btn" id="playBtn" onclick="playTTS()" title="발음 듣기">
