@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ハイキュー로 배우는 일본어</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a1a;--text2:#555;--text3:#888;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --orange:#E8601C;--orange-light:#fff0e8;--orange-dark:#b84810;
+  --green:#3aaf6a;--red:#e24b4a;--blue:#185fa5;
+  --radius:10px;--radius-lg:16px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:var(--bg3);color:var(--text);min-height:100vh}
+
+/* ── SHELL ── */
+.shell{max-width:680px;margin:0 auto;padding:0 0 80px}
+.topbar{background:var(--bg);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100;padding:12px 16px}
+.topbar-inner{display:flex;align-items:center;gap:10px}
+.logo{font-size:17px;font-weight:600;color:var(--text)}
+.logo span{color:var(--orange)}
+.topbar-tabs{display:flex;gap:4px;margin-left:auto}
+.ttab{padding:6px 13px;border-radius:20px;border:none;font-size:13px;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s;font-weight:500}
+.ttab.active{background:var(--orange);color:#fff}
+.ttab:hover:not(.active){background:var(--bg2)}
+
+.view{display:none;padding:16px}
+.view.active{display:block}
+
+/* ── COMMON COMPONENTS ── */
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:12px}
+.section-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back-btn{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:6px 13px;font-size:13px;cursor:pointer;color:var(--text2)}
+.back-btn:hover{color:var(--text)}
+.section-title{font-size:16px;font-weight:600;color:var(--text)}
+.progress-bar{height:3px;background:var(--bg3);border-radius:2px;margin-bottom:4px;overflow:hidden}
+.progress-fill{height:100%;background:var(--orange);border-radius:2px;transition:width .3s}
+.progress-label{font-size:12px;color:var(--text3);text-align:right;margin-bottom:12px}
+.cat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cat-btn{padding:5px 12px;border-radius:16px;border:0.5px solid var(--border2);font-size:12px;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s;font-weight:500}
+.cat-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btn{padding:11px 10px;border:0.5px solid var(--border2);background:var(--bg);border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;color:var(--text);transition:all .15s;width:100%}
+.btn:hover{background:var(--bg2)}
+.btn.primary{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn.primary:hover{opacity:.88}
+.tag{display:inline-block;background:var(--bg2);border-radius:12px;padding:3px 9px;font-size:11px;color:var(--text2);margin:2px;border:0.5px solid var(--border)}
+
+/* ── HOME ── */
+.hero{background:linear-gradient(135deg,#E8601C 0%,#b84810 100%);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:14px}
+.hero-ball{font-size:48px;flex-shrink:0}
+.hero h2{font-size:17px;font-weight:700;margin-bottom:5px}
+.hero p{font-size:13px;opacity:.88;line-height:1.6}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.home-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:18px 14px;cursor:pointer;transition:all .18s;text-align:center}
+.home-card:hover{border-color:var(--orange);transform:translateY(-2px)}
+.home-card .hc-icon{font-size:26px;margin-bottom:8px}
+.home-card .hc-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.home-card .hc-desc{font-size:12px;color:var(--text3);line-height:1.4}
+
+/* ── VOCAB ── */
+.fc-top{background:var(--bg2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:28px 20px;text-align:center;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.fc-speaker{font-size:12px;color:var(--orange);font-weight:600;margin-bottom:8px;letter-spacing:.04em}
+.fc-char{font-size:60px;line-height:1;color:var(--text);margin-bottom:10px}
+.fc-reveal{font-size:13px;color:var(--text2);cursor:pointer;border:0.5px solid var(--border2);border-radius:20px;padding:4px 14px;background:var(--bg);transition:all .15s}
+.fc-reveal:hover{background:var(--bg3)}
+.fc-bottom{padding:14px 18px;display:none;border-top:0.5px solid var(--border)}
+.fc-bottom.show{display:block}
+.fc-jp{font-size:20px;font-weight:600;color:var(--text);margin-bottom:5px}
+.fc-romaji{font-size:13px;color:var(--text3);margin-bottom:3px}
+.fc-kr{font-size:14px;color:var(--orange);font-weight:600;margin-bottom:10px}
+.fc-ctx{font-size:12px;color:var(--text2);background:var(--bg2);border-radius:var(--radius);padding:8px 10px;line-height:1.6}
+
+/* ── QUIZ ── */
+.score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.score-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center}
+.score-n{font-size:24px;font-weight:700}
+.score-n.c{color:var(--green)}
+.score-n.w{color:var(--red)}
+.score-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.quiz-q-box{background:var(--bg2);border-radius:var(--radius-lg);padding:28px 20px;text-align:center;margin-bottom:12px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.quiz-char{font-size:52px;color:var(--text);margin-bottom:6px}
+.quiz-sub{font-size:13px;color:var(--text3)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.qopt{border:0.5px solid var(--border2);background:var(--bg);border-radius:var(--radius);padding:12px 8px;cursor:pointer;font-size:13px;color:var(--text);transition:all .15s;text-align:center;font-weight:500}
+.qopt:hover:not(.disabled){border-color:var(--orange);background:var(--orange-light)}
+.qopt.correct{background:#eaf3de;border-color:var(--green);color:#27500a}
+.qopt.wrong{background:#fcebeb;border-color:var(--red);color:#501313}
+.qopt.disabled{cursor:default;pointer-events:none}
+.quiz-fb{background:var(--bg2);border-radius:var(--radius);padding:12px;margin-bottom:10px;display:none}
+.quiz-fb.show{display:block}
+.fb-char{font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px}
+.fb-detail{font-size:12px;color:var(--text2);line-height:1.5}
+.streak{font-size:12px;color:var(--orange);font-weight:600;text-align:center;min-height:18px;margin-bottom:6px}
+
+/* ── SENTENCES ── */
+.sent-scene{font-size:11px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.sent-ep{font-size:11px;color:var(--text3);margin-bottom:10px}
+.sent-jp{font-size:24px;color:var(--text);line-height:1.4;margin-bottom:7px}
+.sent-romaji{font-size:12px;color:var(--text3);margin-bottom:3px}
+.sent-pron{font-size:12px;color:var(--text3);margin-bottom:6px}
+.sent-kr{font-size:15px;color:var(--orange);font-weight:600;margin-bottom:10px}
+.breakdown-box{background:var(--bg2);border-radius:var(--radius);padding:10px;margin-top:10px;display:none}
+.breakdown-box.show{display:block}
+.bd-row{display:flex;gap:8px;font-size:12px;margin-bottom:6px;align-items:flex-start}
+.bd-jp{font-weight:600;min-width:70px;color:var(--text)}
+.bd-desc{color:var(--text2);line-height:1.4}
+.toggle-bd{font-size:12px;color:var(--text3);cursor:pointer;background:none;border:none;padding:0;margin-top:6px;text-decoration:underline;text-decoration-style:dotted}
+
+/* ── CANVAS ── */
+.canvas-type-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ctype-btn{padding:10px;border:0.5px solid var(--border2);background:var(--bg);border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;color:var(--text);transition:all .15s;text-align:center}
+.ctype-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.char-display{text-align:center;padding:10px 0}
+.char-big{font-size:72px;color:var(--orange);font-weight:700;line-height:1}
+.char-info{font-size:15px;color:var(--text2);margin-top:4px}
+.char-strokes{font-size:12px;color:var(--text3);margin-top:2px}
+.canvas-wrap{position:relative;background:#fafaf8;border:1.5px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px}
+#drawCanvas{display:block;width:100%;height:220px;cursor:crosshair;touch-action:none}
+#guideCanvas{position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity .3s}
+#guideCanvas.show{opacity:.28}
+.canvas-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.canvas-cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.cc-btn{padding:8px 4px;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);font-size:15px;cursor:pointer;text-align:center;transition:all .15s;font-weight:500;position:relative}
+.cc-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.cc-btn .done-dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:var(--green);border-radius:50%;display:none}
+.cc-btn.has-done .done-dot{display:block}
+.tab-row{display:flex;gap:6px;margin-bottom:10px}
+.tab-btn{padding:6px 14px;border-radius:16px;border:0.5px solid var(--border2);font-size:12px;cursor:pointer;background:transparent;color:var(--text2);font-weight:500;transition:all .15s}
+.tab-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+.check-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--green);font-weight:600;padding:4px 10px;background:#eaf3de;border-radius:20px;border:0.5px solid var(--green);cursor:pointer;transition:all .15s}
+.check-badge.unchecked{color:var(--text3);background:var(--bg2);border-color:var(--border)}
+.char-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+
+/* katakana color */
+.kana-kata .char-big{color:var(--blue)}
+.kana-kata .cc-btn.active{background:var(--blue);border-color:var(--blue)}
+.kana-kata .cat-btn.active{background:var(--blue);border-color:var(--blue)}
+.kana-kata .progress-fill{background:var(--blue)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">🏐 <span>ハイキュー</span> 일본어</div>
+      <div class="topbar-tabs">
+        <button class="ttab active" onclick="showView('home')">홈</button>
+        <button class="ttab" onclick="showView('vocab')">단어</button>
+        <button class="ttab" onclick="showView('quiz')">퀴즈</button>
+        <button class="ttab" onclick="showView('sentences')">문장</button>
+        <button class="ttab" onclick="showView('canvas')">쓰기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <div id="view-home" class="view active">
+    <div class="hero">
+      <div class="hero-ball">🏐</div>
+      <div>
+        <h2>하이큐로 배우는 진짜 일본어</h2>
+        <p>카게야마·힌아타·츠키시마의 명대사와<br>배구 용어로 실전 일본어를 익혀보세요.</p>
+      </div>
+    </div>
+    <div class="home-grid">
+      <div class="home-card" onclick="gotoView('vocab')">
+        <div class="hc-icon">📖</div>
+        <div class="hc-label">단어 카드</div>
+        <div class="hc-desc">캐릭터별 대사 & 배구 용어 플래시카드</div>
+      </div>
+      <div class="home-card" onclick="gotoView('quiz')">
+        <div class="hc-icon">⚡</div>
+        <div class="hc-label">스파이크 퀴즈</div>
+        <div class="hc-desc">4지선다로 단어 뜻 맞추기</div>
+      </div>
+      <div class="home-card" onclick="gotoView('sentences')">
+        <div class="hc-icon">💬</div>
+        <div class="hc-label">명대사 문장</div>
+        <div class="hc-desc">에피소드별 대사 문법 분석</div>
+      </div>
+      <div class="home-card" onclick="gotoView('canvas')">
+        <div class="hc-icon">✍️</div>
+        <div class="hc-label">히라가나/가타카나 쓰기</div>
+        <div class="hc-desc">손으로 직접 쓰며 익히기</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ VOCAB ═══════════════ -->
+  <div id="view-vocab" class="view">
+    <div class="section-hd">
+      <button class="back-btn" onclick="showView('home')">← 홈</button>
+      <span class="section-title">단어 카드</span>
+    </div>
+    <!-- character filter -->
+    <div class="cat-row" id="char-filter"></div>
+    <!-- category tabs -->
+    <div class="cat-row" id="vocab-cats"></div>
+    <div class="progress-bar"><div class="progress-fill" id="vp-fill"></div></div>
+    <div class="progress-label" id="vp-label"></div>
+    <!-- flashcard -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="fc-top">
+        <div class="fc-speaker" id="fc-speaker"></div>
+        <div class="fc-char" id="fc-char"></div>
+        <button class="fc-reveal" onclick="toggleReveal()">뜻 보기 ↓</button>
+      </div>
+      <div class="fc-bottom" id="fc-bottom">
+        <div class="fc-jp" id="fc-jp"></div>
+        <div class="fc-romaji" id="fc-romaji"></div>
+        <div class="fc-kr" id="fc-kr"></div>
+        <div class="fc-ctx" id="fc-ctx"></div>
+      </div>
+    </div>
+    <div class="row2">
+      <button class="btn" onclick="prevCard()">← 이전</button>
+      <button class="btn primary" onclick="nextCard()">다음 →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <div id="view-quiz" class="view">
+    <div class="section-hd">
+      <button class="back-btn" onclick="showView('home')">← 홈</button>
+      <span class="section-title">스파이크 퀴즈</span>
+    </div>
+    <div class="score-row">
+      <div class="score-card"><div class="score-n c" id="qc">0</div><div class="score-lbl">정답</div></div>
+      <div class="score-card"><div class="score-n w" id="qw">0</div><div class="score-lbl">오답</div></div>
+      <div class="score-card"><div class="score-n" id="qt" style="color:var(--text)">0</div><div class="score-lbl">총</div></div>
+    </div>
+    <div class="streak" id="streak-msg"></div>
+    <div class="quiz-q-box">
+      <div class="quiz-char" id="quiz-char">?</div>
+      <div class="quiz-sub" id="quiz-sub">이 단어의 뜻은?</div>
+    </div>
+    <div class="quiz-opts" id="quiz-opts"></div>
+    <div class="quiz-fb" id="quiz-fb">
+      <div class="fb-char" id="fb-char"></div>
+      <div class="fb-detail" id="fb-detail"></div>
+    </div>
+    <button class="btn primary" id="quiz-next" onclick="nextQuiz()" style="display:none">다음 문제 →</button>
+  </div>
+
+  <!-- ═══════════════ SENTENCES ═══════════════ -->
+  <div id="view-sentences" class="view">
+    <div class="section-hd">
+      <button class="back-btn" onclick="showView('home')">← 홈</button>
+      <span class="section-title">하이큐 명대사</span>
+    </div>
+    <!-- char filter -->
+    <div class="cat-row" id="sent-char-filter"></div>
+    <!-- ep filter -->
+    <div class="cat-row" id="sent-cats"></div>
+    <div class="progress-bar"><div class="progress-fill" id="sp-fill"></div></div>
+    <div class="progress-label" id="sp-label"></div>
+    <div id="sent-display"></div>
+    <div class="row2">
+      <button class="btn" onclick="prevSent()">← 이전</button>
+      <button class="btn primary" onclick="nextSent()">다음 →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CANVAS ═══════════════ -->
+  <div id="view-canvas" class="view">
+    <div class="section-hd">
+      <button class="back-btn" onclick="showView('home')">← 홈</button>
+      <span class="section-title">히라가나 / 가타카나 쓰기</span>
+    </div>
+    <!-- type selector -->
+    <div class="canvas-type-row">
+      <button class="ctype-btn active" id="ct-hira" onclick="setKanaType('hira')">あ 히라가나</button>
+      <button class="ctype-btn" id="ct-kata" onclick="setKanaType('kata')">ア 가타카나</button>
+    </div>
+    <!-- tab: basic / extended -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="ktab-basic" onclick="setKanaTab('basic')">청음·탁음</button>
+      <button class="tab-btn" id="ktab-ext" onclick="setKanaTab('ext')">요음 (拗音)</button>
+    </div>
+    <!-- category grid -->
+    <div class="canvas-cat-grid" id="kana-cats"></div>
+    <!-- char display -->
+    <div id="kana-view">
+      <div class="progress-bar"><div class="progress-fill" id="kp-fill"></div></div>
+      <div class="progress-label" id="kp-label"></div>
+      <div class="char-top-row">
+        <div class="char-display">
+          <div class="char-big" id="kana-char">あ</div>
+          <div class="char-info" id="kana-info">a (아)</div>
+          <div class="char-strokes" id="kana-strokes"></div>
+        </div>
+        <div>
+          <div class="check-badge unchecked" id="check-badge" onclick="toggleCheck()">✓ 완료</div>
+        </div>
+      </div>
+      <!-- canvas -->
+      <div class="canvas-wrap">
+        <canvas id="drawCanvas"></canvas>
+        <canvas id="guideCanvas"></canvas>
+      </div>
+      <div class="canvas-btns">
+        <button class="btn" onclick="clearCanvas()">🗑 지우기</button>
+        <button class="btn" onclick="toggleGuide()">👁 가이드</button>
+        <button class="btn" id="prev-kana" onclick="prevKana()">← 이전</button>
+      </div>
+      <div class="row2">
+        <button class="btn" onclick="prevKana()">← 이전</button>
+        <button class="btn primary" onclick="nextKana()">다음 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA
+══════════════════════════════════════════ */
+const CHARS = ['전체','힌아타','카게야마','츠키시마','니시노야','타나카','사토리','아카아시','케넬마'];
+
+const vocabData = {
+  volleyball:[
+    {char:'スパイク',jp:'スパイク',romaji:'supaiku',kr:'스파이크 (강공격)',speaker:'힌아타',ctx:'배구에서 강하게 때리는 공격 동작. 힌아타의 주 무기! 영어 spike에서 온 외래어.'},
+    {char:'トス',jp:'トス',romaji:'tosu',kr:'토스 (공 올려주기)',speaker:'카게야마',ctx:'세터가 공격수에게 공을 올려주는 동작. 카게야마의 전문 기술.'},
+    {char:'ブロック',jp:'ブロック',romaji:'burokku',kr:'블로킹 (막기)',speaker:'츠키시마',ctx:'상대방의 공격을 막는 동작. 츠키시마의 특기이자 각성의 계기.'},
+    {char:'レシーブ',jp:'レシーブ',romaji:'resiibu',kr:'리시브 (받기)',speaker:'니시노야',ctx:'상대방의 서브·스파이크를 받아내는 동작. 리베로 니시노야의 전문!'},
+    {char:'サーブ',jp:'サーブ',romaji:'saabu',kr:'서브',speaker:'전체',ctx:'경기 시작 시 공을 상대 코트로 보내는 것. 영어 serve에서.'},
+    {char:'コート',jp:'コート',romaji:'kooto',kr:'코트 (경기장)',speaker:'전체',ctx:'배구 경기를 하는 장소. 가로 18m × 세로 9m 크기.'},
+    {char:'ネット',jp:'ネット',romaji:'netto',kr:'네트 (그물)',speaker:'전체',ctx:'코트 중앙을 가로지르는 그물. 남자부 높이 2.43m.'},
+    {char:'リベロ',jp:'リベロ',romaji:'ribero',kr:'리베로 (수비 전담)',speaker:'니시노야',ctx:'수비 전담 포지션. 다른 색 유니폼 착용. 니시노야가 카라스노의 리베로!'},
+    {char:'セッター',jp:'セッター',romaji:'settaa',kr:'세터 (토스 전담)',speaker:'카게야마',ctx:'토스로 공격을 연결하는 포지션. 팀의 두뇌 역할. 카게야마의 포지션.'},
+    {char:'エース',jp:'エース',romaji:'eesu',kr:'에이스 (주 공격수)',speaker:'힌아타',ctx:'팀의 주 공격수. 힌아타가 목표로 하는 자리.'},
+    {char:'ローテーション',jp:'ローテーション',romaji:'rooteshon',kr:'로테이션',speaker:'전체',ctx:'득점 후 선수들이 시계방향으로 한 자리씩 이동하는 규칙.'},
+    {char:'フローター',jp:'フローターサーブ',romaji:'furootaa saabu',kr:'플로터 서브 (무회전)',speaker:'카게야마',ctx:'공에 회전을 주지 않아 불규칙하게 움직이는 서브. 받기 어렵다.'},
+    {char:'クイック',jp:'クイック攻撃',romaji:'kuikku kougeki',kr:'퀵 공격 (속공)',speaker:'힌아타',ctx:'토스와 거의 동시에 점프해 치는 초고속 공격. 힌아타와 카게야마의 트레이드마크.'},
+    {char:'フェイント',jp:'フェイント',romaji:'feinto',kr:'페인트 (속임 공격)',speaker:'힌아타',ctx:'강하게 치는 척하고 살살 넘기는 기술. 힌아타가 자주 쓰는 기습 기술.'},
+    {char:'アタック',jp:'アタック',romaji:'attaku',kr:'어택 (공격)',speaker:'전체',ctx:'상대 코트에 공을 강하게 보내는 공격의 총칭.'},
+    {char:'ポジション',jp:'ポジション',romaji:'pojishon',kr:'포지션 (위치)',speaker:'전체',ctx:'코트 위에서 각 선수가 맡는 역할과 위치.'},
+    {char:'アウトサイド',jp:'アウトサイドヒッター',romaji:'autosaido hittaa',kr:'아웃사이드 히터 (레프트)',speaker:'타나카',ctx:'코트 왼쪽에서 공격하는 포지션. 타나카와 사와무라가 담당.'},
+    {char:'オポジット',jp:'オポジット',romaji:'opojitto',kr:'오포짓 (라이트)',speaker:'전체',ctx:'코트 오른쪽 공격 포지션. 세터의 반대쪽에 위치해서 이 이름.'},
+    {char:'ミドル',jp:'ミドルブロッカー',romaji:'midoru burokkaa',kr:'미들 블로커 (센터)',speaker:'츠키시마',ctx:'코트 중앙에서 블로킹을 주로 담당하는 포지션. 츠키시마의 포지션.'},
+    {char:'サーブレシーブ',jp:'サーブレシーブ',romaji:'saabu resiibu',kr:'서브 리시브',speaker:'니시노야',ctx:'상대의 서브를 받아내는 것. 리베로가 특히 중요한 기술.'},
+    {char:'デュース',jp:'デュース',romaji:'dyuusu',kr:'듀스 (동점 접전)',speaker:'전체',ctx:'24점에서 동점이 됐을 때 2점 이상 앞서야 이기는 규칙.'},
+    {char:'マッチポイント',jp:'マッチポイント',romaji:'matchi pointo',kr:'매치 포인트',speaker:'전체',ctx:'다음 한 점으로 경기가 끝나는 상황. 긴장감 최고조!'},
+    {char:'レフト',jp:'レフト',romaji:'refuto',kr:'레프트 (왼쪽 공격)',speaker:'타나카',ctx:'아웃사이드 히터의 또 다른 이름. 코트 왼쪽에서 뛰는 포지션.'},
+    {char:'ジャンプサーブ',jp:'ジャンプサーブ',romaji:'janpu saabu',kr:'점프 서브',speaker:'카게야마',ctx:'점프해서 치는 강력한 서브. 카게야마가 구사하는 강서브.'},
+  ],
+  hinata:[
+    {char:'飛べ！',jp:'飛べ！',romaji:'Tobe!',kr:'날아올라!',speaker:'카게야마',ctx:'카게야마가 힌아타에게 외치는 명대사. 飛ぶ(날다)의 명령형.'},
+    {char:'最強',jp:'最強',romaji:'saikyou',kr:'최강',speaker:'힌아타',ctx:'"최강"을 꿈꾸는 힌아타의 목표. 最(가장) + 強(강함).'},
+    {char:'諦めない',jp:'諦めない',romaji:'akiramenai',kr:'포기하지 않아',speaker:'힌아타',ctx:'포기하다(諦める)의 부정형. 하이큐!! 전체를 관통하는 핵심 정신.'},
+    {char:'小さな巨人',jp:'小さな巨人',romaji:'chiisana kyojin',kr:'작은 거인',speaker:'힌아타',ctx:'힌아타의 롤모델. 키가 작지만 전국 최강 플레이를 보인 전설적 선수.'},
+    {char:'すごい',jp:'すごい！',romaji:'sugoi!',kr:'대단해! 굉장해!',speaker:'힌아타',ctx:'놀라움과 감탄의 표현. 힌아타가 강한 플레이를 볼 때 자주 외침.'},
+    {char:'よし！',jp:'よし！',romaji:'yoshi!',kr:'좋아! 해보자!',speaker:'힌아타',ctx:'결심하거나 기쁠 때 쓰는 감탄사. 힌아타가 가장 자주 외치는 말.'},
+    {char:'好きだ！',jp:'バレーが好きだ！',romaji:'baree ga suki da!',kr:'배구가 좋아!',speaker:'힌아타',ctx:'힌아타의 순수한 배구 사랑. が好きだ = ~을 좋아한다.'},
+    {char:'見えてる',jp:'見えてる！',romaji:'mieteru!',kr:'보여! (다 보인다!)',speaker:'힌아타',ctx:'힌아타가 세터와 호흡이 맞을 때 외치는 말. 공의 궤적이 보인다는 뜻.'},
+    {char:'もっと上へ',jp:'もっと上へ！',romaji:'motto ue e!',kr:'더 높이!',speaker:'힌아타',ctx:'힌아타의 성장 욕구 표현. もっと(더) + 上(위) + へ(방향 조사).'},
+    {char:'走れ',jp:'走れ！',romaji:'hashire!',kr:'달려!',speaker:'힌아타',ctx:'走る(달리다)의 명령형. 힌아타가 코트 안에서 누구보다 빠르게 움직임.'},
+    {char:'諦めるもんか',jp:'諦めるもんか！',romaji:'akirameru mon ka!',kr:'포기할 리 없어!',speaker:'힌아타',ctx:'もんか는 ものか의 구어체. "절대로 포기 안 해"라는 강한 의지 표현.'},
+    {char:'高く飛びたい',jp:'もっと高く飛びたい',romaji:'motto takaku tobitai',kr:'더 높이 날고 싶어',speaker:'힌아타',ctx:'飛ぶ(날다)+たい(희망). 힌아타의 변치 않는 꿈.'},
+    {char:'びっくり',jp:'びっくりした！',romaji:'bikkuri shita!',kr:'깜짝 놀랐어!',speaker:'힌아타',ctx:'놀랐을 때 쓰는 일상 표현. 힌아타가 자주 놀라는 장면에서 나옴.'},
+    {char:'絶対に',jp:'絶対に負けない！',romaji:'zettai ni makenai!',kr:'절대로 지지 않아!',speaker:'힌아타',ctx:'絶対に(절대로) + 負けない(지지 않는다). 강한 승부 의지.'},
+    {char:'ありがとう',jp:'ありがとうございます！',romaji:'arigatou gozaimasu!',kr:'감사합니다!',speaker:'힌아타',ctx:'힌아타가 선배나 상대팀 에이스에게 배울 때 쓰는 정중한 감사 표현.'},
+  ],
+  kageyama:[
+    {char:'天才',jp:'天才',romaji:'tensai',kr:'천재',speaker:'카게야마',ctx:'"천재 세터" 카게야마. 天(하늘) + 才(재능). 어릴 때부터 천재였지만 팀워크를 배워감.'},
+    {char:'王様',jp:'王様',romaji:'ousama',kr:'왕님 (오만한 왕)',speaker:'카게야마',ctx:'카게야마의 과거 별명. 독선적이었던 모습에서 붙여진 이름.'},
+    {char:'うるさい',jp:'うるさい！',romaji:'urusai!',kr:'시끄러워!',speaker:'카게야마',ctx:'시끄러울 때 쓰는 말. 카게야마가 힌아타에게 자주 쓰는 말!'},
+    {char:'俺のトス',jp:'俺のトスを打ってみろ！',romaji:'Ore no tosu wo utte miro!',kr:'내 토스를 쳐봐!',speaker:'카게야마',ctx:'俺(나, 남성 구어) + の(의) + トス(토스) + を(을) + 打ってみろ(쳐봐!).'},
+    {char:'バカ',jp:'バカ',romaji:'baka',kr:'바보',speaker:'카게야마',ctx:'힌아타에게 자주 쓰는 말. "멍청이"에 가까운 강도. 친밀함도 담겨 있음.'},
+    {char:'信じろ',jp:'信じろ',romaji:'shinjiro',kr:'믿어!',speaker:'카게야마',ctx:'信じる(믿다)의 명령형. 카게야마가 팀원에게 자신을 믿으라고 할 때.'},
+    {char:'合わせる',jp:'俺が合わせる',romaji:'ore ga awaseru',kr:'내가 맞추겠어',speaker:'카게야마',ctx:'합을 맞추다, 맞추겠다. 카게야마가 힌아타의 플레이에 맞춰주기로 한 결정.'},
+    {char:'集中',jp:'集中しろ',romaji:'shuuchuu shiro',kr:'집중해!',speaker:'카게야마',ctx:'集中(집중) + しろ(해라). 팀원을 채근할 때 카게야마가 자주 쓰는 표현.'},
+    {char:'全力',jp:'全力でやれ',romaji:'zenryoku de yare',kr:'전력을 다해',speaker:'카게야마',ctx:'全力(전력) + でやれ(로 해). 절반의 힘으로는 안 된다는 카게야마의 철학.'},
+    {char:'当然だ',jp:'当然だ',romaji:'touzen da',kr:'당연하지',speaker:'카게야마',ctx:'자신의 실력에 자신 있을 때 하는 말. 카게야마의 자부심이 담긴 표현.'},
+    {char:'黙れ',jp:'黙れ',romaji:'damare',kr:'닥쳐',speaker:'카게야마',ctx:'黙る(침묵하다)의 명령형. 거칠지만 카게야마의 개성을 보여주는 표현.'},
+    {char:'勝ちたい',jp:'勝ちたい',romaji:'kachitai',kr:'이기고 싶어',speaker:'카게야마',ctx:'勝つ(이기다) + たい(희망). 카게야마의 승부욕.'},
+    {char:'完璧',jp:'完璧なトス',romaji:'kanpeki na tosu',kr:'완벽한 토스',speaker:'카게야마',ctx:'完璧(완벽) + な(형용동사 수식형). 카게야마가 추구하는 목표.'},
+    {char:'もったいない',jp:'もったいない',romaji:'mottainai',kr:'아깝다, 낭비야',speaker:'카게야마',ctx:'팀원이 실수할 때 쓰는 말. 힌아타의 재능이 아깝다는 의미로도 씀.'},
+    {char:'チームワーク',jp:'チームワーク',romaji:'chiimuwaaku',kr:'팀워크',speaker:'카게야마',ctx:'카게야마가 가장 늦게 배운 것. 개인 천재에서 팀 플레이어로 성장.'},
+  ],
+  tsukishima:[
+    {char:'諦めたら',jp:'諦めたら楽になれるのに。',romaji:'Akirametara raku ni nareru noni.',kr:'포기하면 편해질 텐데.',speaker:'츠키시마',ctx:'냉소적인 츠키시마의 대사. たら(~하면) + のに(~할 텐데, 아쉬움).'},
+    {char:'なるほど',jp:'なるほど',romaji:'naruhodo',kr:'그렇구나, 아하',speaker:'츠키시마',ctx:'이해했을 때 쓰는 표현. 차분한 츠키시마가 자주 쓸 법한 말.'},
+    {char:'どうでもいい',jp:'どうでもいい',romaji:'dou demo ii',kr:'어찌되든 상관없어',speaker:'츠키시마',ctx:'무관심하거나 체념할 때 쓰는 말. 초기 츠키시마의 태도.'},
+    {char:'一点の意味',jp:'一点の意味',romaji:'itten no imi',kr:'한 점의 의미',speaker:'츠키시마',ctx:'츠키시마가 배구에서 한 점 막기의 의미를 깨닫는 장면.'},
+    {char:'興味ない',jp:'興味ない',romaji:'kyoumi nai',kr:'관심 없어',speaker:'츠키시마',ctx:'興味(흥미, 관심) + ない(없다). 츠키시마가 애써 냉담한 척할 때.'},
+    {char:'サイコー',jp:'サイコー！',romaji:'saikoo!',kr:'최고야! (최고다!)',speaker:'츠키시마',ctx:'최고(最高)의 구어 발음. 각성한 츠키시마가 블로킹 성공 후 외치는 말.'},
+    {char:'知ってる',jp:'知ってる',romaji:'shitteru',kr:'알고 있어',speaker:'츠키시마',ctx:'知る(알다)의 て형+いる(진행·상태). 츠키시마가 분석적으로 말할 때.'},
+    {char:'努力',jp:'努力しても',romaji:'doryoku shite mo',kr:'노력해도',speaker:'츠키시마',ctx:'努力(노력) + しても(해도). 노력의 한계에 대한 츠키시마의 냉소.'},
+    {char:'センス',jp:'センスの問題だ',romaji:'sensu no mondai da',kr:'센스의 문제야',speaker:'츠키시마',ctx:'센스(재능·감각) + の問題(의 문제). 재능 vs 노력 논쟁에서 츠키시마의 발언.'},
+    {char:'やっぱり',jp:'やっぱりそうか',romaji:'yappari souka',kr:'역시 그렇구나',speaker:'츠키시마',ctx:'예상이 맞았을 때 쓰는 표현. 차분히 상황을 분석하는 츠키시마다운 말.'},
+    {char:'本気',jp:'本気でやる',romaji:'honki de yaru',kr:'진심으로 한다',speaker:'츠키시마',ctx:'本気(진심, 전력) + でやる(로 한다). 각성 후 츠키시마가 변화를 보이는 표현.'},
+    {char:'楽しい',jp:'楽しい',romaji:'tanoshii',kr:'즐거워, 재미있어',speaker:'츠키시마',ctx:'시즌2 후반 블로킹 성공 후 츠키시마가 처음으로 느끼는 진심의 즐거움.'},
+    {char:'メガネ',jp:'メガネ',romaji:'megane',kr:'안경',speaker:'츠키시마',ctx:'글라스 + 안경. 츠키시마의 상징적 아이템. 시합 중에도 착용.'},
+    {char:'頭を使え',jp:'頭を使え',romaji:'atama wo tsukae',kr:'머리를 써',speaker:'츠키시마',ctx:'頭(머리) + を(을) + 使え(써라). 분석파 츠키시마의 배구 철학.'},
+  ],
+  nishioyatanaka:[
+    {char:'ナイス',jp:'ナイスサーブ！',romaji:'naisu saabu!',kr:'나이스 서브!',speaker:'니시노야',ctx:'nice serve. 외래어. 서브가 잘 들어갔을 때 응원하는 말.'},
+    {char:'守る',jp:'絶対に守る！',romaji:'zettai ni mamoru!',kr:'절대로 지킨다!',speaker:'니시노야',ctx:'守る(지키다, 수비하다)의 의지 표현. 리베로로서의 니시노야 다짐.'},
+    {char:'リベロの誇り',jp:'リベロの誇り',romaji:'ribero no hokori',kr:'리베로의 자부심',speaker:'니시노야',ctx:'誇り(자부심, 자긍심). 니시노야가 리베로 포지션에 갖는 자부심.'},
+    {char:'受け取る',jp:'受け取る！',romaji:'uketoru!',kr:'받겠어!',speaker:'니시노야',ctx:'受け取る(받아내다). 리시브할 때의 결의 표현. 니시노야의 선언.'},
+    {char:'男の背中',jp:'男の背中を見せろ',romaji:'otoko no senaka wo misero',kr:'남자의 등을 보여줘',speaker:'타나카',ctx:'男(남자) + の(의) + 背中(등) + を(을) + 見せろ(보여라). 타나카의 열혈 발언.'},
+    {char:'熱い',jp:'熱い！',romaji:'atsui!',kr:'뜨겁다! 불타오른다!',speaker:'타나카',ctx:'热(열) + い(형용사). 타나카가 흥분하거나 승부욕을 불태울 때 쓰는 표현.'},
+    {char:'エネルギー',jp:'エネルギー',romaji:'enerugyii',kr:'에너지',speaker:'타나카',ctx:'팀에 활기를 불어넣는 타나카의 역할. 항상 분위기를 띄우는 타입.'},
+    {char:'うおおお！',jp:'うおおお！',romaji:'uoooo!',kr:'우오오오!',speaker:'타나카',ctx:'흥분하거나 기쁠 때 내는 의성어. 타나카가 득점 후 자주 내는 함성.'},
+  ],
+  general:[
+    {char:'ありがとう',jp:'ありがとう',romaji:'arigatou',kr:'고마워',speaker:'전체',ctx:'감사 표현. 팀원 간 협력 장면에서 많이 등장.'},
+    {char:'頑張れ！',jp:'頑張れ！',romaji:'ganbare!',kr:'힘내!',speaker:'전체',ctx:'응원할 때 쓰는 말. 관중석에서도 자주 들림.'},
+    {char:'いくぞ！',jp:'いくぞ！',romaji:'ikuzo!',kr:'가자!',speaker:'타나카',ctx:'출발·돌격할 때 쓰는 구어. 남성적 표현. 타나카가 많이 씀.'},
+    {char:'やばい',jp:'やばい',romaji:'yabai',kr:'대박이야 / 위험해',speaker:'전체',ctx:'맥락에 따라 "위험"과 "대단함" 모두 표현. 젊은층 구어.'},
+    {char:'ドンマイ',jp:'ドンマイ',romaji:'don mai',kr:"괜찮아! (Don't mind)",speaker:'전체',ctx:"Don't mind의 일본식 줄임말. 실수해도 괜찮다는 위로."},
+    {char:'お疲れ様',jp:'お疲れ様でした！',romaji:'otsukaresama deshita!',kr:'수고하셨습니다!',speaker:'전체',ctx:'경기·연습 후 쓰는 인사. 일본 스포츠·직장 문화의 필수 표현.'},
+    {char:'よろしく',jp:'よろしくお願いします',romaji:'yoroshiku onegaishimasu',kr:'잘 부탁드립니다',speaker:'전체',ctx:'처음 만남·새 팀에서 쓰는 인사. 하이큐에서 입부·전입 시 자주 등장.'},
+    {char:'勝つぞ！',jp:'勝つぞ！',romaji:'katsuzo!',kr:'이긴다!',speaker:'전체',ctx:'勝つ(이기다) + ぞ(의지·강조 어미). 경기 전 팀 전체가 다 같이 외치는 구호.'},
+    {char:'気合い',jp:'気合いを入れろ！',romaji:'kiai wo irero!',kr:'기합을 넣어!',speaker:'전체',ctx:'気合い(기합, 기력) + を入れろ(넣어라). 사기 올릴 때 쓰는 표현.'},
+    {char:'チャンス',jp:'チャンス！',romaji:'chansu!',kr:'찬스!',speaker:'전체',ctx:'영어 chance에서 온 외래어. 공격 기회가 왔을 때 외치는 말.'},
+    {char:'集中',jp:'集中！',romaji:'shuuchuu!',kr:'집중!',speaker:'전체',ctx:'集中(집중). 중요한 순간에 서로를 다독이는 말.'},
+    {char:'諦めるな',jp:'諦めるな！',romaji:'akirameru na!',kr:'포기하지 마!',speaker:'전체',ctx:'諦める(포기하다) + な(부정 명령). ~するな 패턴으로 금지 명령 표현.'},
+    {char:'自信',jp:'自信を持て',romaji:'jishin wo mote',kr:'자신감을 가져',speaker:'전체',ctx:'自信(자신감) + を持て(가져라). 팀원 격려 시 쓰는 표현.'},
+    {char:'練習',jp:'練習あるのみ',romaji:'renshuu aru nomi',kr:'연습만이 살길',speaker:'전체',ctx:'練習(연습) + あるのみ(만 있을 뿐). 카라스노 팀의 훈련 정신.'},
+    {char:'ナイスキル',jp:'ナイスキル！',romaji:'naisu kiru!',kr:'나이스 킬!',speaker:'전체',ctx:'nice kill. 스파이크가 상대 코트 바닥에 꽂혔을 때 쓰는 배구 용어.'},
+    {char:'ストレート',jp:'ストレートで勝った',romaji:'sutoreeto de katta',kr:'스트레이트로 이겼다',speaker:'전체',ctx:'세트 하나도 안 내주고 이겼을 때. 2:0이나 3:0 완승.'},
+    {char:'応援',jp:'応援ありがとう',romaji:'ouen arigatou',kr:'응원 고마워',speaker:'전체',ctx:'応援(응원) + ありがとう(고마워). 관중과의 일체감을 보여주는 표현.'},
+    {char:'仲間',jp:'仲間',romaji:'nakama',kr:'동료, 팀원',speaker:'전체',ctx:'仲(사이) + 間(사이). 단순한 팀원 이상의 의미. 하이큐 팀 정신의 핵심 단어.'},
+  ]
+};
+
+const sentenceData = [
+  /* ── 시즌1 ── */
+  {ep:'시즌1',char:'카게야마',scene:'카게야마 → 힌아타',jp:'俺のトスを打ってみろ！',romaji:'Ore no tosu wo utte miro!',pron:'오레노 토스오 웃테 미로!',kr:'내 토스를 쳐봐!',tags:['명령형','て형+みろ'],bd:[{jp:'俺の',d:'나의 (남성 구어체)'},{jp:'トスを',d:'토스를 (を=목적격 조사)'},{jp:'打ってみろ',d:'쳐봐! (打つ=치다, てみろ=~해봐 명령형)'}]},
+  {ep:'시즌1',char:'힌아타',scene:'힌아타 다짐',jp:'諦めるもんか！',romaji:'Akirameru mon ka!',pron:'아키라메루 몬카!',kr:'포기할 리 없어!',tags:['강한 부정','もんか'],bd:[{jp:'諦める',d:'포기하다'},{jp:'もんか',d:'~할 리 없어 (강한 부정 의지, ものか 구어)'}]},
+  {ep:'시즌1',char:'힌아타',scene:'힌아타 → 전체',jp:'俺は絶対にエースになる！',romaji:'Ore wa zettai ni eesu ni naru!',pron:'오레와 젯타이니 에스니 나루!',kr:'나는 반드시 에이스가 될 거야!',tags:['의지 표현','になる'],bd:[{jp:'絶対に',d:'반드시, 절대로'},{jp:'エースに',d:'에이스가 (に=목표 조사)'},{jp:'なる',d:'되다 (become)'}]},
+  {ep:'시즌1',char:'카게야마',scene:'카게야마 각오',jp:'俺は誰よりも高いトスを上げる。',romaji:'Ore wa dare yori mo takai tosu wo ageru.',pron:'오레와 다레요리모 다카이 토스오 아게루.',kr:'나는 누구보다 높은 토스를 올린다.',tags:['비교 よりも','의지'],bd:[{jp:'誰よりも',d:'누구보다도 (よりも=比較 강조)'},{jp:'高いトスを',d:'높은 토스를'},{jp:'上げる',d:'올리다'}]},
+  {ep:'시즌1',char:'힌아타',scene:'배구부 가입 선언',jp:'俺はバレーが上手くなりたい！',romaji:'Ore wa baree ga umaku naritai!',pron:'오레와 바레가 우마쿠 나리타이!',kr:'나는 배구를 잘하고 싶어!',tags:['希望 たい','~くなる'],bd:[{jp:'バレーが',d:'배구를 (が=감정·능력 대상 조사)'},{jp:'上手く',d:'잘 (上手い의 부사형)'},{jp:'なりたい',d:'되고 싶다 (なる+たい)'}]},
+  {ep:'시즌1',char:'카게야마',scene:'카게야마 선언',jp:'バレーは一人でするもんじゃない。',romaji:'Baree wa hitori de suru mon ja nai.',pron:'바레와 히토리데 스루 몬쟈 나이.',kr:'배구는 혼자 하는 게 아니야.',tags:['부정 じゃない','もん=もの'],bd:[{jp:'一人で',d:'혼자서 (一人=혼자, で=로써)'},{jp:'するもん',d:'하는 것 (もの 구어체 줄임)'},{jp:'じゃない',d:'~이 아니야 (부정)'}]},
+  {ep:'시즌1',char:'니시노야',scene:'리베로 선언',jp:'俺が守る！絶対に！',romaji:'Ore ga mamoru! Zettai ni!',pron:'오레가 마모루! 젯타이니!',kr:'내가 지킨다! 절대로!',tags:['의지형','絶対に'],bd:[{jp:'俺が',d:'내가 (が=주체 강조 조사)'},{jp:'守る',d:'지키다, 수비하다'},{jp:'絶対に',d:'절대로, 반드시'}]},
+  {ep:'시즌1',char:'타나카',scene:'타나카 격려',jp:'諦めたら試合終わりだろ！',romaji:'Akirametara shiai owari daro!',pron:'아키라메타라 시아이 오와리다로!',kr:'포기하면 경기 끝이잖아!',tags:['가정 たら','だろ 추측'],bd:[{jp:'諦めたら',d:'포기하면 (たら=가정)'},{jp:'試合',d:'경기, 시합'},{jp:'終わりだろ',d:'끝이잖아 (だろ=~이지/~이잖아, 구어 추측)'}]},
+  /* ── 시즌2 ── */
+  {ep:'시즌2',char:'츠키시마',scene:'츠키시마 독백',jp:'諦めたら楽になれるのに。',romaji:'Akirametara raku ni nareru noni.',pron:'아키라메타라 라쿠니 나레루 노니.',kr:'포기하면 편해질 텐데.',tags:['가정형 たら','のに 아쉬움'],bd:[{jp:'諦めたら',d:'포기하면 (たら=가정)'},{jp:'楽に',d:'편하게'},{jp:'なれるのに',d:'될 수 있을 텐데 (のに=안타까움)'}]},
+  {ep:'시즌2',char:'카게야마',scene:'카게야마 고백',jp:'バレーが好きだ。',romaji:'Baree ga suki da.',pron:'바레가 스키다.',kr:'배구가 좋아.',tags:['감정 표현','が好き'],bd:[{jp:'バレーが',d:'배구가 (が=감정 대상 조사)'},{jp:'好きだ',d:'좋다 (好き는 형용동사, だ=단정)'}]},
+  {ep:'시즌2',char:'카게야마',scene:'진화한 세터',jp:'俺が合わせる。信じろ。',romaji:'Ore ga awaseru. Shinjiro.',pron:'오레가 아와세루. 신지로.',kr:'내가 맞추겠어. 믿어.',tags:['의지형','명령형 信じろ'],bd:[{jp:'合わせる',d:'맞추다 (현재/미래 의지)'},{jp:'信じろ',d:'믿어! (信じる의 명령형)'}]},
+  {ep:'시즌2',char:'츠키시마',scene:'블로킹 각성 후',jp:'一点取れた。それで十分だ。',romaji:'Itten toreta. Sore de juubun da.',pron:'잇텐 토레타. 소레데 쥬분다.',kr:'한 점 막았어. 그걸로 충분해.',tags:['과거형','十分だ'],bd:[{jp:'一点',d:'한 점'},{jp:'取れた',d:'얻었다, 막았다 (可能形 과거)'},{jp:'十分だ',d:'충분하다'}]},
+  {ep:'시즌2',char:'힌아타',scene:'훈련 중 다짐',jp:'必ず上手くなってみせる！',romaji:'Kanarazu umaku natte miseru!',pron:'카나라즈 우마쿠 낫테 미세루!',kr:'반드시 잘하게 되어 보이겠어!',tags:['~てみせる 결의','必ず'],bd:[{jp:'必ず',d:'반드시'},{jp:'上手くなって',d:'잘하게 되어서'},{jp:'みせる',d:'보이겠다 (결의·증명의 표현)'}]},
+  {ep:'시즌2',char:'니시노야',scene:'리시브 성공',jp:'受け取ったぞ！',romaji:'Uketotta zo!',pron:'우케톳타 조!',kr:'받았다!',tags:['과거형','ぞ 강조'],bd:[{jp:'受け取った',d:'받았다 (受け取る의 과거형)'},{jp:'ぞ',d:'강조 어미 (남성 구어, 의지·선언)'}]},
+  /* ── 시즌3 ── */
+  {ep:'시즌3',char:'힌아타',scene:'시라토리자와 전',jp:'もっと高く飛びたい！',romaji:'Motto takai tobitai!',pron:'못토 다카이 토비타이!',kr:'더 높이 날고 싶어!',tags:['희망 表現','~たい'],bd:[{jp:'もっと',d:'더, 더욱 (비교 강조)'},{jp:'高く',d:'높게 (형용사 부사형)'},{jp:'飛びたい',d:'날고 싶어 (飛ぶ+たい=희망)'}]},
+  {ep:'시즌3',char:'힌아타',scene:'사토리 와카토시 돌파',jp:'見えた！コースが見えた！',romaji:'Mieta! Koosu ga mieta!',pron:'미에타! 코스가 미에타!',kr:'보였어! 코스가 보였어!',tags:['과거형','が 강조'],bd:[{jp:'見えた',d:'보였다 (見える 가능 동사 과거형)'},{jp:'コースが',d:'코스가 (が=발견의 주격 조사)'}]},
+  {ep:'시즌3',char:'카게야마',scene:'결승 세트',jp:'お前が決めろ。俺が上げる。',romaji:'Omae ga kimero. Ore ga ageru.',pron:'오마에가 키메로. 오레가 아게루.',kr:'네가 결정해. 내가 올린다.',tags:['명령형','역할 분담'],bd:[{jp:'お前が',d:'네가 (お前=너, 친밀한 남성어)'},{jp:'決めろ',d:'결정해! (決める 명령형)'},{jp:'俺が上げる',d:'내가 올리겠다 (의지)'}]},
+  {ep:'시즌3',char:'사토리',scene:'사토리 도발',jp:'見えるよ、全部。',romaji:'Mieru yo, zenbu.',pron:'미에루 요, 젠부.',kr:'다 보여, 전부.',tags:['よ 강조','全部'],bd:[{jp:'見える',d:'보이다 (가능 표현)'},{jp:'よ',d:'강조 종조사'},{jp:'全部',d:'전부, 모두'}]},
+  {ep:'시즌3',char:'힌아타',scene:'시라토리자와 격파 후',jp:'勝った！勝ったぞ！',romaji:'Katta! Katta zo!',pron:'캇타! 캇타 조!',kr:'이겼어! 이겼다!',tags:['과거형 勝った','ぞ 강조'],bd:[{jp:'勝った',d:'이겼다 (勝つ 과거형)'},{jp:'ぞ',d:'강조 어미 (기쁨·선언)'}]},
+  /* ── 시즌4 ── */
+  {ep:'시즌4',char:'힌아타',scene:'브라질 훈련',jp:'もっと上手くなりたい。',romaji:'Motto umasuku naritai.',pron:'못토 우마쿠 나리타이.',kr:'더 잘하고 싶어.',tags:['なる+たい','성장 의지'],bd:[{jp:'もっと',d:'더 (비교 강조)'},{jp:'上手く',d:'잘 (上手い의 부사형)'},{jp:'なりたい',d:'되고 싶다 (なる+たい)'}]},
+  {ep:'시즌4',char:'힌아타',scene:'MSBY 입단',jp:'ここから始まる。',romaji:'Koko kara hajimaru.',pron:'코코카라 하지마루.',kr:'여기서부터 시작된다.',tags:['から(부터)','自動詞 始まる'],bd:[{jp:'ここから',d:'여기서부터 (から=부터)'},{jp:'始まる',d:'시작되다 (자동사, 스스로 시작됨)'}]},
+  {ep:'시즌4',char:'카게야마',scene:'올림픽 대표팀',jp:'もっと上を目指す。',romaji:'Motto ue wo mezasu.',pron:'못토 우에오 메자스.',kr:'더 높은 곳을 목표로 한다.',tags:['目指す','上を'],bd:[{jp:'もっと',d:'더욱 (비교 강조)'},{jp:'上を',d:'위를 (を=목적격 조사)'},{jp:'目指す',d:'목표로 하다, 겨냥하다'}]},
+  {ep:'시즌4',char:'카게야마',scene:'쌍벽 전',jp:'あいつに負けたくない。',romaji:'Aitsu ni maketakunai.',pron:'아이츠니 마케타쿠나이.',kr:'그 녀석한테 지고 싶지 않아.',tags:['~たくない','에 대한 負け'],bd:[{jp:'あいつに',d:'그 녀석에게 (あいつ=그 놈, に=대상)'},{jp:'負けたくない',d:'지고 싶지 않다 (負ける+たい 부정)'}]},
+  {ep:'시즌4',char:'힌아타',scene:'상대 에이스 맞대결',jp:'お前のことを越えてみせる！',romaji:'Omae no koto wo koete miseru!',pron:'오마에노 코토오 코에테 미세루!',kr:'너를 넘어 보이겠어!',tags:['~てみせる 결의','越える'],bd:[{jp:'お前のことを',d:'너를 (のことを=~를, 인물 대상 강조)'},{jp:'越えて',d:'넘어서 (越える=넘다 て형)'},{jp:'みせる',d:'보이겠다 (결의 표현)'}]},
+  /* ── 경기 표현 ── */
+  {ep:'경기 중',char:'전체',scene:'득점 후',jp:'もう一本！',romaji:'Mou ippon!',pron:'모- 잇폰!',kr:'한 번 더!',tags:['배구 용어','本 카운팅'],bd:[{jp:'もう',d:'또, 다시'},{jp:'一本',d:'한 개/한 번 (긴 것 세는 단위)'}]},
+  {ep:'경기 중',char:'니시노야',scene:'리시브 성공',jp:'ナイスレシーブ！',romaji:'Naisu resiibu!',pron:'나이스 레시브!',kr:'나이스 리시브!',tags:['응원 표현','외래어'],bd:[{jp:'ナイス',d:'나이스 (nice 차용)'},{jp:'レシーブ',d:'리시브 (receive 차용)'}]},
+  {ep:'경기 중',char:'카게야마',scene:'작전 타임',jp:'次はどうする？',romaji:'Tsugi wa dou suru?',pron:'츠기와 도-스루?',kr:'다음은 어떻게 할까?',tags:['의문문','どう+する'],bd:[{jp:'次は',d:'다음은 (は=주제 조사)'},{jp:'どう',d:'어떻게'},{jp:'する',d:'하다'}]},
+  {ep:'경기 후',char:'전체',scene:'경기 종료',jp:'お疲れ様でした！',romaji:'Otsukaresama deshita!',pron:'오츠카레사마데시타!',kr:'수고하셨습니다!',tags:['경어','스포츠 문화'],bd:[{jp:'お疲れ様',d:'수고하다의 경어'},{jp:'でした',d:'~이었습니다 (정중 과거형)'}]},
+  {ep:'경기 중',char:'전체',scene:'블로킹 성공',jp:'ナイスブロック！',romaji:'Naisu burokku!',pron:'나이스 부로쿠!',kr:'나이스 블로킹!',tags:['응원 표현','외래어'],bd:[{jp:'ナイス',d:'나이스 (nice)'},{jp:'ブロック',d:'블로킹 (block)'}]},
+  {ep:'경기 중',char:'카게야마',scene:'세터 지시',jp:'もっと前に出ろ！',romaji:'Motto mae ni dero!',pron:'못토 마에니 데로!',kr:'더 앞으로 나와!',tags:['명령형','방향 に'],bd:[{jp:'もっと',d:'더'},{jp:'前に',d:'앞으로 (に=방향 조사)'},{jp:'出ろ',d:'나와! (出る 명령형)'}]},
+  {ep:'경기 중',char:'힌아타',scene:'스파이크 직전',jp:'上げてくれ！',romaji:'Agete kure!',pron:'아게테 쿠레!',kr:'올려줘!',tags:['~てくれ 부탁','上げる'],bd:[{jp:'上げて',d:'올려서 (上げる て형)'},{jp:'くれ',d:'줘! (てくれ=~해줘, 구어 부탁)'}]},
+  {ep:'경기 중',char:'전체',scene:'서브 에러',jp:'ドンマイ！切り替えて！',romaji:'Don mai! Kirikaete!',pron:'돈마이! 키리카에테!',kr:'괜찮아! 기분 전환해!',tags:['外来語','切り替える'],bd:[{jp:'ドンマイ',d:'Don\'t mind 줄임말. 위로 표현.'},{jp:'切り替えて',d:'기분 전환해 (切り替える=전환하다 て형 지시)'}]},
+  {ep:'경기 후',char:'힌아타',scene:'패배 후',jp:'悔しい。でも、また頑張る。',romaji:'Kuyashii. Demo, mata ganbaru.',pron:'쿠야시이. 데모, 마타 간바루.',kr:'분해. 하지만, 또 열심히 할 거야.',tags:['감정 표현','でも 역접'],bd:[{jp:'悔しい',d:'분하다, 억울하다 (패배·실수 후 감정)'},{jp:'でも',d:'하지만 (역접 접속사)'},{jp:'また頑張る',d:'또 열심히 하겠다'}]},
+  {ep:'경기 후',char:'전체',scene:'승리 후 감사',jp:'応援ありがとうございました！',romaji:'Ouen arigatou gozaimashita!',pron:'오엔 아리가토 고자이마시타!',kr:'응원해 주셔서 감사합니다!',tags:['경어 過去','応援'],bd:[{jp:'応援',d:'응원'},{jp:'ありがとうございました',d:'감사했습니다 (ありがとう의 정중 과거형)'}]},
+  /* ── 특별 표현 ── */
+  {ep:'특별',char:'힌아타',scene:'팀 구호',jp:'飛べ！！！',romaji:'Tobe!!!',pron:'토베!!!',kr:'날아올라!!!',tags:['명령형','팀 구호'],bd:[{jp:'飛べ',d:'날아올라! (飛ぶ=날다, 命令形)'}]},
+  {ep:'특별',char:'전체',scene:'경기 전 구호',jp:'一本！！',romaji:'Ippon!!',pron:'잇폰!!',kr:'한 점!!',tags:['배구 구호','一本'],bd:[{jp:'一本',d:'한 점, 한 번. 배구에서 한 점 가져오겠다는 선언.'}]},
+  {ep:'특별',char:'카게야마',scene:'팀워크 각성',jp:'チームで勝つ。それが全てだ。',romaji:'Chiimu de katsu. Sore ga subete da.',pron:'치무데 카츠. 소레가 스베테다.',kr:'팀으로 이긴다. 그것이 전부다.',tags:['で(수단)','全てだ'],bd:[{jp:'チームで',d:'팀으로 (で=수단·방법 조사)'},{jp:'勝つ',d:'이기다'},{jp:'それが全てだ',d:'그것이 전부다 (が=강조)'}]},
+  {ep:'특별',char:'츠키시마',scene:'블로킹 성공 순간',jp:'楽しい。バレー、楽しい。',romaji:'Tanoshii. Baree, tanoshii.',pron:'타노시이. 바레, 타노시이.',kr:'재밌어. 배구, 재밌어.',tags:['형용사 반복','감정 변화'],bd:[{jp:'楽しい',d:'즐겁다, 재밌다 (い형용사)'},{jp:'バレー',d:'배구 (volleyball의 일본어 표기)'}]},
+];
+
+/* ══════════════════════════════════════════
+   KANA DATA
+══════════════════════════════════════════ */
+const hiraBasic = {
+  a:[{c:'あ',r:'a',k:'아',s:'3획: 가로→세로→곡선'},{c:'い',r:'i',k:'이',s:'2획: 두 세로 획'},{c:'う',r:'u',k:'우',s:'3획: 위 가로→두 세로'},{c:'え',r:'e',k:'에',s:'4획'},{c:'お',r:'o',k:'오',s:'3획'}],
+  ka:[{c:'か',r:'ka',k:'카',s:'3획'},{c:'き',r:'ki',k:'키',s:'4획'},{c:'く',r:'ku',k:'쿠',s:'1획: 꺾인 선'},{c:'け',r:'ke',k:'케',s:'3획'},{c:'こ',r:'ko',k:'코',s:'2획'},{c:'が',r:'ga',k:'가',s:'か+탁점'},{c:'ぎ',r:'gi',k:'기',s:'き+탁점'},{c:'ぐ',r:'gu',k:'구',s:'く+탁점'},{c:'げ',r:'ge',k:'게',s:'け+탁점'},{c:'ご',r:'go',k:'고',s:'こ+탁점'}],
+  sa:[{c:'さ',r:'sa',k:'사',s:'3획'},{c:'し',r:'shi',k:'시',s:'1획: 큰 곡선'},{c:'す',r:'su',k:'스',s:'2획'},{c:'せ',r:'se',k:'세',s:'3획'},{c:'そ',r:'so',k:'소',s:'1획'},{c:'ざ',r:'za',k:'자'},{c:'じ',r:'ji',k:'지'},{c:'ず',r:'zu',k:'즈'},{c:'ぜ',r:'ze',k:'제'},{c:'ぞ',r:'zo',k:'조'}],
+  ta:[{c:'た',r:'ta',k:'타',s:'4획'},{c:'ち',r:'chi',k:'치',s:'2획'},{c:'つ',r:'tsu',k:'츠',s:'1획'},{c:'て',r:'te',k:'테',s:'1획'},{c:'と',r:'to',k:'토',s:'2획'},{c:'だ',r:'da',k:'다'},{c:'ぢ',r:'ji',k:'지'},{c:'づ',r:'zu',k:'즈'},{c:'で',r:'de',k:'데'},{c:'ど',r:'do',k:'도'}],
+  na:[{c:'な',r:'na',k:'나',s:'4획'},{c:'に',r:'ni',k:'니',s:'3획'},{c:'ぬ',r:'nu',k:'누',s:'2획'},{c:'ね',r:'ne',k:'네',s:'2획'},{c:'の',r:'no',k:'노',s:'1획: 소용돌이'}],
+  ha:[{c:'は',r:'ha',k:'하',s:'3획'},{c:'ひ',r:'hi',k:'히',s:'2획'},{c:'ふ',r:'fu',k:'후',s:'4획'},{c:'へ',r:'he',k:'헤',s:'1획'},{c:'ほ',r:'ho',k:'호',s:'4획'},{c:'ば',r:'ba',k:'바'},{c:'び',r:'bi',k:'비'},{c:'ぶ',r:'bu',k:'부'},{c:'べ',r:'be',k:'베'},{c:'ぼ',r:'bo',k:'보'},{c:'ぱ',r:'pa',k:'파'},{c:'ぴ',r:'pi',k:'피'},{c:'ぷ',r:'pu',k:'푸'},{c:'ぺ',r:'pe',k:'페'},{c:'ぽ',r:'po',k:'포'}],
+  ma:[{c:'ま',r:'ma',k:'마',s:'3획'},{c:'み',r:'mi',k:'미',s:'2획'},{c:'む',r:'mu',k:'무',s:'3획'},{c:'め',r:'me',k:'메',s:'2획'},{c:'も',r:'mo',k:'모',s:'3획'}],
+  ya:[{c:'や',r:'ya',k:'야',s:'3획'},{c:'ゆ',r:'yu',k:'유',s:'2획'},{c:'よ',r:'yo',k:'요',s:'2획'}],
+  ra:[{c:'ら',r:'ra',k:'라',s:'2획'},{c:'り',r:'ri',k:'리',s:'2획'},{c:'る',r:'ru',k:'루',s:'1획'},{c:'れ',r:'re',k:'레',s:'2획'},{c:'ろ',r:'ro',k:'로',s:'3획'}],
+  wa:[{c:'わ',r:'wa',k:'와',s:'2획'},{c:'を',r:'wo',k:'오(조사)',s:'3획'},{c:'ん',r:'n',k:'응',s:'1획'}],
+};
+const hiraExt = {
+  kya:[{c:'きゃ',r:'kya',k:'캬'},{c:'きゅ',r:'kyu',k:'큐'},{c:'きょ',r:'kyo',k:'쿄'},{c:'ぎゃ',r:'gya',k:'갸'},{c:'ぎゅ',r:'gyu',k:'규'},{c:'ぎょ',r:'gyo',k:'교'}],
+  sha:[{c:'しゃ',r:'sha',k:'샤'},{c:'しゅ',r:'shu',k:'슈'},{c:'しょ',r:'sho',k:'쇼'},{c:'じゃ',r:'ja',k:'쟈'},{c:'じゅ',r:'ju',k:'쥬'},{c:'じょ',r:'jo',k:'죠'}],
+  cha:[{c:'ちゃ',r:'cha',k:'챠'},{c:'ちゅ',r:'chu',k:'츄'},{c:'ちょ',r:'cho',k:'쵸'}],
+  nya:[{c:'にゃ',r:'nya',k:'냐'},{c:'にゅ',r:'nyu',k:'뉴'},{c:'にょ',r:'nyo',k:'뇨'}],
+  hya:[{c:'ひゃ',r:'hya',k:'햐'},{c:'ひゅ',r:'hyu',k:'휴'},{c:'ひょ',r:'hyo',k:'효'},{c:'びゃ',r:'bya',k:'뱌'},{c:'びゅ',r:'byu',k:'뷰'},{c:'びょ',r:'byo',k:'뵤'},{c:'ぴゃ',r:'pya',k:'퍄'},{c:'ぴゅ',r:'pyu',k:'퓨'},{c:'ぴょ',r:'pyo',k:'표'}],
+  mya:[{c:'みゃ',r:'mya',k:'먀'},{c:'みゅ',r:'myu',k:'뮤'},{c:'みょ',r:'myo',k:'묘'}],
+  rya:[{c:'りゃ',r:'rya',k:'랴'},{c:'りゅ',r:'ryu',k:'류'},{c:'りょ',r:'ryo',k:'료'}],
+};
+const kataBasic = {
+  a:[{c:'ア',r:'a',k:'아',s:'2획'},{c:'イ',r:'i',k:'이',s:'2획'},{c:'ウ',r:'u',k:'우',s:'3획'},{c:'エ',r:'e',k:'에',s:'3획'},{c:'オ',r:'o',k:'오',s:'3획'}],
+  ka:[{c:'カ',r:'ka',k:'카',s:'2획'},{c:'キ',r:'ki',k:'키',s:'3획'},{c:'ク',r:'ku',k:'쿠',s:'2획'},{c:'ケ',r:'ke',k:'케',s:'3획'},{c:'コ',r:'ko',k:'코',s:'2획'},{c:'ガ',r:'ga',k:'가'},{c:'ギ',r:'gi',k:'기'},{c:'グ',r:'gu',k:'구'},{c:'ゲ',r:'ge',k:'게'},{c:'ゴ',r:'go',k:'고'}],
+  sa:[{c:'サ',r:'sa',k:'사'},{c:'シ',r:'shi',k:'시'},{c:'ス',r:'su',k:'스'},{c:'セ',r:'se',k:'세'},{c:'ソ',r:'so',k:'소'},{c:'ザ',r:'za',k:'자'},{c:'ジ',r:'ji',k:'지'},{c:'ズ',r:'zu',k:'즈'},{c:'ゼ',r:'ze',k:'제'},{c:'ゾ',r:'zo',k:'조'}],
+  ta:[{c:'タ',r:'ta',k:'타'},{c:'チ',r:'chi',k:'치'},{c:'ツ',r:'tsu',k:'츠'},{c:'テ',r:'te',k:'테'},{c:'ト',r:'to',k:'토'},{c:'ダ',r:'da',k:'다'},{c:'ヂ',r:'ji',k:'지'},{c:'ヅ',r:'zu',k:'즈'},{c:'デ',r:'de',k:'데'},{c:'ド',r:'do',k:'도'}],
+  na:[{c:'ナ',r:'na',k:'나'},{c:'ニ',r:'ni',k:'니'},{c:'ヌ',r:'nu',k:'누'},{c:'ネ',r:'ne',k:'네'},{c:'ノ',r:'no',k:'노'}],
+  ha:[{c:'ハ',r:'ha',k:'하'},{c:'ヒ',r:'hi',k:'히'},{c:'フ',r:'fu',k:'후'},{c:'ヘ',r:'he',k:'헤'},{c:'ホ',r:'ho',k:'호'},{c:'バ',r:'ba',k:'바'},{c:'ビ',r:'bi',k:'비'},{c:'ブ',r:'bu',k:'부'},{c:'ベ',r:'be',k:'베'},{c:'ボ',r:'bo',k:'보'},{c:'パ',r:'pa',k:'파'},{c:'ピ',r:'pi',k:'피'},{c:'プ',r:'pu',k:'푸'},{c:'ペ',r:'pe',k:'페'},{c:'ポ',r:'po',k:'포'}],
+  ma:[{c:'マ',r:'ma',k:'마'},{c:'ミ',r:'mi',k:'미'},{c:'ム',r:'mu',k:'무'},{c:'メ',r:'me',k:'메'},{c:'モ',r:'mo',k:'모'}],
+  ya:[{c:'ヤ',r:'ya',k:'야'},{c:'ユ',r:'yu',k:'유'},{c:'ヨ',r:'yo',k:'요'}],
+  ra:[{c:'ラ',r:'ra',k:'라'},{c:'リ',r:'ri',k:'리'},{c:'ル',r:'ru',k:'루'},{c:'レ',r:'re',k:'레'},{c:'ロ',r:'ro',k:'로'}],
+  wa:[{c:'ワ',r:'wa',k:'와'},{c:'ヲ',r:'wo',k:'오(조사)'},{c:'ン',r:'n',k:'응'}],
+};
+const kataExt = {
+  kya:[{c:'キャ',r:'kya',k:'캬'},{c:'キュ',r:'kyu',k:'큐'},{c:'キョ',r:'kyo',k:'쿄'},{c:'ギャ',r:'gya',k:'갸'},{c:'ギュ',r:'gyu',k:'규'},{c:'ギョ',r:'gyo',k:'교'}],
+  sha:[{c:'シャ',r:'sha',k:'샤'},{c:'シュ',r:'shu',k:'슈'},{c:'ショ',r:'sho',k:'쇼'},{c:'ジャ',r:'ja',k:'쟈'},{c:'ジュ',r:'ju',k:'쥬'},{c:'ジョ',r:'jo',k:'죠'}],
+  cha:[{c:'チャ',r:'cha',k:'챠'},{c:'チュ',r:'chu',k:'츄'},{c:'チョ',r:'cho',k:'쵸'}],
+  nya:[{c:'ニャ',r:'nya',k:'냐'},{c:'ニュ',r:'nyu',k:'뉴'},{c:'ニョ',r:'nyo',k:'뇨'}],
+  hya:[{c:'ヒャ',r:'hya',k:'햐'},{c:'ヒュ',r:'hyu',k:'휴'},{c:'ヒョ',r:'hyo',k:'효'},{c:'ビャ',r:'bya',k:'뱌'},{c:'ビュ',r:'byu',k:'뷰'},{c:'ビョ',r:'byo',k:'뵤'},{c:'ピャ',r:'pya',k:'퍄'},{c:'ピュ',r:'pyu',k:'퓨'},{c:'ピョ',r:'pyo',k:'표'}],
+  mya:[{c:'ミャ',r:'mya',k:'먀'},{c:'ミュ',r:'myu',k:'뮤'},{c:'ミョ',r:'myo',k:'묘'}],
+  rya:[{c:'リャ',r:'rya',k:'랴'},{c:'リュ',r:'ryu',k:'류'},{c:'リョ',r:'ryo',k:'료'}],
+};
+const basicCatLabels = {a:'あ/ア',ka:'か/カ',sa:'さ/サ',ta:'た/タ',na:'な/ナ',ha:'は/ハ',ma:'ま/マ',ya:'や/ヤ',ra:'ら/ラ',wa:'わ/ワ'};
+const extCatLabels   = {kya:'きゃ',sha:'しゃ',cha:'ちゃ',nya:'にゃ',hya:'ひゃ',mya:'みゃ',rya:'りゃ'};
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let vocabCharFilter='전체', vocabCat='volleyball', vocabIdx=0, fcRevealed=false;
+let quizCorrect=0,quizWrong=0,quizStreak=0,quizAnswered=false,quizItem=null;
+let sentCharFilter='전체', sentCat='all', sentIdx=0;
+let kanaType='hira', kanaTab='basic', kanaCat='a', kanaIdx=0;
+let kanaChecked = JSON.parse(localStorage.getItem('kanaChecked')||'{}');
+let isDrawing=false, guideVisible=false;
+let drawCtx=null,guideCtx=null,drawCanvas=null,guideCanvasEl=null;
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.ttab').forEach((t,i)=>{
+    t.classList.toggle('active',['home','vocab','quiz','sentences','canvas'][i]===v);
+  });
+  document.getElementById('view-'+v).classList.add('active');
+  if(v==='vocab'){initVocab();}
+  if(v==='quiz'){initQuiz();}
+  if(v==='sentences'){initSentences();}
+  if(v==='canvas'){initCanvas();}
+}
+function gotoView(v){showView(v);}
+
+/* ══════════════════════════════════════════
+   VOCAB
+══════════════════════════════════════════ */
+const vocabCatLabels = {volleyball:'🏐 배구 용어',hinata:'🟠 힌아타',kageyama:'👑 카게야마',tsukishima:'🦕 츠키시마',nishioyatanaka:'🛡 니시노야·타나카',general:'💬 공통 표현'};
+const charToVocabCat = {'힌아타':'hinata','카게야마':'kageyama','츠키시마':'tsukishima','니시노야':'nishioyatanaka','타나카':'nishioyatanaka'};
+
+function initVocab(){
+  // char filter
+  const cf = document.getElementById('char-filter');
+  cf.innerHTML='';
+  ['전체','힌아타','카게야마','츠키시마','니시노야','타나카'].forEach(ch=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(ch===vocabCharFilter?' active':'');
+    b.textContent=ch;
+    b.onclick=()=>{vocabCharFilter=ch;vocabIdx=0;
+      if(ch!=='전체'){const mapped=charToVocabCat[ch]||'general';vocabCat=mapped;}
+      else vocabCat='volleyball';
+      cf.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      buildVocabCatBtns();renderCard();};
+    cf.appendChild(b);
+  });
+  buildVocabCatBtns();
+  renderCard();
+}
+
+function buildVocabCatBtns(){
+  const el=document.getElementById('vocab-cats');
+  el.innerHTML='';
+  // if char filter active, only show relevant cats
+  const cats = vocabCharFilter==='전체'
+    ? Object.keys(vocabCatLabels)
+    : ['volleyball', charToVocabCat[vocabCharFilter]||'general','general'];
+  const unique=[...new Set(cats)];
+  unique.forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(cat===vocabCat?' active':'');
+    b.textContent=vocabCatLabels[cat];
+    b.onclick=()=>{vocabCat=cat;vocabIdx=0;
+      el.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');renderCard();};
+    el.appendChild(b);
+  });
+}
+
+function getVocabItems(){
+  let items = vocabData[vocabCat]||[];
+  if(vocabCharFilter!=='전체') items=items.filter(it=>it.speaker===vocabCharFilter||it.speaker==='전체');
+  return items.length>0?items:vocabData[vocabCat]||[];
+}
+
+function renderCard(){
+  fcRevealed=false;
+  document.getElementById('fc-bottom').classList.remove('show');
+  const items=getVocabItems();
+  if(!items.length)return;
+  if(vocabIdx>=items.length)vocabIdx=0;
+  const it=items[vocabIdx];
+  document.getElementById('fc-speaker').textContent='🏐 '+it.speaker;
+  document.getElementById('fc-char').textContent=it.char;
+  document.getElementById('fc-jp').textContent=it.jp;
+  document.getElementById('fc-romaji').textContent='['+it.romaji+']';
+  document.getElementById('fc-kr').textContent=it.kr;
+  document.getElementById('fc-ctx').textContent=it.ctx;
+  const pct=((vocabIdx+1)/items.length)*100;
+  document.getElementById('vp-fill').style.width=pct+'%';
+  document.getElementById('vp-label').textContent=(vocabIdx+1)+' / '+items.length;
+}
+function toggleReveal(){fcRevealed=!fcRevealed;document.getElementById('fc-bottom').classList.toggle('show',fcRevealed);}
+function nextCard(){const l=getVocabItems().length;vocabIdx=(vocabIdx+1)%l;renderCard();}
+function prevCard(){const l=getVocabItems().length;vocabIdx=(vocabIdx-1+l)%l;renderCard();}
+
+/* ══════════════════════════════════════════
+   QUIZ
+══════════════════════════════════════════ */
+function getAllVocab(){return Object.values(vocabData).flat();}
+function initQuiz(){
+  quizCorrect=0;quizWrong=0;quizStreak=0;
+  updQScores();nextQuiz();
+}
+function updQScores(){
+  document.getElementById('qc').textContent=quizCorrect;
+  document.getElementById('qw').textContent=quizWrong;
+  document.getElementById('qt').textContent=quizCorrect+quizWrong;
+}
+function nextQuiz(){
+  quizAnswered=false;
+  document.getElementById('quiz-fb').classList.remove('show');
+  document.getElementById('quiz-next').style.display='none';
+  const all=getAllVocab().sort(()=>Math.random()-.5);
+  quizItem=all[0];
+  const wrongs=all.slice(1,4);
+  const opts=[...wrongs,quizItem].sort(()=>Math.random()-.5);
+  document.getElementById('quiz-char').textContent=quizItem.char;
+  document.getElementById('quiz-sub').textContent='이 단어의 뜻은?';
+  const el=document.getElementById('quiz-opts');
+  el.innerHTML='';
+  opts.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='qopt';b.textContent=opt.kr;
+    b.onclick=()=>answerQuiz(opt,b);
+    el.appendChild(b);
+  });
+}
+function answerQuiz(chosen,btn){
+  if(quizAnswered)return;quizAnswered=true;
+  const ok=chosen.char===quizItem.char;
+  document.querySelectorAll('.qopt').forEach(b=>b.classList.add('disabled'));
+  document.querySelectorAll('.qopt').forEach(b=>{if(b.textContent===quizItem.kr)b.classList.add('correct');});
+  if(!ok){btn.classList.add('wrong');quizWrong++;quizStreak=0;document.getElementById('streak-msg').textContent='';}
+  else{quizCorrect++;quizStreak++;
+    const msgs=['','','🔥 2연속!','⚡ 3연속!','🏐 스파이크 4연속!','👑 5연속 에이스!'];
+    document.getElementById('streak-msg').textContent=quizStreak>=2?(msgs[Math.min(quizStreak,5)]||'🏆 '+quizStreak+'연속!'):'';
+  }
+  updQScores();
+  document.getElementById('fb-char').textContent=quizItem.jp+' → '+quizItem.kr;
+  document.getElementById('fb-detail').textContent='['+quizItem.romaji+']  '+quizItem.ctx;
+  document.getElementById('quiz-fb').classList.add('show');
+  document.getElementById('quiz-next').style.display='block';
+}
+
+/* ══════════════════════════════════════════
+   SENTENCES
+══════════════════════════════════════════ */
+function initSentences(){
+  // char filter
+  const cf=document.getElementById('sent-char-filter');
+  cf.innerHTML='';
+  ['전체','힌아타','카게야마','츠키시마','니시노야','타나카'].forEach(ch=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(ch===sentCharFilter?' active':'');
+    b.textContent=ch;
+    b.onclick=()=>{sentCharFilter=ch;sentIdx=0;
+      cf.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');buildSentCatBtns();renderSent();};
+    cf.appendChild(b);
+  });
+  buildSentCatBtns();
+  renderSent();
+}
+
+function buildSentCatBtns(){
+  const el=document.getElementById('sent-cats');
+  el.innerHTML='';
+  const eps=['전체','시즌1','시즌2','시즌3','시즌4','경기 중','경기 후'];
+  eps.forEach(ep=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(ep===sentCat?' active':'');
+    b.textContent=ep==='전체'?'📋 전체':ep;
+    b.onclick=()=>{sentCat=ep;sentIdx=0;
+      el.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');renderSent();};
+    el.appendChild(b);
+  });
+}
+
+function getFilteredSents(){
+  let items=sentenceData;
+  if(sentCharFilter!=='전체') items=items.filter(s=>s.char===sentCharFilter||s.char==='전체');
+  if(sentCat!=='전체' && sentCat!=='all') items=items.filter(s=>s.ep===sentCat);
+  return items.length?items:sentenceData;
+}
+
+function renderSent(){
+  const items=getFilteredSents();
+  if(!items.length){document.getElementById('sent-display').innerHTML='<div class="card" style="text-align:center;color:var(--text3);padding:30px">해당 필터에 맞는 문장이 없어요.</div>';return;}
+  if(sentIdx>=items.length)sentIdx=0;
+  const it=items[sentIdx];
+  const pct=((sentIdx+1)/items.length)*100;
+  document.getElementById('sp-fill').style.width=pct+'%';
+  document.getElementById('sp-label').textContent=(sentIdx+1)+' / '+items.length;
+  const bdHtml=it.bd.map(b=>`<div class="bd-row"><div class="bd-jp">${b.jp}</div><div class="bd-desc">${b.d}</div></div>`).join('');
+  const tagsHtml=(it.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('sent-display').innerHTML=`
+  <div class="card">
+    <div class="sent-scene">${it.scene}</div>
+    <div class="sent-ep">${it.ep} · ${it.char}</div>
+    <div class="sent-jp">${it.jp}</div>
+    <div class="sent-romaji">${it.romaji}</div>
+    <div class="sent-pron">${it.pron}</div>
+    <div class="sent-kr">${it.kr}</div>
+    <div>${tagsHtml}</div>
+    <button class="toggle-bd" onclick="toggleBd(this)">문법 분석 보기 ↓</button>
+    <div class="breakdown-box" id="bd-box">${bdHtml}</div>
+  </div>`;
+}
+function toggleBd(btn){
+  const b=document.getElementById('bd-box');
+  const s=b.classList.toggle('show');
+  btn.textContent=s?'문법 분석 닫기 ↑':'문법 분석 보기 ↓';
+}
+function nextSent(){const l=getFilteredSents().length;sentIdx=(sentIdx+1)%l;renderSent();}
+function prevSent(){const l=getFilteredSents().length;sentIdx=(sentIdx-1+l)%l;renderSent();}
+
+/* ══════════════════════════════════════════
+   CANVAS
+══════════════════════════════════════════ */
+function getKanaData(){
+  return kanaType==='hira'
+    ? (kanaTab==='basic'?hiraBasic:hiraExt)
+    : (kanaTab==='basic'?kataBasic:kataExt);
+}
+function getKanaColor(){return kanaType==='kata'?'#185fa5':'#E8601C';}
+
+function setKanaType(t){
+  kanaType=t;kanaIdx=0;
+  document.getElementById('ct-hira').classList.toggle('active',t==='hira');
+  document.getElementById('ct-kata').classList.toggle('active',t==='kata');
+  const view=document.getElementById('kana-view');
+  view.classList.toggle('kana-kata',t==='kata');
+  buildKanaCats();renderKana();
+}
+function setKanaTab(t){
+  kanaTab=t;kanaIdx=0;
+  document.getElementById('ktab-basic').classList.toggle('active',t==='basic');
+  document.getElementById('ktab-ext').classList.toggle('active',t==='ext');
+  const data=getKanaData();
+  kanaCat=Object.keys(data)[0];
+  buildKanaCats();renderKana();
+}
+
+function buildKanaCats(){
+  const el=document.getElementById('kana-cats');
+  el.innerHTML='';
+  const data=getKanaData();
+  const labels=kanaTab==='basic'?basicCatLabels:extCatLabels;
+  Object.keys(data).forEach(cat=>{
+    const items=data[cat];
+    const anyDone=items.some(it=>{const k=kanaType+':'+it.c;return kanaChecked[k];});
+    const b=document.createElement('button');
+    b.className='cc-btn'+(cat===kanaCat?' active':'')+(anyDone?' has-done':'');
+    b.innerHTML=(labels[cat]||cat)+'<span class="done-dot"></span>';
+    b.onclick=()=>{kanaCat=cat;kanaIdx=0;
+      el.querySelectorAll('.cc-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');renderKana();clearCanvas();};
+    el.appendChild(b);
+  });
+}
+
+function renderKana(){
+  const data=getKanaData()[kanaCat]||[];
+  if(!data.length)return;
+  if(kanaIdx>=data.length)kanaIdx=0;
+  const it=data[kanaIdx];
+  document.getElementById('kana-char').textContent=it.c;
+  document.getElementById('kana-char').style.color=getKanaColor();
+  document.getElementById('kana-info').textContent=it.r+' ('+it.k+')';
+  document.getElementById('kana-strokes').textContent=it.s||'';
+  const pct=((kanaIdx+1)/data.length)*100;
+  document.getElementById('kp-fill').style.width=pct+'%';
+  document.getElementById('kp-fill').style.background=getKanaColor();
+  document.getElementById('kp-label').textContent=(kanaIdx+1)+' / '+data.length;
+  const key=kanaType+':'+it.c;
+  const done=!!kanaChecked[key];
+  const badge=document.getElementById('check-badge');
+  badge.textContent=done?'✓ 완료':'✓ 완료';
+  badge.className='check-badge'+(done?'':' unchecked');
+  drawGuide();
+}
+
+function toggleCheck(){
+  const data=getKanaData()[kanaCat]||[];
+  const it=data[kanaIdx];if(!it)return;
+  const key=kanaType+':'+it.c;
+  kanaChecked[key]=!kanaChecked[key];
+  try{localStorage.setItem('kanaChecked',JSON.stringify(kanaChecked));}catch(e){}
+  renderKana();buildKanaCats();
+}
+
+function initCanvas(){
+  drawCanvas=document.getElementById('drawCanvas');
+  guideCanvasEl=document.getElementById('guideCanvas');
+  drawCtx=drawCanvas.getContext('2d');
+  guideCtx=guideCanvasEl.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize',resizeCanvas);
+
+  drawCanvas.addEventListener('mousedown',startDraw);
+  drawCanvas.addEventListener('mousemove',doDraw);
+  drawCanvas.addEventListener('mouseup',stopDraw);
+  drawCanvas.addEventListener('mouseleave',stopDraw);
+  drawCanvas.addEventListener('touchstart',startDraw,{passive:false});
+  drawCanvas.addEventListener('touchmove',doDraw,{passive:false});
+  drawCanvas.addEventListener('touchend',stopDraw);
+
+  const data=getKanaData();
+  kanaCat=Object.keys(data)[0];
+  kanaIdx=0;
+  buildKanaCats();
+  renderKana();
+}
+
+function resizeCanvas(){
+  if(!drawCanvas)return;
+  const wrap=drawCanvas.parentElement;
+  const w=wrap.getBoundingClientRect().width;
+  drawCanvas.width=w;drawCanvas.height=220;
+  guideCanvasEl.width=w;guideCanvasEl.height=220;
+  drawCtx.lineWidth=3;drawCtx.lineCap='round';drawCtx.lineJoin='round';
+  drawCtx.strokeStyle='#E8601C';
+  drawGuide();
+}
+
+function getPos(e){
+  const rect=drawCanvas.getBoundingClientRect();
+  const t=e.touches?e.touches[0]:e;
+  return{x:t.clientX-rect.left,y:t.clientY-rect.top};
+}
+function startDraw(e){e.preventDefault();isDrawing=true;const p=getPos(e);drawCtx.beginPath();drawCtx.moveTo(p.x,p.y);}
+function doDraw(e){if(!isDrawing)return;e.preventDefault();const p=getPos(e);drawCtx.lineTo(p.x,p.y);drawCtx.stroke();}
+function stopDraw(){isDrawing=false;}
+function clearCanvas(){if(drawCtx)drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);}
+function toggleGuide(){
+  guideVisible=!guideVisible;
+  guideCanvasEl.classList.toggle('show',guideVisible);
+}
+function drawGuide(){
+  if(!guideCtx)return;
+  guideCtx.clearRect(0,0,guideCanvasEl.width,guideCanvasEl.height);
+  const data=getKanaData()[kanaCat]||[];
+  const it=data[kanaIdx];if(!it)return;
+  const size=Math.min(guideCanvasEl.width,guideCanvasEl.height)*0.65;
+  guideCtx.font='bold '+size+'px sans-serif';
+  guideCtx.fillStyle=getKanaColor();
+  guideCtx.textAlign='center';
+  guideCtx.textBaseline='middle';
+  guideCtx.fillText(it.c,guideCanvasEl.width/2,guideCanvasEl.height/2);
+}
+function nextKana(){const l=(getKanaData()[kanaCat]||[]).length;kanaIdx=(kanaIdx+1)%l;renderKana();clearCanvas();}
+function prevKana(){const l=(getKanaData()[kanaCat]||[]).length;kanaIdx=(kanaIdx-1+l)%l;renderKana();clearCanvas();}
+
+/* ── BOOT ── */
+initVocab();
+</script>
+</body>
+</html>
